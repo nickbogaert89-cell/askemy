@@ -182,7 +182,7 @@ function EmyChat() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key==="Enter" && send()}
-            placeholder="type here..."
+            placeholder="tell me how and when to reach you. no team. no handovers."
             disabled={loading}
             style={{
               flex:1, background:"transparent", border:"none", outline:"none",
@@ -312,8 +312,8 @@ export default function App() {
             <Label>Personal Concierge<br/>Lifestyle Management</Label>
             <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
               <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
-              <p style={{ marginBottom:22 }}>Emy is one person. Direct line. She's there for the flight changed at midnight, the birthday, the safari, the thing you'd rather not run past anyone else.</p>
-              <p>Over time she learns your life. That's the point.</p>
+              <p style={{ marginBottom:22 }}>I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.</p>
+              <p>Over time, I learn your life. That's the whole point.</p>
             </div>
             <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>— €150 / month</div>
           </Section>
