@@ -170,9 +170,9 @@ function EmyChat() {
         {messages.map((m, i) => (
           <div key={i} style={{ display:"flex", justifyContent:m.role==="user"?"flex-end":"flex-start", marginBottom:18 }}>
             <div style={{
-              maxWidth:"85%",
-              fontSize:14, lineHeight:1.8,
-              color: m.role==="user" ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.5)",
+              maxWidth:"88%",
+              fontSize:16, lineHeight:1.75,
+              color: m.role==="user" ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.82)",
               textAlign: m.role==="user" ? "right" : "left",
               letterSpacing:"0.01em",
             }}>
@@ -218,15 +218,15 @@ function EmyChat() {
             disabled={loading}
             style={{
               flex:1, background:"transparent", border:"none", outline:"none",
-              color:"rgba(255,255,255,0.85)", fontFamily:"inherit", fontSize:14,
-              letterSpacing:"0.01em", caretColor:"rgba(255,255,255,0.5)",
+              color:"rgba(255,255,255,0.95)", fontFamily:"inherit", fontSize:15,
+              letterSpacing:"0.01em", caretColor:"rgba(255,255,255,0.6)",
             }}
           />
           <button onClick={send} disabled={loading||!input.trim()} style={{
             background:"transparent", border:"none",
             cursor:input.trim()&&!loading?"pointer":"default",
-            color:"rgba(255,255,255,0.5)", fontSize:16,
-            opacity:input.trim()&&!loading?1:0.2, transition:"opacity 0.15s",
+            color:"rgba(255,255,255,0.7)", fontSize:18,
+            opacity:input.trim()&&!loading?1:0.25, transition:"opacity 0.15s",
             fontFamily:"inherit", padding:"0 2px",
           }}>→</button>
         </div>
@@ -245,7 +245,7 @@ export default function App() {
   useEffect(() => { setTimeout(() => setMounted(true), 80); }, []);
 
   return (
-    <div style={{ background:"#000", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", maxWidth:480, margin:"0 auto" }}>
+    <div className="emy-page" style={{ background:"#000", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}
@@ -253,86 +253,101 @@ export default function App() {
         @keyframes logoIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
         @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
         @keyframes dotPulse{0%,100%{opacity:0.15;}50%{opacity:0.65;}}
-        input::placeholder{color:rgba(255,255,255,0.18);}
+        input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.3);}
         ::-webkit-scrollbar{width:0;}
         ::selection{background:rgba(255,255,255,0.12);}
+
+        .emy-page{display:block;}
+        .emy-image-col{width:100%;}
+        .emy-image{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.02);}
+        .emy-content-col{width:100%;}
+        .emy-content-inner{max-width:480px;margin:0 auto;padding:56px 28px 96px;}
+
+        @media (min-width: 900px) {
+          .emy-page{display:grid;grid-template-columns:60vw 40vw;}
+          .emy-image-col{height:100vh;position:sticky;top:0;align-self:start;}
+          .emy-image{width:100%;height:100%;object-fit:cover;}
+          .emy-content-col{min-height:100vh;}
+          .emy-content-inner{max-width:460px;margin:0;padding:72px 56px 120px;}
+        }
       `}</style>
 
-      <div style={{ padding:"56px 28px 96px" }}>
+      {/* Image (desktop: sticky left 60vw; mobile: full width stacked) */}
+      <div className="emy-image-col">
+        <img
+          className="emy-image"
+          src={`${import.meta.env.BASE_URL}emy.jpg`}
+          alt=""
+        />
+      </div>
 
-        {/* Logo */}
-        <div style={{ marginBottom:48, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
-          <Logo width={210}/>
-        </div>
+      {/* Content column */}
+      <div className="emy-content-col">
+        <div className="emy-content-inner">
 
-        {/* Portrait */}
-        <Section delay={0.1}>
-          <div style={{ margin:"0 -28px 8px", overflow:"hidden" }}>
-            <img
-              src={`${import.meta.env.BASE_URL}emy.jpg`}
-              alt=""
-              style={{ display:"block", width:"100%", height:"auto", filter:"grayscale(1) contrast(1.02)" }}
-            />
+          {/* Logo */}
+          <div style={{ marginBottom:48, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
+            <Logo width={210}/>
           </div>
-        </Section>
 
-        <Rule/>
+          <Rule/>
 
-        {/* About */}
-        <Section delay={0}>
-          <Label>About</Label>
-          <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
-            <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
-            <p style={{ marginBottom:22 }}>Emy is one person. Direct line. She's there for the flight changed at midnight, the birthday, the safari, the thing you'd rather not run past anyone else.</p>
-            <p>Over time she learns your life. That's the point.</p>
-          </div>
-          <div style={{ marginTop:32, fontSize:12, color:"rgba(255,255,255,0.45)", letterSpacing:"0.1em" }}>— €150 / month</div>
-        </Section>
+          {/* About */}
+          <Section delay={0}>
+            <Label>About</Label>
+            <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
+              <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
+              <p style={{ marginBottom:22 }}>Emy is one person. Direct line. She's there for the flight changed at midnight, the birthday, the safari, the thing you'd rather not run past anyone else.</p>
+              <p>Over time she learns your life. That's the point.</p>
+            </div>
+            <div style={{ marginTop:32, fontSize:12, color:"rgba(255,255,255,0.45)", letterSpacing:"0.1em" }}>— €150 / month</div>
+          </Section>
 
-        <Rule/>
+          <Rule/>
 
-        {/* Where is Emy */}
-        <Section delay={0.05}>
-          <Label>Where is Emy.</Label>
-          <div style={{ position:"relative" }}>
-            <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.04))" }}/>
-            {LOCATIONS.map((loc, i) => {
-              const isCurrent = i===0;
-              return (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:20, padding:"14px 0", opacity:TRAIL_OPACITY[i], borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-                  <div style={{
-                    width:isCurrent?13:7, height:isCurrent?13:7, borderRadius:"50%",
-                    border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.85:0.35})`,
-                    flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
-                    animation:isCurrent?"blink 3s ease-in-out infinite":"none",
-                  }}>
-                    {isCurrent && <div style={{ width:5, height:5, borderRadius:"50%", background:"#fff" }}/>}
+          {/* Reach Emy (moved above Where is Emy) */}
+          <Section delay={0.05}>
+            <Label>Reach Emy.</Label>
+            <EmyChat/>
+          </Section>
+
+          <Rule/>
+
+          {/* Where is Emy */}
+          <Section delay={0.1}>
+            <Label>Where is Emy.</Label>
+            <div style={{ position:"relative" }}>
+              <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.04))" }}/>
+              {LOCATIONS.map((loc, i) => {
+                const isCurrent = i===0;
+                return (
+                  <div key={i} style={{ display:"flex", alignItems:"center", gap:20, padding:"14px 0", opacity:TRAIL_OPACITY[i], borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
+                    <div style={{
+                      width:isCurrent?13:7, height:isCurrent?13:7, borderRadius:"50%",
+                      border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.85:0.35})`,
+                      flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
+                      animation:isCurrent?"blink 3s ease-in-out infinite":"none",
+                    }}>
+                      {isCurrent && <div style={{ width:5, height:5, borderRadius:"50%", background:"#fff" }}/>}
+                    </div>
+                    <div style={{ flex:1 }}>
+                      <div style={{ fontSize:isCurrent?19:16, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
+                      {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.5)", marginTop:4, textTransform:"uppercase" }}>{loc.country}</div>}
+                    </div>
+                    {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.6)", border:"1px solid rgba(255,255,255,0.2)", padding:"5px 10px" }}>now</div>}
                   </div>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontSize:isCurrent?19:16, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
-                    {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.5)", marginTop:4, textTransform:"uppercase" }}>{loc.country}</div>}
-                  </div>
-                  {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.6)", border:"1px solid rgba(255,255,255,0.2)", padding:"5px 10px" }}>now</div>}
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+          </Section>
+
+          <Rule/>
+
+          <div style={{ fontSize:10, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", textTransform:"uppercase" }}>
+            ask-emy.com
           </div>
-        </Section>
 
-        <Rule/>
-
-        {/* Reach Emy */}
-        <Section delay={0.1}>
-          <Label>Reach Emy.</Label>
-          <EmyChat/>
-        </Section>
-
-        <Rule/>
-
-        <div style={{ fontSize:10, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", textTransform:"uppercase" }}>
-          ask-emy.com
         </div>
-
       </div>
     </div>
   );
