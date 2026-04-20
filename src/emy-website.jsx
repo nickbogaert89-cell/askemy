@@ -77,7 +77,7 @@ function Rule() {
   return <div style={{ height:1, background:"rgba(255,255,255,0.14)", margin:"52px 0" }}/>;
 }
 function Label({ children }) {
-  return <div style={{ fontSize:10, letterSpacing:"0.32em", color:"rgba(255,255,255,0.4)", textTransform:"uppercase", marginBottom:28 }}>{children}</div>;
+  return <div style={{ fontSize:11, letterSpacing:"0.28em", color:"rgba(255,255,255,0.72)", textTransform:"uppercase", marginBottom:28, fontWeight:700 }}>{children}</div>;
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
@@ -294,13 +294,13 @@ export default function App() {
 
           {/* About */}
           <Section delay={0}>
-            <Label>About</Label>
+            <Label>Personal Concierge &amp; Lifestyle Management</Label>
             <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
               <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
               <p style={{ marginBottom:22 }}>Emy is one person. Direct line. She's there for the flight changed at midnight, the birthday, the safari, the thing you'd rather not run past anyone else.</p>
               <p>Over time she learns your life. That's the point.</p>
             </div>
-            <div style={{ marginTop:32, fontSize:12, color:"rgba(255,255,255,0.45)", letterSpacing:"0.1em" }}>— €150 / month</div>
+            <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>— €150 / month</div>
           </Section>
 
           <Rule/>
