@@ -243,29 +243,84 @@ export default function App() {
         ::-webkit-scrollbar{width:0;}
         ::selection{background:rgba(255,255,255,0.12);}
 
-        /* mobile: stacked, content first then where */
+        /* mobile stacked: about → reach → where */
         .emy-page{display:flex;flex-direction:column;}
-        .emy-where-col{order:2;width:100%;}
-        .emy-where-inner{max-width:480px;margin:0 auto;padding:0 28px 72px;}
-        .emy-content-col{order:1;width:100%;}
-        .emy-content-inner{max-width:480px;margin:0 auto;padding:56px 28px 56px;}
+        .emy-about-col,.emy-reach-col,.emy-where-col{width:100%;}
+        .emy-about-col{order:1;padding:56px 28px 12px;}
+        .emy-reach-col{order:2;padding:20px 28px;}
+        .emy-where-col{order:3;padding:20px 28px 80px;}
+        .emy-col-inner{max-width:480px;margin:0 auto;}
 
-        @media (min-width: 900px) {
+        @media (min-width: 1000px) {
           .emy-page{
             display:grid;
-            grid-template-columns:60vw 40vw;
-            grid-template-areas:"where content";
+            grid-template-columns:1fr 1fr 1fr;
+            grid-template-areas:"where reach about";
+            min-height:100vh;
           }
-          .emy-where-col{order:unset;grid-area:where;height:100vh;position:sticky;top:0;align-self:start;display:flex;align-items:center;}
-          .emy-where-inner{max-width:none;margin:0;padding:72px 72px;width:100%;}
-          .emy-content-col{order:unset;grid-area:content;min-height:100vh;border-left:1px solid rgba(255,255,255,0.08);}
-          .emy-content-inner{max-width:460px;margin:0;padding:72px 56px 120px;}
+          .emy-about-col,.emy-reach-col,.emy-where-col{
+            padding:72px 44px 96px;
+            display:flex;
+            flex-direction:column;
+          }
+          .emy-where-col{grid-area:where;}
+          .emy-reach-col{grid-area:reach;border-left:1px solid rgba(255,255,255,0.07);border-right:1px solid rgba(255,255,255,0.07);}
+          .emy-about-col{grid-area:about;}
+          .emy-col-inner{max-width:none;margin:0;width:100%;}
+          .emy-mobile-logo{display:none;}
+          .emy-desktop-logo{display:block;}
         }
+        .emy-mobile-logo{display:block;}
+        .emy-desktop-logo{display:none;}
       `}</style>
 
-      {/* Left: Where is Emy (desktop sticky panel / mobile below content) */}
+      {/* MOBILE ONLY: logo + footer appear inside About column at top/bottom.
+          Desktop: logo appears in the middle (Reach) column; footer bottom of About. */}
+
+      {/* About (desktop: middle-to-right — right column) */}
+      <div className="emy-about-col">
+        <div className="emy-col-inner">
+          {/* Mobile logo */}
+          <div className="emy-mobile-logo" style={{ marginBottom:40, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
+            <Logo width={200}/>
+          </div>
+
+          <Section delay={0}>
+            <Label>Personal Concierge<br/>Lifestyle Management</Label>
+            <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
+              <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
+              <p style={{ marginBottom:22 }}>I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.</p>
+              <p>Over time, I learn your life. That's the whole point.</p>
+            </div>
+            <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>— €150 / month</div>
+          </Section>
+        </div>
+      </div>
+
+      {/* Reach (desktop: middle column with logo) */}
+      <div className="emy-reach-col">
+        <div className="emy-col-inner">
+          <div className="emy-desktop-logo" style={{ marginBottom:56, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
+            <Logo width={210}/>
+          </div>
+          <Section delay={0.05}>
+            <Label>Reach Emy.</Label>
+            <div style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.72)", marginBottom: 22 }}>
+              <p style={{ marginBottom:14 }}>No inbox, no team, no handovers. One message lands on one phone.</p>
+              <p>Say what you need, how you prefer to be reached, and a time that suits you. I take it from there.</p>
+            </div>
+            <EmyChat/>
+          </Section>
+
+          <div style={{ marginTop:56, fontSize:10, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", textTransform:"uppercase" }}>
+            ask-emy.com
+          </div>
+        </div>
+      </div>
+
+      {/* Where (desktop: left column) */}
       <div className="emy-where-col">
-        <div className="emy-where-inner">
+        <div className="emy-col-inner">
           <Section delay={0.1}>
             <Label>Where is Emy.</Label>
             <div style={{ position:"relative" }}>
@@ -293,45 +348,6 @@ export default function App() {
               })}
             </div>
           </Section>
-        </div>
-      </div>
-
-      {/* Right: Logo + about + reach + footer */}
-      <div className="emy-content-col">
-        <div className="emy-content-inner">
-
-          {/* Logo */}
-          <div style={{ marginBottom:48, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
-            <Logo width={210}/>
-          </div>
-
-          <Rule/>
-
-          {/* About */}
-          <Section delay={0}>
-            <Label>Personal Concierge<br/>Lifestyle Management</Label>
-            <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
-              <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
-              <p style={{ marginBottom:22 }}>I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.</p>
-              <p>Over time, I learn your life. That's the whole point.</p>
-            </div>
-            <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>— €150 / month</div>
-          </Section>
-
-          <Rule/>
-
-          {/* Reach Emy */}
-          <Section delay={0.05}>
-            <Label>Reach Emy.</Label>
-            <EmyChat/>
-          </Section>
-
-          <Rule/>
-
-          <div style={{ fontSize:10, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", textTransform:"uppercase" }}>
-            ask-emy.com
-          </div>
-
         </div>
       </div>
     </div>
