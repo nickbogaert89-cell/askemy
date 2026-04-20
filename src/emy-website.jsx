@@ -7,7 +7,7 @@ const LOCATIONS = [
   { city: "Mauritius", country: "Mauritius" },
   { city: "Antwerp",   country: "Belgium"   },
 ];
-const TRAIL_OPACITY = [1, 0.36, 0.20, 0.11, 0.06];
+const TRAIL_OPACITY = [1, 0.55, 0.38, 0.26, 0.18];
 const CURRENT_LOCATION = "Valencia, Spain";
 const TODAY = new Date().toLocaleDateString("en-GB", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
 
@@ -74,10 +74,10 @@ function Section({ children, delay=0 }) {
   );
 }
 function Rule() {
-  return <div style={{ height:1, background:"rgba(255,255,255,0.07)", margin:"52px 0" }}/>;
+  return <div style={{ height:1, background:"rgba(255,255,255,0.14)", margin:"52px 0" }}/>;
 }
 function Label({ children }) {
-  return <div style={{ fontSize:8, letterSpacing:"0.38em", color:"rgba(255,255,255,0.18)", textTransform:"uppercase", marginBottom:28 }}>{children}</div>;
+  return <div style={{ fontSize:10, letterSpacing:"0.32em", color:"rgba(255,255,255,0.4)", textTransform:"uppercase", marginBottom:28 }}>{children}</div>;
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
@@ -270,12 +270,12 @@ export default function App() {
         {/* About */}
         <Section delay={0}>
           <Label>About</Label>
-          <div style={{ fontSize:14, lineHeight:1.85, color:"rgba(255,255,255,0.78)" }}>
+          <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
             <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
             <p style={{ marginBottom:22 }}>Emy is one person. Direct line. She's there for the flight changed at midnight, the birthday, the safari, the thing you'd rather not run past anyone else.</p>
             <p>Over time she learns your life. That's the point.</p>
           </div>
-          <div style={{ marginTop:32, fontSize:10, color:"rgba(255,255,255,0.22)", letterSpacing:"0.12em" }}>— €150 / month</div>
+          <div style={{ marginTop:32, fontSize:12, color:"rgba(255,255,255,0.45)", letterSpacing:"0.1em" }}>— €150 / month</div>
         </Section>
 
         <Rule/>
@@ -284,11 +284,11 @@ export default function App() {
         <Section delay={0.05}>
           <Label>Where is Emy.</Label>
           <div style={{ position:"relative" }}>
-            <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.12), transparent)" }}/>
+            <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.04))" }}/>
             {LOCATIONS.map((loc, i) => {
               const isCurrent = i===0;
               return (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:20, padding:"12px 0", opacity:TRAIL_OPACITY[i], borderBottom:"1px solid rgba(255,255,255,0.03)" }}>
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:20, padding:"14px 0", opacity:TRAIL_OPACITY[i], borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
                   <div style={{
                     width:isCurrent?13:7, height:isCurrent?13:7, borderRadius:"50%",
                     border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.85:0.35})`,
@@ -298,10 +298,10 @@ export default function App() {
                     {isCurrent && <div style={{ width:5, height:5, borderRadius:"50%", background:"#fff" }}/>}
                   </div>
                   <div style={{ flex:1 }}>
-                    <div style={{ fontSize:isCurrent?16:13, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
-                    {isCurrent && <div style={{ fontSize:8, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", marginTop:3, textTransform:"uppercase" }}>{loc.country}</div>}
+                    <div style={{ fontSize:isCurrent?19:16, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
+                    {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.5)", marginTop:4, textTransform:"uppercase" }}>{loc.country}</div>}
                   </div>
-                  {isCurrent && <div style={{ fontSize:8, letterSpacing:"0.3em", color:"rgba(255,255,255,0.38)", border:"1px solid rgba(255,255,255,0.1)", padding:"4px 8px" }}>now</div>}
+                  {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.6)", border:"1px solid rgba(255,255,255,0.2)", padding:"5px 10px" }}>now</div>}
                 </div>
               );
             })}
@@ -318,7 +318,7 @@ export default function App() {
 
         <Rule/>
 
-        <div style={{ fontSize:8, letterSpacing:"0.3em", color:"rgba(255,255,255,0.1)", textTransform:"uppercase" }}>
+        <div style={{ fontSize:10, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", textTransform:"uppercase" }}>
           ask-emy.com
         </div>
 
