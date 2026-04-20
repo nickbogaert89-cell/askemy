@@ -32,7 +32,12 @@ function extractContact(text) {
   return null;
 }
 
-const GREETING = "How do you want to connect?";
+const GREETING = "How can I help?";
+
+// Emy's WhatsApp (stored so we can wire the real Cloud API later).
+// Formatted as international digits-only for wa.me.
+const WA_NUMBER_INTL = "+32471481010";
+const WA_WAIT_MS = 2 * 60 * 1000; // 2 minutes before fallback kicks in
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
 function Logo({ width = 210 }) {
@@ -82,23 +87,37 @@ function Label({ children }) {
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
+// Phases:
+//   "idle"         initial greeting, waiting for first user message
+//   "waiting"      first message sent, showing countdown for Emy to reply on WA
+//   "asking"       timer expired, asking for phone/email fallback
+//   "done"         contact captured, chat closed
 function EmyChat() {
   const [messages, setMessages] = useState([{ role:"emy", text: GREETING, ts: Date.now() }]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
-  const [done, setDone]         = useState(false);
-  const docIdRef  = useRef(null);
-  const bottomRef = useRef(null);
-  const inputRef  = useRef(null);
+  const [phase, setPhase]       = useState("idle");
+  const [secondsLeft, setSecondsLeft] = useState(Math.round(WA_WAIT_MS/1000));
+  const docIdRef   = useRef(null);
+  const bottomRef  = useRef(null);
+  const inputRef   = useRef(null);
+  const timerRef   = useRef(null);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior:"smooth" });
-  }, [messages, loading]);
+  }, [messages, loading, secondsLeft, phase]);
+
+  useEffect(() => () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  }, []);
 
   async function persist(allMessages, extra = {}) {
     try {
       const base = {
         messages: allMessages.map(m => ({ role:m.role, text:m.text, ts:m.ts })),
+        waTarget: WA_NUMBER_INTL,
         updatedAt: serverTimestamp(),
         ...extra,
       };
@@ -113,36 +132,100 @@ function EmyChat() {
     }
   }
 
+  function startWaitTimer() {
+    const endAt = Date.now() + WA_WAIT_MS;
+    setSecondsLeft(Math.round(WA_WAIT_MS/1000));
+    intervalRef.current = setInterval(() => {
+      const left = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+      setSecondsLeft(left);
+      if (left === 0 && intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }, 1000);
+    timerRef.current = setTimeout(() => {
+      // Ask for fallback contact
+      setPhase("asking");
+      setMessages(prev => {
+        const next = [...prev, { role:"emy", text:"She hasn't picked up yet. Leave a phone or email and she'll reach out.", ts: Date.now() }];
+        persist(next, { phase: "asking" });
+        return next;
+      });
+      setTimeout(() => inputRef.current?.focus(), 40);
+    }, WA_WAIT_MS);
+  }
+
+  function cancelWaitTimer() {
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
+  }
+
   async function send() {
-    if (!input.trim() || loading || done) return;
+    if (!input.trim() || loading || phase === "done") return;
     const userText = input.trim();
     setInput("");
     const withUser = [...messages, { role:"user", text:userText, ts: Date.now() }];
     setMessages(withUser);
     setLoading(true);
+    await new Promise(r => setTimeout(r, 380 + Math.random()*260));
 
-    // Client-side bot logic: detect contact, else ask for it.
-    const found = extractContact(userText);
-    let botText, extras = {}, finished = false;
-    if (found) {
-      botText = found.method === "email"
-        ? `Got it — ${found.contact}. Emy will be in touch.`
-        : `Got it. Emy will be in touch. Stays between us.`;
-      extras  = { contact: found.contact, method: found.method, completed: true };
-      finished = true;
-    } else {
-      botText = "What's the best email or number to reach you?";
+    // Phase: idle → first message. Kick off WA wait.
+    if (phase === "idle") {
+      const botText = "Sent to Emy. She usually picks up within a couple of minutes.";
+      const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
+      setMessages(all);
+      setLoading(false);
+      setPhase("waiting");
+      persist(all, { phase: "waiting", firstMessage: userText });
+      startWaitTimer();
+      return;
     }
 
-    await new Promise(r => setTimeout(r, 450 + Math.random()*350));
+    // Phase: waiting → user sent a follow-up while counting down.
+    // If it contains contact info, treat as early fallback.
+    if (phase === "waiting") {
+      const found = extractContact(userText);
+      if (found) {
+        cancelWaitTimer();
+        const botText = found.method === "email"
+          ? `Got it — ${found.contact}. She'll be in touch.`
+          : `Got it — ${found.contact}. She'll call you. Stays between us.`;
+        const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
+        setMessages(all);
+        setLoading(false);
+        setPhase("done");
+        persist(all, { phase: "done", contact: found.contact, method: found.method, completed: true });
+        return;
+      }
+      // No contact — just acknowledge, keep waiting.
+      const all = [...withUser, { role:"emy", text:"Noted. Still waiting on her.", ts: Date.now() }];
+      setMessages(all);
+      setLoading(false);
+      persist(all);
+      return;
+    }
 
-    const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
-    setMessages(all);
-    setLoading(false);
-    if (finished) setDone(true);
-    persist(all, extras);
-
-    if (!finished) setTimeout(() => inputRef.current?.focus(), 40);
+    // Phase: asking → user is providing their contact info.
+    if (phase === "asking") {
+      const found = extractContact(userText);
+      if (found) {
+        const botText = found.method === "email"
+          ? `Got it — ${found.contact}. She'll be in touch.`
+          : `Got it — ${found.contact}. She'll call you. Stays between us.`;
+        const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
+        setMessages(all);
+        setLoading(false);
+        setPhase("done");
+        persist(all, { phase: "done", contact: found.contact, method: found.method, completed: true });
+        return;
+      }
+      const all = [...withUser, { role:"emy", text:"I didn't catch a number or email — could you send one?", ts: Date.now() }];
+      setMessages(all);
+      setLoading(false);
+      persist(all);
+      setTimeout(() => inputRef.current?.focus(), 40);
+      return;
+    }
   }
 
   return (
@@ -198,8 +281,24 @@ function EmyChat() {
             fontFamily:"inherit", padding:"0 2px",
           }}>→</button>
         </div>
-      ) : (
-        <div style={{ fontSize:9, letterSpacing:"0.3em", color:"rgba(255,255,255,0.22)", textTransform:"uppercase", paddingTop:4 }}>
+      ) : null}
+
+      {/* WA wait indicator */}
+      {phase === "waiting" && !loading && (
+        <div style={{ marginTop:16, display:"flex", alignItems:"center", gap:10 }}>
+          <div style={{ display:"flex", gap:4 }}>
+            {[0,1,2].map(i => (
+              <div key={i} style={{ width:3, height:3, borderRadius:"50%", background:"rgba(255,255,255,0.35)", animation:"dotPulse 1.2s ease-in-out infinite", animationDelay:`${i*0.2}s` }}/>
+            ))}
+          </div>
+          <div style={{ fontSize:9, letterSpacing:"0.3em", color:"rgba(255,255,255,0.35)", textTransform:"uppercase" }}>
+            waiting for emy · {Math.floor(secondsLeft/60)}:{String(secondsLeft%60).padStart(2,"0")}
+          </div>
+        </div>
+      )}
+
+      {phase === "done" && (
+        <div style={{ fontSize:9, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", textTransform:"uppercase", paddingTop:6 }}>
           message received.
         </div>
       )}
@@ -243,111 +342,116 @@ export default function App() {
         ::-webkit-scrollbar{width:0;}
         ::selection{background:rgba(255,255,255,0.12);}
 
-        /* mobile stacked: about → reach → where */
+        /* Header (logo top-right) stretches across all columns */
+        .emy-header{
+          display:flex;
+          justify-content:flex-end;
+          padding:32px 28px 0;
+        }
+
+        /* Mobile stacked: about → reach → where (order set on columns) */
         .emy-page{display:flex;flex-direction:column;}
         .emy-about-col,.emy-reach-col,.emy-where-col{width:100%;}
-        .emy-about-col{order:1;padding:56px 28px 12px;}
+        .emy-about-col{order:1;padding:28px 28px 20px;}
         .emy-reach-col{order:2;padding:20px 28px;}
         .emy-where-col{order:3;padding:20px 28px 80px;}
         .emy-col-inner{max-width:480px;margin:0 auto;}
 
         @media (min-width: 1000px) {
-          .emy-page{
+          .emy-header{padding:32px 52px 0;}
+          .emy-columns{
             display:grid;
             grid-template-columns:1fr 1fr 1fr;
-            grid-template-areas:"where reach about";
-            min-height:100vh;
+            grid-template-areas:"where talk about";
+            min-height:calc(100vh - 140px);
           }
           .emy-about-col,.emy-reach-col,.emy-where-col{
-            padding:72px 44px 96px;
+            padding:56px 44px 96px;
             display:flex;
             flex-direction:column;
           }
           .emy-where-col{grid-area:where;}
-          .emy-reach-col{grid-area:reach;border-left:1px solid rgba(255,255,255,0.07);border-right:1px solid rgba(255,255,255,0.07);}
+          .emy-reach-col{grid-area:talk;border-left:1px solid rgba(255,255,255,0.07);border-right:1px solid rgba(255,255,255,0.07);}
           .emy-about-col{grid-area:about;}
           .emy-col-inner{max-width:none;margin:0;width:100%;}
-          .emy-mobile-logo{display:none;}
-          .emy-desktop-logo{display:block;}
         }
-        .emy-mobile-logo{display:block;}
-        .emy-desktop-logo{display:none;}
       `}</style>
 
-      {/* MOBILE ONLY: logo + footer appear inside About column at top/bottom.
-          Desktop: logo appears in the middle (Reach) column; footer bottom of About. */}
-
-      {/* About (desktop: middle-to-right — right column) */}
-      <div className="emy-about-col">
-        <div className="emy-col-inner">
-          {/* Mobile logo */}
-          <div className="emy-mobile-logo" style={{ marginBottom:40, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
-            <Logo width={200}/>
-          </div>
-
-          <Section delay={0}>
-            <Label>Personal Concierge<br/>Lifestyle Management</Label>
-            <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
-              <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
-              <p style={{ marginBottom:22 }}>I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.</p>
-              <p>Over time, I learn your life. That's the whole point.</p>
-            </div>
-            <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>— €150 / month</div>
-          </Section>
-        </div>
-      </div>
-
-      {/* Reach (desktop: middle column with logo) */}
-      <div className="emy-reach-col">
-        <div className="emy-col-inner">
-          <div className="emy-desktop-logo" style={{ marginBottom:56, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
-            <Logo width={210}/>
-          </div>
-          <Section delay={0.05}>
-            <Label>Reach Emy.</Label>
-            <div style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.72)", marginBottom: 22 }}>
-              <p style={{ marginBottom:14 }}>No inbox, no team, no handovers. One message lands on one phone.</p>
-              <p>Say what you need, how you prefer to be reached, and a time that suits you. I take it from there.</p>
-            </div>
-            <EmyChat/>
-          </Section>
-
-          <div style={{ marginTop:56, fontSize:10, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", textTransform:"uppercase" }}>
-            ask-emy.com
+      {/* Header: logo top-right across full width, with tagline under */}
+      <div className="emy-header" style={{ opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end" }}>
+          <Logo width={180}/>
+          <div style={{
+            marginTop:12,
+            fontSize:10, letterSpacing:"0.28em", textTransform:"uppercase",
+            color:"rgba(255,255,255,0.55)", fontWeight:700, textAlign:"right", lineHeight:1.6,
+          }}>
+            Personal Concierge<br/>Lifestyle Management
           </div>
         </div>
       </div>
 
-      {/* Where (desktop: left column) */}
-      <div className="emy-where-col">
-        <div className="emy-col-inner">
-          <Section delay={0.1}>
-            <Label>Where is Emy.</Label>
-            <div style={{ position:"relative" }}>
-              <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
-              {locations.map((loc, i) => {
-                const isCurrent = i===0;
-                const op = trailOpacity(i, locations.length);
-                return (
-                  <div key={i} style={{ display:"flex", alignItems:"center", gap:22, padding:"12px 0", opacity:op, borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
-                    <div style={{
-                      width:isCurrent?14:7, height:isCurrent?14:7, borderRadius:"50%",
-                      border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.9:0.38})`,
-                      flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
-                      animation:isCurrent?"blink 3s ease-in-out infinite":"none",
-                    }}>
-                      {isCurrent && <div style={{ width:6, height:6, borderRadius:"50%", background:"#fff" }}/>}
+      <div className="emy-columns">
+        {/* About (desktop: right column) */}
+        <div className="emy-about-col">
+          <div className="emy-col-inner">
+            <Section delay={0}>
+              <Label>About Emy.</Label>
+              <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
+                <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
+                <p style={{ marginBottom:22 }}>I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.</p>
+                <p>Over time, I learn your life. That's the whole point.</p>
+              </div>
+              <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>— €150 / month</div>
+            </Section>
+          </div>
+        </div>
+
+        {/* Talk (desktop: middle column) */}
+        <div className="emy-reach-col">
+          <div className="emy-col-inner">
+            <Section delay={0.05}>
+              <Label>Talk to Emy.</Label>
+              <div style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.72)", marginBottom: 22 }}>
+                <p style={{ marginBottom:14 }}>No inbox, no team, no handovers. One message lands on one phone.</p>
+                <p>Say what you need, how you prefer to be reached, and a time that suits you. I take it from there.</p>
+              </div>
+              <EmyChat/>
+            </Section>
+          </div>
+        </div>
+
+        {/* Where (desktop: left column) */}
+        <div className="emy-where-col">
+          <div className="emy-col-inner">
+            <Section delay={0.1}>
+              <Label>Where is Emy.</Label>
+              <div style={{ position:"relative" }}>
+                <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
+                {locations.map((loc, i) => {
+                  const isCurrent = i===0;
+                  const op = trailOpacity(i, locations.length);
+                  return (
+                    <div key={i} style={{ display:"flex", alignItems:"center", gap:22, padding:"12px 0", opacity:op, borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
+                      <div style={{
+                        width:isCurrent?14:7, height:isCurrent?14:7, borderRadius:"50%",
+                        border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.9:0.38})`,
+                        flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
+                        animation:isCurrent?"blink 3s ease-in-out infinite":"none",
+                      }}>
+                        {isCurrent && <div style={{ width:6, height:6, borderRadius:"50%", background:"#fff" }}/>}
+                      </div>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontSize:isCurrent?22:17, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
+                        {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.55)", marginTop:5, textTransform:"uppercase" }}>{loc.country}</div>}
+                      </div>
+                      {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.65)", border:"1px solid rgba(255,255,255,0.22)", padding:"5px 10px", fontWeight:700 }}>now</div>}
                     </div>
-                    <div style={{ flex:1 }}>
-                      <div style={{ fontSize:isCurrent?22:17, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
-                      {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.55)", marginTop:5, textTransform:"uppercase" }}>{loc.country}</div>}
-                    </div>
-                    {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.65)", border:"1px solid rgba(255,255,255,0.22)", padding:"5px 10px", fontWeight:700 }}>now</div>}
-                  </div>
-                );
-              })}
-            </div>
-          </Section>
+                  );
+                })}
+              </div>
+            </Section>
+          </div>
         </div>
       </div>
     </div>
