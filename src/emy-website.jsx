@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { db } from "./firebase";
+import { collection, addDoc, updateDoc, doc, getDoc, serverTimestamp } from "firebase/firestore";
 
-const LOCATIONS = [
+const DEFAULT_LOCATIONS = [
   { city: "Valencia",  country: "Spain"     },
   { city: "Antwerp",   country: "Belgium"   },
   { city: "Cape Town", country: "S. Africa" },
@@ -8,30 +10,19 @@ const LOCATIONS = [
   { city: "Antwerp",   country: "Belgium"   },
 ];
 const TRAIL_OPACITY = [1, 0.55, 0.38, 0.26, 0.18];
-const CURRENT_LOCATION = "Valencia, Spain";
-const TODAY = new Date().toLocaleDateString("en-GB", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
 
-const SYSTEM = `You are the contact intake for Emy's personal concierge service. Your job: understand how and when someone wants to connect, collect what's needed, and check her calendar when relevant.
+// Simple regex detection for email / phone
+const EMAIL_RE = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
+const PHONE_RE = /(?:\+?\d[\d\s\-().]{6,}\d)/;
+function extractContact(text) {
+  const em = text.match(EMAIL_RE);
+  if (em) return { contact: em[0], method: "email" };
+  const ph = text.match(PHONE_RE);
+  if (ph) return { contact: ph[0].replace(/\s+/g, " ").trim(), method: "phone" };
+  return null;
+}
 
-Context:
-- Today is ${TODAY}
-- Emy is currently in ${CURRENT_LOCATION}
-- You have access to Emy's Google Calendar
-
-Behaviour:
-- When someone proposes an in-person meeting (e.g. "this bar", "dinner tomorrow", "meet tonight") → use the calendar tool to check if Emy is free at that time and date.
-  - If she's free: create a calendar event and say "Done — booked in Emy's calendar." with the details.
-  - If she's busy or has a conflict: "Sorry, she's tied up then — can she call you instead?" and ask for their number.
-  - If the proposed location is far from ${CURRENT_LOCATION}: "She's in ${CURRENT_LOCATION} right now — can she call you instead?" and ask for their number.
-- When someone wants a call or WhatsApp → ask for their number → say "Stays between us."
-- When someone gives an email → confirm it back.
-- Once you have all details → one-line confirmation ending with exactly: "Emy will be in touch."
-
-Style rules:
-- 1-2 sentences max per reply. One question at a time.
-- Direct, warm, human. No "certainly", "of course", "absolutely", "great", "happy to help".
-- Don't explain your process. Just respond.
-- Start with only: "How do you want to connect?"`;
+const GREETING = "How do you want to connect?";
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
 function Logo({ width = 210 }) {
@@ -74,7 +65,7 @@ function Section({ children, delay=0 }) {
   );
 }
 function Rule() {
-  return <div style={{ height:1, background:"rgba(255,255,255,0.14)", margin:"52px 0" }}/>;
+  return <div style={{ height:0, margin:"40px 0 0" }}/>;
 }
 function Label({ children }) {
   return <div style={{ fontSize:11, letterSpacing:"0.28em", color:"rgba(255,255,255,0.72)", textTransform:"uppercase", marginBottom:28, fontWeight:700 }}>{children}</div>;
@@ -82,85 +73,66 @@ function Label({ children }) {
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
 function EmyChat() {
-  const [messages, setMessages]   = useState([]);
-  const [input, setInput]         = useState("");
-  const [loading, setLoading]     = useState(false);
-  const [checking, setChecking]   = useState(false); // calendar check in progress
-  const [done, setDone]           = useState(false);
+  const [messages, setMessages] = useState([{ role:"emy", text: GREETING, ts: Date.now() }]);
+  const [input, setInput]       = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [done, setDone]         = useState(false);
+  const docIdRef  = useRef(null);
   const bottomRef = useRef(null);
   const inputRef  = useRef(null);
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const reply = await callAPI([{ role:"user", content:"start" }]);
-      setMessages([{ role:"emy", text:reply }]);
-      setLoading(false);
-    })();
-  }, []);
-
-  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior:"smooth" });
-  }, [messages, loading, checking]);
+  }, [messages, loading]);
 
-  async function callAPI(history) {
-    const body = {
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 200,
-      system: SYSTEM,
-      messages: history,
-      mcp_servers: [
-        {
-          type: "url",
-          url: "https://calendarmcp.googleapis.com/mcp/v1",
-          name: "google-calendar",
-        }
-      ],
-    };
-
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const d = await r.json();
-
-    // Check if calendar tool was used
-    const usedCalendar = d.content?.some(b => b.type === "mcp_tool_use");
-    if (usedCalendar) setChecking(false);
-
-    // Extract text from all content blocks
-    const text = (d.content || [])
-      .filter(b => b.type === "text")
-      .map(b => b.text)
-      .join(" ")
-      .trim();
-
-    return text || "Something went wrong.";
+  async function persist(allMessages, extra = {}) {
+    try {
+      const base = {
+        messages: allMessages.map(m => ({ role:m.role, text:m.text, ts:m.ts })),
+        updatedAt: serverTimestamp(),
+        ...extra,
+      };
+      if (!docIdRef.current) {
+        const ref = await addDoc(collection(db, "requests"), { ...base, createdAt: serverTimestamp() });
+        docIdRef.current = ref.id;
+      } else {
+        await updateDoc(doc(db, "requests", docIdRef.current), base);
+      }
+    } catch (e) {
+      console.warn("requests save failed:", e?.message || e);
+    }
   }
 
   async function send() {
     if (!input.trim() || loading || done) return;
-    const text = input.trim();
+    const userText = input.trim();
     setInput("");
-    const updated = [...messages, { role:"user", text }];
-    setMessages(updated);
+    const withUser = [...messages, { role:"user", text:userText, ts: Date.now() }];
+    setMessages(withUser);
     setLoading(true);
 
-    // If message contains time/place hints, show calendar indicator
-    const mightCheckCalendar = /tonight|tomorrow|today|monday|tuesday|wednesday|thursday|friday|saturday|sunday|bar|dinner|lunch|meet|pm|am|\d+(:\d+)?/i.test(text);
-    if (mightCheckCalendar) setChecking(true);
+    // Client-side bot logic: detect contact, else ask for it.
+    const found = extractContact(userText);
+    let botText, extras = {}, finished = false;
+    if (found) {
+      botText = found.method === "email"
+        ? `Got it — ${found.contact}. Emy will be in touch.`
+        : `Got it. Emy will be in touch. Stays between us.`;
+      extras  = { contact: found.contact, method: found.method, completed: true };
+      finished = true;
+    } else {
+      botText = "What's the best email or number to reach you?";
+    }
 
-    const history = updated.map(m => ({ role:m.role==="emy"?"assistant":"user", content:m.text }));
-    const reply = await callAPI(history);
-    setChecking(false);
+    await new Promise(r => setTimeout(r, 450 + Math.random()*350));
 
-    const next = [...updated, { role:"emy", text:reply }];
-    setMessages(next);
+    const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
+    setMessages(all);
     setLoading(false);
+    if (finished) setDone(true);
+    persist(all, extras);
 
-    if (reply.toLowerCase().includes("emy will be in touch")) setDone(true);
-    else setTimeout(() => inputRef.current?.focus(), 50);
+    if (!finished) setTimeout(() => inputRef.current?.focus(), 40);
   }
 
   return (
@@ -181,22 +153,8 @@ function EmyChat() {
           </div>
         ))}
 
-        {/* Calendar checking state */}
-        {checking && (
-          <div style={{ display:"flex", alignItems:"center", gap:8, padding:"4px 0", marginBottom:8 }}>
-            <div style={{ fontSize:8, letterSpacing:"0.3em", color:"rgba(255,255,255,0.2)", textTransform:"uppercase" }}>
-              checking calendar
-            </div>
-            <div style={{ display:"flex", gap:4 }}>
-              {[0,1,2].map(i => (
-                <div key={i} style={{ width:2, height:2, borderRadius:"50%", background:"rgba(255,255,255,0.2)", animation:"dotPulse 1s ease-in-out infinite", animationDelay:`${i*0.15}s` }}/>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Typing indicator */}
-        {loading && !checking && (
+        {loading && (
           <div style={{ display:"flex", gap:5, padding:"4px 0" }}>
             {[0,1,2].map(i => (
               <div key={i} style={{ width:3, height:3, borderRadius:"50%", background:"rgba(255,255,255,0.3)", animation:"dotPulse 1.2s ease-in-out infinite", animationDelay:`${i*0.2}s` }}/>
@@ -242,7 +200,25 @@ function EmyChat() {
 // ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   const [mounted, setMounted] = useState(false);
+  const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
   useEffect(() => { setTimeout(() => setMounted(true), 80); }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const snap = await getDoc(doc(db, "meta", "current"));
+        if (snap.exists()) {
+          const d = snap.data();
+          const current = d.city ? [{ city: d.city, country: d.country || "" }] : [];
+          const trail = Array.isArray(d.trail) ? d.trail : [];
+          const combined = [...current, ...trail].slice(0, 5);
+          if (combined.length) setLocations(combined);
+        }
+      } catch (e) {
+        console.warn("location fetch failed:", e?.message || e);
+      }
+    })();
+  }, []);
 
   return (
     <div className="emy-page" style={{ background:"#000", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace" }}>
@@ -294,7 +270,7 @@ export default function App() {
 
           {/* About */}
           <Section delay={0}>
-            <Label>Personal Concierge &amp; Lifestyle Management</Label>
+            <Label>Personal Concierge<br/>Lifestyle Management</Label>
             <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
               <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
               <p style={{ marginBottom:22 }}>Emy is one person. Direct line. She's there for the flight changed at midnight, the birthday, the safari, the thing you'd rather not run past anyone else.</p>
@@ -318,7 +294,7 @@ export default function App() {
             <Label>Where is Emy.</Label>
             <div style={{ position:"relative" }}>
               <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.04))" }}/>
-              {LOCATIONS.map((loc, i) => {
+              {locations.map((loc, i) => {
                 const isCurrent = i===0;
                 return (
                   <div key={i} style={{ display:"flex", alignItems:"center", gap:20, padding:"14px 0", opacity:TRAIL_OPACITY[i], borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
