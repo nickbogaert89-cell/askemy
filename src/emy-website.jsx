@@ -3,13 +3,23 @@ import { db } from "./firebase";
 import { collection, addDoc, updateDoc, doc, getDoc, serverTimestamp } from "firebase/firestore";
 
 const DEFAULT_LOCATIONS = [
-  { city: "Valencia",  country: "Spain"     },
-  { city: "Antwerp",   country: "Belgium"   },
-  { city: "Cape Town", country: "S. Africa" },
-  { city: "Mauritius", country: "Mauritius" },
-  { city: "Antwerp",   country: "Belgium"   },
+  { city: "Valencia",  country: "Spain"      },
+  { city: "Antwerp",   country: "Belgium"    },
+  { city: "Cape Town", country: "S. Africa"  },
+  { city: "Zanzibar",  country: "Tanzania"   },
+  { city: "Lima",      country: "Peru"       },
+  { city: "Lisbon",    country: "Portugal"   },
+  { city: "Windhoek",  country: "Namibia"    },
+  { city: "Berlin",    country: "Germany"    },
+  { city: "Paris",     country: "France"     },
 ];
-const TRAIL_OPACITY = [1, 0.55, 0.38, 0.26, 0.18];
+function trailOpacity(i, total) {
+  if (i === 0) return 1;
+  const rest = total - 1;
+  if (rest <= 1) return 0.55;
+  const start = 0.62, end = 0.14;
+  return start + (end - start) * ((i - 1) / (rest - 1));
+}
 
 // Simple regex detection for email / phone
 const EMAIL_RE = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
@@ -211,7 +221,7 @@ export default function App() {
           const d = snap.data();
           const current = d.city ? [{ city: d.city, country: d.country || "" }] : [];
           const trail = Array.isArray(d.trail) ? d.trail : [];
-          const combined = [...current, ...trail].slice(0, 5);
+          const combined = [...current, ...trail].slice(0, 10);
           if (combined.length) setLocations(combined);
         }
       } catch (e) {
@@ -233,31 +243,60 @@ export default function App() {
         ::-webkit-scrollbar{width:0;}
         ::selection{background:rgba(255,255,255,0.12);}
 
-        .emy-page{display:block;}
-        .emy-image-col{width:100%;}
-        .emy-image{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.02);}
-        .emy-content-col{width:100%;}
-        .emy-content-inner{max-width:480px;margin:0 auto;padding:56px 28px 96px;}
+        /* mobile: stacked, content first then where */
+        .emy-page{display:flex;flex-direction:column;}
+        .emy-where-col{order:2;width:100%;}
+        .emy-where-inner{max-width:480px;margin:0 auto;padding:0 28px 72px;}
+        .emy-content-col{order:1;width:100%;}
+        .emy-content-inner{max-width:480px;margin:0 auto;padding:56px 28px 56px;}
 
         @media (min-width: 900px) {
-          .emy-page{display:grid;grid-template-columns:60vw 40vw;}
-          .emy-image-col{height:100vh;position:sticky;top:0;align-self:start;}
-          .emy-image{width:100%;height:100%;object-fit:cover;}
-          .emy-content-col{min-height:100vh;}
+          .emy-page{
+            display:grid;
+            grid-template-columns:60vw 40vw;
+            grid-template-areas:"where content";
+          }
+          .emy-where-col{order:unset;grid-area:where;height:100vh;position:sticky;top:0;align-self:start;display:flex;align-items:center;}
+          .emy-where-inner{max-width:none;margin:0;padding:72px 72px;width:100%;}
+          .emy-content-col{order:unset;grid-area:content;min-height:100vh;border-left:1px solid rgba(255,255,255,0.08);}
           .emy-content-inner{max-width:460px;margin:0;padding:72px 56px 120px;}
         }
       `}</style>
 
-      {/* Image (desktop: sticky left 60vw; mobile: full width stacked) */}
-      <div className="emy-image-col">
-        <img
-          className="emy-image"
-          src={`${import.meta.env.BASE_URL}emy.jpg`}
-          alt=""
-        />
+      {/* Left: Where is Emy (desktop sticky panel / mobile below content) */}
+      <div className="emy-where-col">
+        <div className="emy-where-inner">
+          <Section delay={0.1}>
+            <Label>Where is Emy.</Label>
+            <div style={{ position:"relative" }}>
+              <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
+              {locations.map((loc, i) => {
+                const isCurrent = i===0;
+                const op = trailOpacity(i, locations.length);
+                return (
+                  <div key={i} style={{ display:"flex", alignItems:"center", gap:22, padding:"12px 0", opacity:op, borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
+                    <div style={{
+                      width:isCurrent?14:7, height:isCurrent?14:7, borderRadius:"50%",
+                      border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.9:0.38})`,
+                      flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
+                      animation:isCurrent?"blink 3s ease-in-out infinite":"none",
+                    }}>
+                      {isCurrent && <div style={{ width:6, height:6, borderRadius:"50%", background:"#fff" }}/>}
+                    </div>
+                    <div style={{ flex:1 }}>
+                      <div style={{ fontSize:isCurrent?22:17, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
+                      {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.55)", marginTop:5, textTransform:"uppercase" }}>{loc.country}</div>}
+                    </div>
+                    {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.65)", border:"1px solid rgba(255,255,255,0.22)", padding:"5px 10px", fontWeight:700 }}>now</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </Section>
+        </div>
       </div>
 
-      {/* Content column */}
+      {/* Right: Logo + about + reach + footer */}
       <div className="emy-content-col">
         <div className="emy-content-inner">
 
@@ -281,40 +320,10 @@ export default function App() {
 
           <Rule/>
 
-          {/* Reach Emy (moved above Where is Emy) */}
+          {/* Reach Emy */}
           <Section delay={0.05}>
             <Label>Reach Emy.</Label>
             <EmyChat/>
-          </Section>
-
-          <Rule/>
-
-          {/* Where is Emy */}
-          <Section delay={0.1}>
-            <Label>Where is Emy.</Label>
-            <div style={{ position:"relative" }}>
-              <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.04))" }}/>
-              {locations.map((loc, i) => {
-                const isCurrent = i===0;
-                return (
-                  <div key={i} style={{ display:"flex", alignItems:"center", gap:20, padding:"14px 0", opacity:TRAIL_OPACITY[i], borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-                    <div style={{
-                      width:isCurrent?13:7, height:isCurrent?13:7, borderRadius:"50%",
-                      border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.85:0.35})`,
-                      flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
-                      animation:isCurrent?"blink 3s ease-in-out infinite":"none",
-                    }}>
-                      {isCurrent && <div style={{ width:5, height:5, borderRadius:"50%", background:"#fff" }}/>}
-                    </div>
-                    <div style={{ flex:1 }}>
-                      <div style={{ fontSize:isCurrent?19:16, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
-                      {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.5)", marginTop:4, textTransform:"uppercase" }}>{loc.country}</div>}
-                    </div>
-                    {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.6)", border:"1px solid rgba(255,255,255,0.2)", padding:"5px 10px" }}>now</div>}
-                  </div>
-                );
-              })}
-            </div>
           </Section>
 
           <Rule/>
