@@ -258,7 +258,7 @@ function EmyChat() {
       </div>
 
       {/* Input */}
-      {!done ? (
+      {phase !== "done" ? (
         <div style={{ display:"flex", alignItems:"center", borderBottom:"1px solid rgba(255,255,255,0.14)", paddingBottom:10, gap:10 }}>
           <input
             ref={inputRef}
