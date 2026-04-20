@@ -261,9 +261,20 @@ export default function App() {
       <div style={{ padding:"56px 28px 96px" }}>
 
         {/* Logo */}
-        <div style={{ marginBottom:64, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
+        <div style={{ marginBottom:48, opacity:mounted?1:0, animation:mounted?"logoIn 1s ease forwards":"none" }}>
           <Logo width={210}/>
         </div>
+
+        {/* Portrait */}
+        <Section delay={0.1}>
+          <div style={{ margin:"0 -28px 8px", overflow:"hidden" }}>
+            <img
+              src={`${import.meta.env.BASE_URL}emy.jpg`}
+              alt=""
+              style={{ display:"block", width:"100%", height:"auto", filter:"grayscale(1) contrast(1.02)" }}
+            />
+          </div>
+        </Section>
 
         <Rule/>
 
