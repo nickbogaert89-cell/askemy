@@ -230,28 +230,52 @@ function EmyChat() {
 
   return (
     <div>
-      {/* Messages */}
-      <div style={{ marginBottom:24 }}>
-        {messages.map((m, i) => (
-          <div key={i} style={{ display:"flex", justifyContent:m.role==="user"?"flex-end":"flex-start", marginBottom:18 }}>
-            <div style={{
-              maxWidth:"88%",
-              fontSize:16, lineHeight:1.75,
-              color: m.role==="user" ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.82)",
-              textAlign: m.role==="user" ? "right" : "left",
-              letterSpacing:"0.01em",
+      {/* Messages — role-labeled, no bubbles, no timestamps */}
+      <div style={{ marginBottom: 22, display:"flex", flexDirection:"column", gap: 22 }}>
+        {messages.map((m, i) => {
+          const isUser = m.role === "user";
+          return (
+            <div key={i} style={{
+              display:"flex",
+              flexDirection:"column",
+              alignItems: isUser ? "flex-end" : "flex-start",
+              gap: 6,
+              animation: "msgIn 0.35s ease forwards",
             }}>
-              {m.text}
+              <div style={{
+                fontSize: 9,
+                letterSpacing: "0.32em",
+                color: "rgba(255,255,255,0.45)",
+                textTransform: "uppercase",
+                fontWeight: 700,
+              }}>
+                {isUser ? "you" : "emy"}
+              </div>
+              <div style={{
+                maxWidth: "88%",
+                fontSize: 15,
+                lineHeight: 1.7,
+                color: isUser ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.82)",
+                textAlign: isUser ? "right" : "left",
+                letterSpacing: "0.01em",
+              }}>
+                {m.text}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
-        {/* Typing indicator */}
+        {/* Typing indicator (Emy "typing") */}
         {loading && (
-          <div style={{ display:"flex", gap:5, padding:"4px 0" }}>
-            {[0,1,2].map(i => (
-              <div key={i} style={{ width:3, height:3, borderRadius:"50%", background:"rgba(255,255,255,0.3)", animation:"dotPulse 1.2s ease-in-out infinite", animationDelay:`${i*0.2}s` }}/>
-            ))}
+          <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap: 6 }}>
+            <div style={{ fontSize:9, letterSpacing:"0.32em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase", fontWeight:700 }}>
+              emy
+            </div>
+            <div style={{ display:"flex", gap:5, padding:"6px 0" }}>
+              {[0,1,2].map(i => (
+                <div key={i} style={{ width:3, height:3, borderRadius:"50%", background:"rgba(255,255,255,0.45)", animation:"dotPulse 1.2s ease-in-out infinite", animationDelay:`${i*0.2}s` }}/>
+              ))}
+            </div>
           </div>
         )}
         <div ref={bottomRef}/>
@@ -338,6 +362,7 @@ export default function App() {
         @keyframes logoIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
         @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
         @keyframes dotPulse{0%,100%{opacity:0.15;}50%{opacity:0.65;}}
+        @keyframes msgIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
         input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.3);}
         ::-webkit-scrollbar{width:0;}
         ::selection{background:rgba(255,255,255,0.12);}
