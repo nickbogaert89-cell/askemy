@@ -32,7 +32,7 @@ function extractContact(text) {
   return null;
 }
 
-const GREETING = "How can I help?";
+const GREETING = null; // no visible bot greeting — placeholder is the prompt
 
 // Emy's WhatsApp (stored so we can wire the real Cloud API later).
 // Formatted as international digits-only for wa.me.
@@ -93,7 +93,7 @@ function Label({ children }) {
 //   "asking"       timer expired, asking for phone/email fallback
 //   "done"         contact captured, chat closed
 function EmyChat() {
-  const [messages, setMessages] = useState([{ role:"emy", text: GREETING, ts: Date.now() }]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
   const [phase, setPhase]       = useState("idle");
@@ -265,7 +265,7 @@ function EmyChat() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key==="Enter" && send()}
-            placeholder="tell me how and when to reach you. no team. no handovers."
+            placeholder="how can i help?"
             disabled={loading}
             style={{
               flex:1, background:"transparent", border:"none", outline:"none",
@@ -412,9 +412,8 @@ export default function App() {
           <div className="emy-col-inner">
             <Section delay={0.05}>
               <Label>Talk to Emy.</Label>
-              <div style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.72)", marginBottom: 22 }}>
-                <p style={{ marginBottom:14 }}>No inbox, no team, no handovers. One message lands on one phone.</p>
-                <p>Say what you need, how you prefer to be reached, and a time that suits you. I take it from there.</p>
+              <div style={{ fontSize:15, lineHeight:1.7, color:"rgba(255,255,255,0.6)", marginBottom: 28 }}>
+                You talk to me directly. No team. No handovers.
               </div>
               <EmyChat/>
             </Section>
