@@ -90,20 +90,45 @@ function Label({ children }) {
 //   "awaiting-when"     contact captured, asking when suits
 //   "done"              timing captured, chat closed
 function EmyChat() {
-  const [messages, setMessages] = useState([
-    { role:"emy", text: GREETING, ts: Date.now() }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
   const [phase, setPhase]       = useState("awaiting-contact");
-  const contactRef = useRef(null); // { contact, method }
+  const [typed, setTyped]       = useState("");        // progressively-typed greeting
+  const [typing, setTyping]     = useState(false);     // cursor visible while typing
+  const [greetingDone, setGreetingDone] = useState(false);
+  const contactRef = useRef(null);
   const docIdRef   = useRef(null);
   const bottomRef  = useRef(null);
   const inputRef   = useRef(null);
 
+  // Typewriter: after a short delay, type the greeting one char at a time.
+  useEffect(() => {
+    let cancelled = false;
+    const start = setTimeout(() => {
+      if (cancelled) return;
+      setTyping(true);
+      let i = 0;
+      const tick = () => {
+        if (cancelled) return;
+        i++;
+        setTyped(GREETING.slice(0, i));
+        if (i < GREETING.length) {
+          setTimeout(tick, 26 + Math.random() * 22);
+        } else {
+          setTyping(false);
+          setGreetingDone(true);
+          setMessages([{ role:"emy", text: GREETING, ts: Date.now() }]);
+        }
+      };
+      tick();
+    }, 900);
+    return () => { cancelled = true; clearTimeout(start); };
+  }, []);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior:"smooth" });
-  }, [messages, loading, phase]);
+  }, [messages, loading, phase, typed]);
 
   async function persist(allMessages, extra = {}) {
     try {
@@ -125,7 +150,7 @@ function EmyChat() {
   }
 
   async function send() {
-    if (!input.trim() || loading || phase === "done") return;
+    if (!input.trim() || loading || phase === "done" || !greetingDone) return;
     const userText = input.trim();
     setInput("");
     const withUser = [...messages, { role:"user", text:userText, ts: Date.now() }];
@@ -177,6 +202,21 @@ function EmyChat() {
     <div>
       {/* Messages — role-labeled, no bubbles, no timestamps */}
       <div style={{ marginBottom: 22, display:"flex", flexDirection:"column", gap: 22 }}>
+        {/* Greeting while typing (before it enters messages array) */}
+        {!greetingDone && (typing || typed) && (
+          <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap: 6 }}>
+            <div style={{ fontSize:9, letterSpacing:"0.32em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase", fontWeight:700 }}>
+              emy
+            </div>
+            <div style={{
+              maxWidth:"88%", fontSize:15, lineHeight:1.7,
+              color:"rgba(255,255,255,0.62)", textAlign:"left", letterSpacing:"0.01em",
+            }}>
+              {typed}<span className="emy-caret">▍</span>
+            </div>
+          </div>
+        )}
+
         {messages.map((m, i) => {
           const isUser = m.role === "user";
           return (
@@ -200,7 +240,7 @@ function EmyChat() {
                 maxWidth: "88%",
                 fontSize: 15,
                 lineHeight: 1.7,
-                color: isUser ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.82)",
+                color: isUser ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.62)",
                 textAlign: isUser ? "right" : "left",
                 letterSpacing: "0.01em",
               }}>
@@ -210,7 +250,7 @@ function EmyChat() {
           );
         })}
 
-        {/* Typing indicator (Emy "typing") */}
+        {/* Typing indicator (Emy "typing" in response) */}
         {loading && (
           <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap: 6 }}>
             <div style={{ fontSize:9, letterSpacing:"0.32em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase", fontWeight:700 }}>
@@ -234,15 +274,15 @@ function EmyChat() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key==="Enter" && send()}
-            placeholder="type here"
-            disabled={loading}
+            placeholder={greetingDone ? "type here" : ""}
+            disabled={loading || !greetingDone}
             style={{
               flex:1, background:"transparent", border:"none", outline:"none",
               color:"rgba(255,255,255,0.95)", fontFamily:"inherit", fontSize:15,
               letterSpacing:"0.01em", caretColor:"rgba(255,255,255,0.6)",
             }}
           />
-          <button onClick={send} disabled={loading||!input.trim()} style={{
+          <button onClick={send} disabled={loading||!input.trim()||!greetingDone} style={{
             background:"transparent", border:"none",
             cursor:input.trim()&&!loading?"pointer":"default",
             color:"rgba(255,255,255,0.7)", fontSize:18,
@@ -292,6 +332,8 @@ export default function App() {
         @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
         @keyframes dotPulse{0%,100%{opacity:0.15;}50%{opacity:0.65;}}
         @keyframes msgIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+        @keyframes caretBlink{0%,50%{opacity:0.9;}51%,100%{opacity:0;}}
+        .emy-caret{display:inline-block;margin-left:2px;color:rgba(255,255,255,0.55);animation:caretBlink 1s step-end infinite;}
         input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.3);}
         ::-webkit-scrollbar{width:0;}
         ::selection{background:rgba(255,255,255,0.12);}
@@ -366,9 +408,6 @@ export default function App() {
           <div className="emy-col-inner">
             <Section delay={0.05}>
               <Label>Talk to Emy.</Label>
-              <div style={{ fontSize:15, lineHeight:1.7, color:"rgba(255,255,255,0.6)", marginBottom: 28 }}>
-                You talk to me directly. No team. No handovers.
-              </div>
               <EmyChat/>
             </Section>
           </div>
