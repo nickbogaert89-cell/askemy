@@ -32,12 +32,10 @@ function extractContact(text) {
   return null;
 }
 
-const GREETING = null; // no visible bot greeting — placeholder is the prompt
+const GREETING = "How do you want me to get in touch with you?";
 
 // Emy's WhatsApp (stored so we can wire the real Cloud API later).
-// Formatted as international digits-only for wa.me.
 const WA_NUMBER_INTL = "+32471481010";
-const WA_WAIT_MS = 2 * 60 * 1000; // 2 minutes before fallback kicks in
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
 function Logo({ width = 210 }) {
@@ -87,31 +85,25 @@ function Label({ children }) {
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
-// Phases:
-//   "idle"         initial greeting, waiting for first user message
-//   "waiting"      first message sent, showing countdown for Emy to reply on WA
-//   "asking"       timer expired, asking for phone/email fallback
-//   "done"         contact captured, chat closed
+// Phases (linear intake):
+//   "awaiting-contact"  initial greeting shown, waiting for user to share phone/email
+//   "awaiting-when"     contact captured, asking when suits
+//   "done"              timing captured, chat closed
 function EmyChat() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { role:"emy", text: GREETING, ts: Date.now() }
+  ]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
-  const [phase, setPhase]       = useState("idle");
-  const [secondsLeft, setSecondsLeft] = useState(Math.round(WA_WAIT_MS/1000));
+  const [phase, setPhase]       = useState("awaiting-contact");
+  const contactRef = useRef(null); // { contact, method }
   const docIdRef   = useRef(null);
   const bottomRef  = useRef(null);
   const inputRef   = useRef(null);
-  const timerRef   = useRef(null);
-  const intervalRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior:"smooth" });
-  }, [messages, loading, secondsLeft, phase]);
-
-  useEffect(() => () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (intervalRef.current) clearInterval(intervalRef.current);
-  }, []);
+  }, [messages, loading, phase]);
 
   async function persist(allMessages, extra = {}) {
     try {
@@ -132,34 +124,6 @@ function EmyChat() {
     }
   }
 
-  function startWaitTimer() {
-    const endAt = Date.now() + WA_WAIT_MS;
-    setSecondsLeft(Math.round(WA_WAIT_MS/1000));
-    intervalRef.current = setInterval(() => {
-      const left = Math.max(0, Math.round((endAt - Date.now()) / 1000));
-      setSecondsLeft(left);
-      if (left === 0 && intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    }, 1000);
-    timerRef.current = setTimeout(() => {
-      // Ask for fallback contact
-      setPhase("asking");
-      setMessages(prev => {
-        const next = [...prev, { role:"emy", text:"She hasn't picked up yet. Leave a phone or email and she'll reach out.", ts: Date.now() }];
-        persist(next, { phase: "asking" });
-        return next;
-      });
-      setTimeout(() => inputRef.current?.focus(), 40);
-    }, WA_WAIT_MS);
-  }
-
-  function cancelWaitTimer() {
-    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
-    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
-  }
-
   async function send() {
     if (!input.trim() || loading || phase === "done") return;
     const userText = input.trim();
@@ -169,61 +133,42 @@ function EmyChat() {
     setLoading(true);
     await new Promise(r => setTimeout(r, 380 + Math.random()*260));
 
-    // Phase: idle → first message. Kick off WA wait.
-    if (phase === "idle") {
-      const botText = "Sent to Emy. She usually picks up within a couple of minutes.";
+    // awaiting-contact: try to parse phone or email. If missing, re-ask.
+    if (phase === "awaiting-contact") {
+      const found = extractContact(userText);
+      if (found) {
+        contactRef.current = found;
+        const botText = `Got it — ${found.contact}. When suits you?`;
+        const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
+        setMessages(all);
+        setLoading(false);
+        setPhase("awaiting-when");
+        persist(all, {
+          phase: "awaiting-when",
+          contact: found.contact,
+          method: found.method,
+          firstMessage: userText,
+        });
+        setTimeout(() => inputRef.current?.focus(), 40);
+        return;
+      }
+      const botText = "What's the best number or email to reach you on?";
       const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
       setMessages(all);
       setLoading(false);
-      setPhase("waiting");
-      persist(all, { phase: "waiting", firstMessage: userText });
-      startWaitTimer();
-      return;
-    }
-
-    // Phase: waiting → user sent a follow-up while counting down.
-    // If it contains contact info, treat as early fallback.
-    if (phase === "waiting") {
-      const found = extractContact(userText);
-      if (found) {
-        cancelWaitTimer();
-        const botText = found.method === "email"
-          ? `Got it — ${found.contact}. She'll be in touch.`
-          : `Got it — ${found.contact}. She'll call you. Stays between us.`;
-        const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
-        setMessages(all);
-        setLoading(false);
-        setPhase("done");
-        persist(all, { phase: "done", contact: found.contact, method: found.method, completed: true });
-        return;
-      }
-      // No contact — just acknowledge, keep waiting.
-      const all = [...withUser, { role:"emy", text:"Noted. Still waiting on her.", ts: Date.now() }];
-      setMessages(all);
-      setLoading(false);
-      persist(all);
-      return;
-    }
-
-    // Phase: asking → user is providing their contact info.
-    if (phase === "asking") {
-      const found = extractContact(userText);
-      if (found) {
-        const botText = found.method === "email"
-          ? `Got it — ${found.contact}. She'll be in touch.`
-          : `Got it — ${found.contact}. She'll call you. Stays between us.`;
-        const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
-        setMessages(all);
-        setLoading(false);
-        setPhase("done");
-        persist(all, { phase: "done", contact: found.contact, method: found.method, completed: true });
-        return;
-      }
-      const all = [...withUser, { role:"emy", text:"I didn't catch a number or email — could you send one?", ts: Date.now() }];
-      setMessages(all);
-      setLoading(false);
-      persist(all);
+      persist(all, { phase: "awaiting-contact" });
       setTimeout(() => inputRef.current?.focus(), 40);
+      return;
+    }
+
+    // awaiting-when: accept any free-text answer as a timing preference.
+    if (phase === "awaiting-when") {
+      const botText = "Got it. I'll be in touch.";
+      const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
+      setMessages(all);
+      setLoading(false);
+      setPhase("done");
+      persist(all, { phase: "done", when: userText, completed: true });
       return;
     }
   }
@@ -289,7 +234,7 @@ function EmyChat() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key==="Enter" && send()}
-            placeholder="how can i help?"
+            placeholder="type here"
             disabled={loading}
             style={{
               flex:1, background:"transparent", border:"none", outline:"none",
@@ -305,24 +250,8 @@ function EmyChat() {
             fontFamily:"inherit", padding:"0 2px",
           }}>→</button>
         </div>
-      ) : null}
-
-      {/* WA wait indicator */}
-      {phase === "waiting" && !loading && (
-        <div style={{ marginTop:16, display:"flex", alignItems:"center", gap:10 }}>
-          <div style={{ display:"flex", gap:4 }}>
-            {[0,1,2].map(i => (
-              <div key={i} style={{ width:3, height:3, borderRadius:"50%", background:"rgba(255,255,255,0.35)", animation:"dotPulse 1.2s ease-in-out infinite", animationDelay:`${i*0.2}s` }}/>
-            ))}
-          </div>
-          <div style={{ fontSize:9, letterSpacing:"0.3em", color:"rgba(255,255,255,0.35)", textTransform:"uppercase" }}>
-            waiting for emy · {Math.floor(secondsLeft/60)}:{String(secondsLeft%60).padStart(2,"0")}
-          </div>
-        </div>
-      )}
-
-      {phase === "done" && (
-        <div style={{ fontSize:9, letterSpacing:"0.3em", color:"rgba(255,255,255,0.28)", textTransform:"uppercase", paddingTop:6 }}>
+      ) : (
+        <div style={{ fontSize:9, letterSpacing:"0.3em", color:"rgba(255,255,255,0.32)", textTransform:"uppercase", paddingTop:6 }}>
           message received.
         </div>
       )}
