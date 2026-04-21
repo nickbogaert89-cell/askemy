@@ -97,17 +97,11 @@ function EmyChat() {
   const [typed, setTyped]       = useState("");
   const [typing, setTyping]     = useState(false);
   const [greetingDone, setGreetingDone] = useState(false);
-  const [started, setStarted]   = useState(false);  // flips true on first scroll-into-view OR hover
-  const [rootRef, inView]       = useInView();
+  const [started, setStarted]   = useState(false);  // flips true only on hover
   const contactRef = useRef(null);
   const docIdRef   = useRef(null);
   const bottomRef  = useRef(null);
   const inputRef   = useRef(null);
-
-  // Arm the typewriter when the chat scrolls into view OR is hovered.
-  useEffect(() => {
-    if (inView) setStarted(true);
-  }, [inView]);
 
   // Typewriter: once "started" is true, delay briefly then type char-by-char.
   useEffect(() => {
@@ -122,7 +116,7 @@ function EmyChat() {
         i++;
         setTyped(GREETING.slice(0, i));
         if (i < GREETING.length) {
-          setTimeout(tick, 62 + Math.random() * 55);
+          setTimeout(tick, 42 + Math.random() * 38);
         } else {
           setTyping(false);
           setGreetingDone(true);
@@ -207,7 +201,7 @@ function EmyChat() {
   }
 
   return (
-    <div ref={rootRef} onMouseEnter={() => setStarted(true)}>
+    <div onMouseEnter={() => setStarted(true)}>
       {/* Messages — role-labeled, no bubbles, no timestamps */}
       <div style={{ marginBottom: 22, display:"flex", flexDirection:"column", gap: 22 }}>
         {/* Greeting while typing (before it enters messages array) */}
