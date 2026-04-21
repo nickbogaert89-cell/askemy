@@ -122,7 +122,7 @@ function EmyChat() {
         i++;
         setTyped(GREETING.slice(0, i));
         if (i < GREETING.length) {
-          setTimeout(tick, 26 + Math.random() * 22);
+          setTimeout(tick, 62 + Math.random() * 55);
         } else {
           setTyping(false);
           setGreetingDone(true);
