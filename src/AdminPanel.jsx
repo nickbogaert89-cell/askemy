@@ -231,7 +231,11 @@ export default function AdminPanel() {
     <Shell>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom: 48 }}>
         <div style={labelSm}>admin</div>
-        <button onClick={() => signOut(auth)} style={{ ...btn, padding:"6px 12px", fontSize:10 }}>out</button>
+        <button onClick={async () => {
+          await signOut(auth);
+          // Navigate back to the public homepage.
+          window.location.hash = "";
+        }} style={{ ...btn, padding:"6px 12px", fontSize:10 }}>out</button>
       </div>
 
       {/* Location */}

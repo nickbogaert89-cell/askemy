@@ -315,6 +315,26 @@ function EmyChat({ greeting }) {
   );
 }
 
+// Hidden admin link: clicking the word "management" in the tagline navigates
+// to #/admin. Styled identically to surrounding text — only cursor hints at it.
+function renderWithAdminLink(text) {
+  const goAdmin = (e) => { e?.preventDefault?.(); window.location.hash = "#/admin"; };
+  const m = (text || "").match(/^(.*?)(\bmanagement\b)(.*)$/i);
+  const linkStyle = { cursor: "pointer", color: "inherit", textDecoration: "none" };
+  if (m) {
+    const [, before, word, after] = m;
+    return (
+      <>
+        {before}
+        <a href="#/admin" onClick={goAdmin} style={linkStyle}>{word}</a>
+        {after}
+      </>
+    );
+  }
+  // Fallback: whole second line becomes the hidden link.
+  return <a href="#/admin" onClick={goAdmin} style={linkStyle}>{text}</a>;
+}
+
 // ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   const [mounted, setMounted] = useState(false);
@@ -413,7 +433,8 @@ export default function App() {
             fontSize:10, letterSpacing:"0.28em", textTransform:"uppercase",
             color:"rgba(255,255,255,0.55)", fontWeight:700, textAlign:"right", lineHeight:1.6,
           }}>
-            {copy.taglineLine1}<br/>{copy.taglineLine2}
+            {copy.taglineLine1}<br/>
+            {renderWithAdminLink(copy.taglineLine2)}
           </div>
         </div>
       </div>
