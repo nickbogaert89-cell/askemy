@@ -1,9 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// When deployed to https://<user>.github.io/askemy/ the base must match.
-// A custom domain later will use "/" — flip VITE_BASE=/ on the workflow.
+// Served at https://www.ask-emy.com (custom domain) — base is "/".
+// If you need to preview under github.io/askemy/, set VITE_BASE=/askemy/.
 export default defineConfig({
-  base: process.env.VITE_BASE ?? "/askemy/",
+  base: process.env.VITE_BASE ?? "/",
   plugins: [react()],
 });
