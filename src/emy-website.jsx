@@ -32,7 +32,20 @@ function extractContact(text) {
   return null;
 }
 
-const GREETING = "How do you want me to get in touch with you?";
+// Default copy — used as fallback whenever a field is missing from Firestore.
+// Must stay in sync with DEFAULT_COPY in AdminPanel.jsx.
+const DEFAULT_COPY = {
+  greeting: "How do you want me to get in touch with you?",
+  taglineLine1: "Personal Concierge",
+  taglineLine2: "Lifestyle Management",
+  labelWhere: "Where is Emy.",
+  labelTalk: "Talk to Emy.",
+  labelAbout: "About Emy.",
+  aboutP1: "Some things are better handled by someone who actually knows you.",
+  aboutP2: "I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.",
+  aboutP3: "Over time, I learn your life. That's the whole point.",
+  price: "— €150 / month",
+};
 
 // Emy's WhatsApp (stored so we can wire the real Cloud API later).
 const WA_NUMBER_INTL = "+32471481010";
@@ -89,7 +102,8 @@ function Label({ children }) {
 //   "awaiting-contact"  initial greeting shown, waiting for user to share phone/email
 //   "awaiting-when"     contact captured, asking when suits
 //   "done"              timing captured, chat closed
-function EmyChat() {
+function EmyChat({ greeting }) {
+  const GREETING = greeting || DEFAULT_COPY.greeting;
   const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
@@ -305,6 +319,7 @@ function EmyChat() {
 export default function App() {
   const [mounted, setMounted] = useState(false);
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
+  const [copy, setCopy] = useState(DEFAULT_COPY);
   useEffect(() => { setTimeout(() => setMounted(true), 80); }, []);
 
   useEffect(() => {
@@ -320,6 +335,20 @@ export default function App() {
         }
       } catch (e) {
         console.warn("location fetch failed:", e?.message || e);
+      }
+      try {
+        const snap = await getDoc(doc(db, "meta", "copy"));
+        if (snap.exists()) {
+          // Merge — any blank field falls back to default.
+          const d = snap.data();
+          const merged = { ...DEFAULT_COPY };
+          for (const k of Object.keys(DEFAULT_COPY)) {
+            if (typeof d[k] === "string" && d[k].trim().length > 0) merged[k] = d[k];
+          }
+          setCopy(merged);
+        }
+      } catch (e) {
+        console.warn("copy fetch failed:", e?.message || e);
       }
     })();
   }, []);
@@ -384,7 +413,7 @@ export default function App() {
             fontSize:10, letterSpacing:"0.28em", textTransform:"uppercase",
             color:"rgba(255,255,255,0.55)", fontWeight:700, textAlign:"right", lineHeight:1.6,
           }}>
-            Personal Concierge<br/>Lifestyle Management
+            {copy.taglineLine1}<br/>{copy.taglineLine2}
           </div>
         </div>
       </div>
@@ -394,13 +423,13 @@ export default function App() {
         <div className="emy-about-col">
           <div className="emy-col-inner">
             <Section delay={0}>
-              <Label>About Emy.</Label>
+              <Label>{copy.labelAbout}</Label>
               <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
-                <p style={{ marginBottom:22 }}>Some things are better handled by someone who actually knows you.</p>
-                <p style={{ marginBottom:22 }}>I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.</p>
-                <p>Over time, I learn your life. That's the whole point.</p>
+                <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
+                <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
+                <p>{copy.aboutP3}</p>
               </div>
-              <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>— €150 / month</div>
+              <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>{copy.price}</div>
             </Section>
           </div>
         </div>
@@ -409,8 +438,8 @@ export default function App() {
         <div className="emy-reach-col">
           <div className="emy-col-inner">
             <Section delay={0.05}>
-              <Label>Talk to Emy.</Label>
-              <EmyChat/>
+              <Label>{copy.labelTalk}</Label>
+              <EmyChat greeting={copy.greeting}/>
             </Section>
           </div>
         </div>
@@ -419,7 +448,7 @@ export default function App() {
         <div className="emy-where-col">
           <div className="emy-col-inner">
             <Section delay={0.1}>
-              <Label>Where is Emy.</Label>
+              <Label>{copy.labelWhere}</Label>
               <div style={{ position:"relative" }}>
                 <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
                 {locations.map((loc, i) => {

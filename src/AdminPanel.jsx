@@ -1,10 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { auth, db, ADMIN_EMAIL } from "./firebase";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import {
   collection, doc, getDoc, setDoc, query, orderBy, onSnapshot,
   serverTimestamp, deleteDoc
 } from "firebase/firestore";
+
+// Must stay in sync with DEFAULT_COPY in emy-website.jsx (source of truth on public site).
+const DEFAULT_COPY = {
+  greeting: "How do you want me to get in touch with you?",
+  taglineLine1: "Personal Concierge",
+  taglineLine2: "Lifestyle Management",
+  labelWhere: "Where is Emy.",
+  labelTalk: "Talk to Emy.",
+  labelAbout: "About Emy.",
+  aboutP1: "Some things are better handled by someone who actually knows you.",
+  aboutP2: "I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.",
+  aboutP3: "Over time, I learn your life. That's the whole point.",
+  price: "— €150 / month",
+};
 
 const input = {
   background: "transparent",
@@ -27,6 +41,31 @@ const labelSm = {
   fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase",
   color: "rgba(0,0,0,0.7)", fontWeight: 700, marginBottom: 14,
 };
+
+function CopyField({ label, value, onChange, multiline, flex }) {
+  const wrap = {
+    display: "flex", flexDirection: "column", gap: 6,
+    marginBottom: 18,
+    ...(flex ? { flex: "1 1 200px" } : {}),
+  };
+  const lbl = {
+    fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
+    color: "rgba(0,0,0,0.55)", fontWeight: 700,
+  };
+  return (
+    <div style={wrap}>
+      <label style={lbl}>{label}</label>
+      {multiline ? (
+        <textarea value={value || ""} onChange={e => onChange(e.target.value)}
+          rows={3}
+          style={{ ...input, resize: "vertical", lineHeight: 1.6, fontFamily: "inherit" }}/>
+      ) : (
+        <input value={value || ""} onChange={e => onChange(e.target.value)}
+          style={input}/>
+      )}
+    </div>
+  );
+}
 
 function Shell({ children }) {
   return (
@@ -55,10 +94,15 @@ export default function AdminPanel() {
 
   const [current, setCurrent] = useState({ city: "", country: "" });
   const [trail, setTrail]     = useState([]);
+  const originalCurrentRef    = useRef({ city: "", country: "" });
   const [locSaving, setLocSaving] = useState(false);
   const [locStatus, setLocStatus] = useState("");
   const [requests, setRequests]   = useState([]);
   const [openId, setOpenId]       = useState(null);
+
+  const [copy, setCopy] = useState(DEFAULT_COPY);
+  const [copySaving, setCopySaving] = useState(false);
+  const [copyStatus, setCopyStatus] = useState("");
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => { setUser(u); setCheck(false); });
@@ -72,9 +116,15 @@ export default function AdminPanel() {
         const s = await getDoc(doc(db, "meta", "current"));
         if (s.exists()) {
           const d = s.data();
-          setCurrent({ city: d.city || "", country: d.country || "" });
+          const loaded = { city: d.city || "", country: d.country || "" };
+          setCurrent(loaded);
+          originalCurrentRef.current = loaded;
           setTrail(Array.isArray(d.trail) ? d.trail : []);
         }
+      } catch (e) { console.warn(e); }
+      try {
+        const s = await getDoc(doc(db, "meta", "copy"));
+        if (s.exists()) setCopy({ ...DEFAULT_COPY, ...s.data() });
       } catch (e) { console.warn(e); }
     })();
     const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
@@ -101,21 +151,58 @@ export default function AdminPanel() {
   async function saveLocation() {
     setLocSaving(true); setLocStatus("");
     try {
+      const newCity = current.city.trim();
+      const newCountry = current.country.trim();
+      const orig = originalCurrentRef.current;
+      let nextTrail = trail
+        .map(t => ({ city: (t.city||"").trim(), country: (t.country||"").trim() }))
+        .filter(t => t.city);
+
+      // Auto-archive: if city/country changed from what we loaded, push the OLD
+      // current to the front of the trail. Nothing ever gets lost.
+      const changed = orig.city && (orig.city !== newCity || orig.country !== newCountry);
+      if (changed && newCity) {
+        nextTrail = [{ city: orig.city, country: orig.country }, ...nextTrail];
+      }
+
       await setDoc(doc(db, "meta", "current"), {
-        city: current.city.trim(),
-        country: current.country.trim(),
-        trail: trail
-          .map(t => ({ city: (t.city||"").trim(), country: (t.country||"").trim() }))
-          .filter(t => t.city),
+        city: newCity,
+        country: newCountry,
+        trail: nextTrail,
         updatedAt: serverTimestamp(),
       });
-      setLocStatus("saved");
-      setTimeout(() => setLocStatus(""), 1800);
+
+      // Reset baseline so a second save doesn't re-archive.
+      originalCurrentRef.current = { city: newCity, country: newCountry };
+      setTrail(nextTrail);
+      setLocStatus(changed ? "saved · moved previous city into history" : "saved");
+      setTimeout(() => setLocStatus(""), 2400);
     } catch (e) {
       setLocStatus(e.message || "save failed");
     } finally {
       setLocSaving(false);
     }
+  }
+
+  async function saveCopy() {
+    setCopySaving(true); setCopyStatus("");
+    try {
+      const payload = Object.fromEntries(
+        Object.entries(copy).map(([k, v]) => [k, typeof v === "string" ? v : ""])
+      );
+      payload.updatedAt = serverTimestamp();
+      await setDoc(doc(db, "meta", "copy"), payload);
+      setCopyStatus("saved");
+      setTimeout(() => setCopyStatus(""), 1800);
+    } catch (e) {
+      setCopyStatus(e.message || "save failed");
+    } finally {
+      setCopySaving(false);
+    }
+  }
+
+  function resetCopy() {
+    setCopy(DEFAULT_COPY);
   }
 
   async function remove(id) {
@@ -155,7 +242,10 @@ export default function AdminPanel() {
           <input value={current.country} onChange={e=>setCurrent({...current, country:e.target.value})} placeholder="country" style={{ ...input, flex:"1 1 180px" }}/>
         </div>
 
-        <div style={{ ...labelSm, marginTop: 32, marginBottom: 10 }}>previous (newest first, max 4)</div>
+        <div style={{ ...labelSm, marginTop: 32, marginBottom: 6 }}>previous (newest first)</div>
+        <div style={{ fontSize:11, color:"rgba(0,0,0,0.5)", marginBottom:12, lineHeight:1.5 }}>
+          When you change the current city and save, the old one moves here automatically. Nothing is deleted from the database.
+        </div>
         {trail.map((t, i) => (
           <div key={i} style={{ display:"flex", gap:10, marginBottom: 8, alignItems:"center" }}>
             <input value={t.city||""} onChange={e=>{ const n=[...trail]; n[i]={...n[i], city:e.target.value}; setTrail(n); }} placeholder="city" style={{ ...input, flex:"1 1 160px" }}/>
@@ -163,50 +253,101 @@ export default function AdminPanel() {
             <button onClick={()=>setTrail(trail.filter((_,j)=>j!==i))} style={{ ...btn, padding:"8px 10px", fontSize:12 }}>×</button>
           </div>
         ))}
-        {trail.length < 4 && (
-          <button onClick={()=>setTrail([...trail, { city:"", country:"" }])} style={{ ...btn, marginTop: 8 }}>
-            + add previous
-          </button>
-        )}
+        <button onClick={()=>setTrail([...trail, { city:"", country:"" }])} style={{ ...btn, marginTop: 8 }}>
+          + add manually
+        </button>
 
-        <div style={{ marginTop: 24, display:"flex", alignItems:"center", gap:16 }}>
+        <div style={{ marginTop: 24, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
           <button onClick={saveLocation} disabled={locSaving} style={btn}>
-            {locSaving ? "saving…" : "save"}
+            {locSaving ? "saving…" : "save location"}
           </button>
-          {locStatus && <span style={{ fontSize:11, color:"rgba(0,0,0,0.55)", letterSpacing:"0.1em" }}>{locStatus}</span>}
+          {locStatus && <span style={{ fontSize:11, color:"rgba(0,0,0,0.6)", letterSpacing:"0.08em" }}>{locStatus}</span>}
+        </div>
+      </section>
+
+      {/* Site copy */}
+      <section style={{ marginBottom: 64 }}>
+        <div style={labelSm}>site copy</div>
+        <div style={{ fontSize:11, color:"rgba(0,0,0,0.5)", marginBottom:18, lineHeight:1.5 }}>
+          Leave any field blank to fall back to the default.
+        </div>
+
+        <CopyField label="Greeting (first message in chat)" value={copy.greeting}
+          onChange={v => setCopy({ ...copy, greeting: v })} />
+
+        <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
+          <CopyField label="Tagline line 1" value={copy.taglineLine1}
+            onChange={v => setCopy({ ...copy, taglineLine1: v })} flex />
+          <CopyField label="Tagline line 2" value={copy.taglineLine2}
+            onChange={v => setCopy({ ...copy, taglineLine2: v })} flex />
+        </div>
+
+        <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
+          <CopyField label="Label · Where" value={copy.labelWhere}
+            onChange={v => setCopy({ ...copy, labelWhere: v })} flex />
+          <CopyField label="Label · Talk" value={copy.labelTalk}
+            onChange={v => setCopy({ ...copy, labelTalk: v })} flex />
+          <CopyField label="Label · About" value={copy.labelAbout}
+            onChange={v => setCopy({ ...copy, labelAbout: v })} flex />
+        </div>
+
+        <CopyField label="About · paragraph 1" value={copy.aboutP1} multiline
+          onChange={v => setCopy({ ...copy, aboutP1: v })} />
+        <CopyField label="About · paragraph 2" value={copy.aboutP2} multiline
+          onChange={v => setCopy({ ...copy, aboutP2: v })} />
+        <CopyField label="About · paragraph 3" value={copy.aboutP3} multiline
+          onChange={v => setCopy({ ...copy, aboutP3: v })} />
+
+        <CopyField label="Price line" value={copy.price}
+          onChange={v => setCopy({ ...copy, price: v })} />
+
+        <div style={{ marginTop: 20, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
+          <button onClick={saveCopy} disabled={copySaving} style={btn}>
+            {copySaving ? "saving…" : "save copy"}
+          </button>
+          <button onClick={resetCopy} style={{ ...btn, borderColor:"rgba(0,0,0,0.25)", color:"rgba(0,0,0,0.6)" }}>
+            reset to defaults
+          </button>
+          {copyStatus && <span style={{ fontSize:11, color:"rgba(0,0,0,0.6)", letterSpacing:"0.08em" }}>{copyStatus}</span>}
         </div>
       </section>
 
       {/* Requests */}
       <section>
         <div style={labelSm}>requests ({requests.length})</div>
-        {requests.length === 0 && <div style={{ color:"rgba(255,255,255,0.35)", fontSize:13 }}>none yet</div>}
+        {requests.length === 0 && <div style={{ color:"rgba(0,0,0,0.45)", fontSize:13 }}>none yet</div>}
         {requests.map(r => {
           const open = openId === r.id;
           const ts   = r.createdAt?.toDate?.();
           const lastUser = [...(r.messages||[])].reverse().find(m => m.role==="user");
           return (
-            <div key={r.id} style={{ padding:"16px 0", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
+            <div key={r.id} style={{ padding:"16px 0", borderBottom:"1px solid rgba(0,0,0,0.12)" }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, cursor:"pointer" }} onClick={()=>setOpenId(open?null:r.id)}>
-                <span style={{ fontSize:10, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)", minWidth: 48 }}>
+                <span style={{ fontSize:10, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(0,0,0,0.55)", minWidth: 48, fontWeight: 700 }}>
                   {r.method || (r.completed ? "done" : "open")}
                 </span>
-                <span style={{ fontSize:14, color: r.contact ? "#fff" : "rgba(255,255,255,0.4)", flex: 1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                <span style={{ fontSize:14, color: r.contact ? "#000" : "rgba(0,0,0,0.55)", flex: 1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                   {r.contact || (lastUser?.text ? `“${lastUser.text.slice(0,60)}”` : "—")}
                 </span>
-                <span style={{ fontSize:10, color:"rgba(255,255,255,0.4)", letterSpacing:"0.06em" }}>
+                <span style={{ fontSize:10, color:"rgba(0,0,0,0.5)", letterSpacing:"0.06em" }}>
                   {ts ? ts.toLocaleString(undefined, { month:"short", day:"numeric", hour:"2-digit", minute:"2-digit" }) : ""}
                 </span>
-                <button onClick={(e)=>{ e.stopPropagation(); remove(r.id); }} style={{ background:"transparent", border:"none", color:"rgba(255,255,255,0.35)", cursor:"pointer", fontSize:14, padding:"0 6px" }}>×</button>
+                <button onClick={(e)=>{ e.stopPropagation(); remove(r.id); }} style={{ background:"transparent", border:"none", color:"rgba(0,0,0,0.45)", cursor:"pointer", fontSize:14, padding:"0 6px" }}>×</button>
               </div>
               {open && (
-                <div style={{ marginTop:14, paddingLeft:60, borderLeft:"1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ marginTop:14, paddingLeft:60, borderLeft:"1px solid rgba(0,0,0,0.12)" }}>
                   {(r.messages||[]).map((m, i) => (
                     <div key={i} style={{ marginBottom:10, fontSize:13, lineHeight:1.6 }}>
-                      <span style={{ fontSize:9, letterSpacing:"0.24em", textTransform:"uppercase", color:"rgba(255,255,255,0.35)", marginRight:10 }}>{m.role}</span>
-                      <span style={{ color: m.role==="user" ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.7)" }}>{m.text}</span>
+                      <span style={{ fontSize:9, letterSpacing:"0.24em", textTransform:"uppercase", color:"rgba(0,0,0,0.5)", marginRight:10, fontWeight: 700 }}>{m.role}</span>
+                      <span style={{ color: m.role==="user" ? "#000" : "rgba(0,0,0,0.72)" }}>{m.text}</span>
                     </div>
                   ))}
+                  {r.when && (
+                    <div style={{ marginTop: 12, fontSize: 12, color: "rgba(0,0,0,0.55)" }}>
+                      <span style={{ fontSize: 9, letterSpacing: "0.24em", textTransform: "uppercase", marginRight: 10, fontWeight: 700 }}>when</span>
+                      <span>{r.when}</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

@@ -9,8 +9,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Public site reads current location. Only admin can write.
-    match /meta/current {
+    // Public site reads meta docs (current location, copy overrides).
+    // Only authenticated admin can write.
+    match /meta/{docId} {
       allow read:  if true;
       allow write: if request.auth != null;
     }
