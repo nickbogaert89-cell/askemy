@@ -41,9 +41,9 @@ const DEFAULT_COPY = {
   labelWhere: "Where is Emy.",
   labelTalk: "Talk to Emy.",
   labelAbout: "About Emy.",
-  aboutP1: "Some things are better handled by someone who actually knows you.",
-  aboutP2: "I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.",
-  aboutP3: "Over time, I learn your life. That's the whole point.",
+  aboutP1: "I'm Emy part of a triplette. Nice to meet you",
+  aboutP2: "",
+  aboutP3: "",
   price: "",
 };
 
