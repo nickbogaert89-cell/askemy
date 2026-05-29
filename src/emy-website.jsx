@@ -44,7 +44,7 @@ const DEFAULT_COPY = {
   aboutP1: "Some things are better handled by someone who actually knows you.",
   aboutP2: "I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.",
   aboutP3: "Over time, I learn your life. That's the whole point.",
-  price: "— €150 / month",
+  price: "",
 };
 
 // Emy's WhatsApp (stored so we can wire the real Cloud API later).
@@ -450,7 +450,6 @@ export default function App() {
                 <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
                 <p>{copy.aboutP3}</p>
               </div>
-              <div style={{ marginTop:32, fontSize:14, color:"rgba(255,255,255,0.82)", letterSpacing:"0.08em", fontWeight:700 }}>{copy.price}</div>
             </Section>
           </div>
         </div>

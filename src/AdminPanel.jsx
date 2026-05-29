@@ -17,7 +17,7 @@ const DEFAULT_COPY = {
   aboutP1: "Some things are better handled by someone who actually knows you.",
   aboutP2: "I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.",
   aboutP3: "Over time, I learn your life. That's the whole point.",
-  price: "— €150 / month",
+  price: "",
 };
 
 const input = {
@@ -301,9 +301,6 @@ export default function AdminPanel() {
           onChange={v => setCopy({ ...copy, aboutP2: v })} />
         <CopyField label="About · paragraph 3" value={copy.aboutP3} multiline
           onChange={v => setCopy({ ...copy, aboutP3: v })} />
-
-        <CopyField label="Price line" value={copy.price}
-          onChange={v => setCopy({ ...copy, price: v })} />
 
         <div style={{ marginTop: 20, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
           <button onClick={saveCopy} disabled={copySaving} style={btn}>
