@@ -6,20 +6,6 @@ import {
   serverTimestamp, deleteDoc
 } from "firebase/firestore";
 
-// Must stay in sync with DEFAULT_COPY in emy-website.jsx (source of truth on public site).
-const DEFAULT_COPY = {
-  greeting: "How do you want me to get in touch with you?",
-  taglineLine1: "Personal Concierge",
-  taglineLine2: "Lifestyle Management",
-  labelWhere: "Where is Emy.",
-  labelTalk: "Talk to Emy.",
-  labelAbout: "About Emy.",
-  aboutP1: "Some things are better handled by someone who actually knows you.",
-  aboutP2: "I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.",
-  aboutP3: "Over time, I learn your life. That's the whole point.",
-  price: "",
-};
-
 const input = {
   background: "transparent",
   border: "1px solid rgba(0,0,0,0.22)",
@@ -41,31 +27,6 @@ const labelSm = {
   fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase",
   color: "rgba(0,0,0,0.7)", fontWeight: 700, marginBottom: 14,
 };
-
-function CopyField({ label, value, onChange, multiline, flex }) {
-  const wrap = {
-    display: "flex", flexDirection: "column", gap: 6,
-    marginBottom: 18,
-    ...(flex ? { flex: "1 1 200px" } : {}),
-  };
-  const lbl = {
-    fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
-    color: "rgba(0,0,0,0.55)", fontWeight: 700,
-  };
-  return (
-    <div style={wrap}>
-      <label style={lbl}>{label}</label>
-      {multiline ? (
-        <textarea value={value || ""} onChange={e => onChange(e.target.value)}
-          rows={3}
-          style={{ ...input, resize: "vertical", lineHeight: 1.6, fontFamily: "inherit" }}/>
-      ) : (
-        <input value={value || ""} onChange={e => onChange(e.target.value)}
-          style={input}/>
-      )}
-    </div>
-  );
-}
 
 function Shell({ children }) {
   return (
@@ -100,10 +61,6 @@ export default function AdminPanel() {
   const [requests, setRequests]   = useState([]);
   const [openId, setOpenId]       = useState(null);
 
-  const [copy, setCopy] = useState(DEFAULT_COPY);
-  const [copySaving, setCopySaving] = useState(false);
-  const [copyStatus, setCopyStatus] = useState("");
-
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => { setUser(u); setCheck(false); });
     return () => unsub();
@@ -121,10 +78,6 @@ export default function AdminPanel() {
           originalCurrentRef.current = loaded;
           setTrail(Array.isArray(d.trail) ? d.trail : []);
         }
-      } catch (e) { console.warn(e); }
-      try {
-        const s = await getDoc(doc(db, "meta", "copy"));
-        if (s.exists()) setCopy({ ...DEFAULT_COPY, ...s.data() });
       } catch (e) { console.warn(e); }
     })();
     const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
@@ -182,27 +135,6 @@ export default function AdminPanel() {
     } finally {
       setLocSaving(false);
     }
-  }
-
-  async function saveCopy() {
-    setCopySaving(true); setCopyStatus("");
-    try {
-      const payload = Object.fromEntries(
-        Object.entries(copy).map(([k, v]) => [k, typeof v === "string" ? v : ""])
-      );
-      payload.updatedAt = serverTimestamp();
-      await setDoc(doc(db, "meta", "copy"), payload);
-      setCopyStatus("saved");
-      setTimeout(() => setCopyStatus(""), 1800);
-    } catch (e) {
-      setCopyStatus(e.message || "save failed");
-    } finally {
-      setCopySaving(false);
-    }
-  }
-
-  function resetCopy() {
-    setCopy(DEFAULT_COPY);
   }
 
   async function remove(id) {
@@ -266,50 +198,6 @@ export default function AdminPanel() {
             {locSaving ? "saving…" : "save location"}
           </button>
           {locStatus && <span style={{ fontSize:11, color:"rgba(0,0,0,0.6)", letterSpacing:"0.08em" }}>{locStatus}</span>}
-        </div>
-      </section>
-
-      {/* Site copy */}
-      <section style={{ marginBottom: 64 }}>
-        <div style={labelSm}>site copy</div>
-        <div style={{ fontSize:11, color:"rgba(0,0,0,0.5)", marginBottom:18, lineHeight:1.5 }}>
-          Leave any field blank to fall back to the default.
-        </div>
-
-        <CopyField label="Greeting (first message in chat)" value={copy.greeting}
-          onChange={v => setCopy({ ...copy, greeting: v })} />
-
-        <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
-          <CopyField label="Tagline line 1" value={copy.taglineLine1}
-            onChange={v => setCopy({ ...copy, taglineLine1: v })} flex />
-          <CopyField label="Tagline line 2" value={copy.taglineLine2}
-            onChange={v => setCopy({ ...copy, taglineLine2: v })} flex />
-        </div>
-
-        <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
-          <CopyField label="Label · Where" value={copy.labelWhere}
-            onChange={v => setCopy({ ...copy, labelWhere: v })} flex />
-          <CopyField label="Label · Talk" value={copy.labelTalk}
-            onChange={v => setCopy({ ...copy, labelTalk: v })} flex />
-          <CopyField label="Label · About" value={copy.labelAbout}
-            onChange={v => setCopy({ ...copy, labelAbout: v })} flex />
-        </div>
-
-        <CopyField label="About · paragraph 1" value={copy.aboutP1} multiline
-          onChange={v => setCopy({ ...copy, aboutP1: v })} />
-        <CopyField label="About · paragraph 2" value={copy.aboutP2} multiline
-          onChange={v => setCopy({ ...copy, aboutP2: v })} />
-        <CopyField label="About · paragraph 3" value={copy.aboutP3} multiline
-          onChange={v => setCopy({ ...copy, aboutP3: v })} />
-
-        <div style={{ marginTop: 20, display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
-          <button onClick={saveCopy} disabled={copySaving} style={btn}>
-            {copySaving ? "saving…" : "save copy"}
-          </button>
-          <button onClick={resetCopy} style={{ ...btn, borderColor:"rgba(0,0,0,0.25)", color:"rgba(0,0,0,0.6)" }}>
-            reset to defaults
-          </button>
-          {copyStatus && <span style={{ fontSize:11, color:"rgba(0,0,0,0.6)", letterSpacing:"0.08em" }}>{copyStatus}</span>}
         </div>
       </section>
 

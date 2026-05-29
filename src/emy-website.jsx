@@ -32,8 +32,8 @@ function extractContact(text) {
   return null;
 }
 
-// Default copy — used as fallback whenever a field is missing from Firestore.
-// Must stay in sync with DEFAULT_COPY in AdminPanel.jsx.
+// All site copy lives here. Edit these values to update the live site
+// (commit + push → auto-deploys in ~30s). The admin panel no longer edits copy.
 const DEFAULT_COPY = {
   greeting: "How do you want me to get in touch with you?",
   taglineLine1: "Personal Concierge",
@@ -339,7 +339,8 @@ function renderWithAdminLink(text) {
 export default function App() {
   const [mounted, setMounted] = useState(false);
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
-  const [copy, setCopy] = useState(DEFAULT_COPY);
+  // Copy is sourced from code only. Edit DEFAULT_COPY above to change site text.
+  const copy = DEFAULT_COPY;
   useEffect(() => { setTimeout(() => setMounted(true), 80); }, []);
 
   useEffect(() => {
@@ -355,20 +356,6 @@ export default function App() {
         }
       } catch (e) {
         console.warn("location fetch failed:", e?.message || e);
-      }
-      try {
-        const snap = await getDoc(doc(db, "meta", "copy"));
-        if (snap.exists()) {
-          // Merge — any blank field falls back to default.
-          const d = snap.data();
-          const merged = { ...DEFAULT_COPY };
-          for (const k of Object.keys(DEFAULT_COPY)) {
-            if (typeof d[k] === "string" && d[k].trim().length > 0) merged[k] = d[k];
-          }
-          setCopy(merged);
-        }
-      } catch (e) {
-        console.warn("copy fetch failed:", e?.message || e);
       }
     })();
   }, []);
