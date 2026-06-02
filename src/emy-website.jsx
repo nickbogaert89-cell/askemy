@@ -37,8 +37,8 @@ function extractContact(text) {
 // (commit + push → auto-deploys in ~30s). The admin panel no longer edits copy.
 const DEFAULT_COPY = {
   greeting: "How do you want me to get in touch with you?",
-  taglineLine1: "Lifestyle Membership",
-  taglineLine2: "",
+  taglineLine1: "Personal Concierge",
+  taglineLine2: "Lifestyle Management",
   labelWhere: "Where is Emy.",
   locationPhoto: "/emy-location.jpg",  // ← paste a photo URL here to show it in the Where section
   labelTalk: "Talk to Emy.",
