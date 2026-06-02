@@ -448,6 +448,15 @@ export default function App() {
             <Section delay={0.05}>
               <Label>{copy.labelTalk}</Label>
               <EmyChat greeting={copy.greeting}/>
+              <div style={{ marginTop:32, borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:24 }}>
+                <div style={{ fontSize:15, fontWeight:700, letterSpacing:"0.06em", color:"#fff", marginBottom:14 }}>Emy Engels</div>
+                <a href="tel:+32471481010" style={{ display:"flex", alignItems:"center", gap:10, color:"rgba(255,255,255,0.75)", textDecoration:"none", fontSize:14, letterSpacing:"0.04em", marginBottom:10 }}>
+                  <span style={{ fontSize:16 }}>📞</span> +32 471 48 10 10
+                </a>
+                <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:10, color:"rgba(255,255,255,0.75)", textDecoration:"none", fontSize:14, letterSpacing:"0.04em" }}>
+                  <span style={{ fontSize:16 }}>✉️</span> emy@ask-emy.com
+                </a>
+              </div>
             </Section>
           </div>
         </div>
