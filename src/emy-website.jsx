@@ -3,6 +3,7 @@ import { db } from "./firebase";
 import { collection, addDoc, updateDoc, doc, getDoc, serverTimestamp } from "firebase/firestore";
 
 const DEFAULT_LOCATIONS = [
+  { city: "Amsterdam", country: "Netherlands" },
   { city: "Valencia",  country: "Spain"      },
   { city: "Antwerp",   country: "Belgium"    },
   { city: "Cape Town", country: "S. Africa"  },
@@ -41,9 +42,9 @@ const DEFAULT_COPY = {
   labelWhere: "Where is Emy.",
   labelTalk: "Talk to Emy.",
   labelAbout: "About Emy.",
-  aboutP1: "Some things are better handled by someone who actually knows you.",
-  aboutP2: "I am one person. One direct line. Whether it's a flight changed at midnight, a last-minute birthday, a safari, a sold-out concert, or the thing you'd rather not run past anyone else, I handle it. Personally. Discreetly. Without you having to explain twice.",
-  aboutP3: "Over time, I learn your life. That's the whole point.",
+  aboutP1: "Some things are better left to someone who truly knows you.",
+  aboutP2: "One dedicated contact. A flight rebooked at midnight. A last-minute celebration. Access where others are turned away. The kind of request you'd rather not have to explain — handled before you ask twice.",
+  aboutP3: "Personal. Discreet. And over time, effortless — because I learn your preferences, your standards, your life. Not a service. A relationship.",
   price: "",
 };
 
