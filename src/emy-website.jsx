@@ -447,16 +447,20 @@ export default function App() {
           <div className="emy-col-inner">
             <Section delay={0.1}>
               <Label>{copy.labelWhere}</Label>
-              {copy.locationPhoto && (
-                <div style={{ marginBottom:24 }}>
-                  <img
-                    src={copy.locationPhoto}
-                    alt="Where is Emy"
-                    style={{ width:"100%", maxHeight:220, objectFit:"cover", borderRadius:4, display:"block" }}
-                  />
-                </div>
-              )}
               <div style={{ position:"relative" }}>
+                {copy.locationPhoto && (
+                  <div style={{
+                    position:"absolute", inset:0,
+                    backgroundImage:`url(${copy.locationPhoto})`,
+                    backgroundSize:"cover",
+                    backgroundPosition:"center",
+                    filter:"blur(3px)",
+                    opacity:0.22,
+                    borderRadius:4,
+                    zIndex:0,
+                  }}/>
+                )}
+                <div style={{ position:"relative", zIndex:1 }}>
                 <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
                 {locations.map((loc, i) => {
                   const isCurrent = i===0;
@@ -479,6 +483,7 @@ export default function App() {
                     </div>
                   );
                 })}
+                </div>
               </div>
             </Section>
           </div>
