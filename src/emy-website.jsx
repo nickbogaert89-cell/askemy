@@ -68,7 +68,7 @@ function Logo({ width = 210 }) {
       <polyline points={`${tx(mx)},${ty(0)} ${tx(mx)},${ty(LH)} ${tx(ax)},${ty(LH-ay)} ${tx(mx+LW)},${ty(LH)} ${tx(mx+LW)},${ty(0)}`} {...j}/>
       <polyline points={`${tx(yx)},${ty(0)} ${tx(jx)},${ty(jy)} ${tx(jx)},${ty(LH)}`} {...j}/>
       <line x1={tx(yx+LW)} y1={ty(0)} x2={tx(jx)} y2={ty(jy)} {...j}/>
-      <rect x={tx(pxPos)} y={ty(LH)} width={pSq*sc} height={pSq*sc} fill="#fff"/>
+      <rect x={tx(pxPos)} y={ty(pSq)} width={pSq*sc} height={pSq*sc} fill="#fff"/>
     </svg>
   );
 }
