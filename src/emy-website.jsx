@@ -455,7 +455,7 @@ export default function App() {
                     backgroundSize:"cover",
                     backgroundPosition:"center",
                     filter:"none",
-                    opacity:0.38,
+                    opacity:0.70,
                     borderRadius:4,
                     zIndex:0,
                   }}/>
