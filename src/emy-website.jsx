@@ -455,7 +455,8 @@ export default function App() {
                       backgroundImage:`url(${copy.locationPhoto})`,
                       backgroundSize:"cover",
                       backgroundPosition:"center",
-                      opacity:0.35,
+                      opacity:0.50,
+                      filter:"blur(4px)",
                       borderRadius:4,
                       zIndex:0,
                     }}/>
