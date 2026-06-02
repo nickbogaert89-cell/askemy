@@ -112,37 +112,17 @@ function EmyChat({ greeting }) {
   const [phase, setPhase]       = useState("awaiting-contact");
   const [typed, setTyped]       = useState("");
   const [typing, setTyping]     = useState(false);
-  const [greetingDone, setGreetingDone] = useState(false);
+  const [greetingDone, setGreetingDone] = useState(true);
   const [started, setStarted]   = useState(false);  // flips true only on hover
   const contactRef = useRef(null);
   const docIdRef   = useRef(null);
   const bottomRef  = useRef(null);
   const inputRef   = useRef(null);
 
-  // Typewriter: once "started" is true, delay briefly then type char-by-char.
+  // Show greeting immediately on mount, no typewriter.
   useEffect(() => {
-    if (!started) return;
-    let cancelled = false;
-    const start = setTimeout(() => {
-      if (cancelled) return;
-      setTyping(true);
-      let i = 0;
-      const tick = () => {
-        if (cancelled) return;
-        i++;
-        setTyped(GREETING.slice(0, i));
-        if (i < GREETING.length) {
-          setTimeout(tick, 42 + Math.random() * 38);
-        } else {
-          setTyping(false);
-          setGreetingDone(true);
-          setMessages([{ role:"emy", text: GREETING, ts: Date.now() }]);
-        }
-      };
-      tick();
-    }, 450);
-    return () => { cancelled = true; clearTimeout(start); };
-  }, [started]);
+    setMessages([{ role:"emy", text: GREETING, ts: Date.now() }]);
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior:"smooth", block:"nearest" });
@@ -343,7 +323,7 @@ export default function App() {
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
   // Copy is sourced from code only. Edit DEFAULT_COPY above to change site text.
   const copy = DEFAULT_COPY;
-  useEffect(() => { setTimeout(() => setMounted(true), 80); }, []);
+  useEffect(() => { setTimeout(() => setMounted(true), 80); window.scrollTo(0, 0); }, []);
 
   useEffect(() => {
     (async () => {
