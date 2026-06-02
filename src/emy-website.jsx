@@ -422,8 +422,8 @@ export default function App() {
             fontSize:10, letterSpacing:"0.28em", textTransform:"uppercase",
             color:"rgba(255,255,255,0.55)", fontWeight:700, textAlign:"right", lineHeight:1.6,
           }}>
-            {copy.taglineLine1}<br/>
-            {renderWithAdminLink(copy.taglineLine2)}
+            {copy.taglineLine1}
+            <span style={{ opacity:0, fontSize:0, userSelect:"none" }}><br/>{renderWithAdminLink(copy.taglineLine2)}</span>
           </div>
         </div>
       </div>
