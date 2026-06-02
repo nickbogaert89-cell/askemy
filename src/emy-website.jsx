@@ -40,7 +40,7 @@ const DEFAULT_COPY = {
   taglineLine1: "Personal Concierge",
   taglineLine2: "Lifestyle Management",
   labelWhere: "Where is Emy.",
-  locationPhoto: "",  // ← paste a photo URL here to show it in the Where section
+  locationPhoto: "/emy-location.jpg",  // ← paste a photo URL here to show it in the Where section
   labelTalk: "Talk to Emy.",
   labelAbout: "About Emy.",
   aboutP1: "Some things are better left to someone who truly knows you.",
