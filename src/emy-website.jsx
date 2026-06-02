@@ -40,6 +40,7 @@ const DEFAULT_COPY = {
   taglineLine1: "Personal Concierge",
   taglineLine2: "Lifestyle Management",
   labelWhere: "Where is Emy.",
+  locationPhoto: "",  // ← paste a photo URL here to show it in the Where section
   labelTalk: "Talk to Emy.",
   labelAbout: "About Emy.",
   aboutP1: "Some things are better left to someone who truly knows you.",
@@ -466,6 +467,15 @@ export default function App() {
           <div className="emy-col-inner">
             <Section delay={0.1}>
               <Label>{copy.labelWhere}</Label>
+              {copy.locationPhoto && (
+                <div style={{ marginBottom:24 }}>
+                  <img
+                    src={copy.locationPhoto}
+                    alt="Where is Emy"
+                    style={{ width:"100%", maxHeight:220, objectFit:"cover", borderRadius:4, display:"block" }}
+                  />
+                </div>
+              )}
               <div style={{ position:"relative" }}>
                 <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
                 {locations.map((loc, i) => {
