@@ -449,16 +449,23 @@ export default function App() {
               <Label>{copy.labelWhere}</Label>
               <div style={{ position:"relative" }}>
                 {copy.locationPhoto && (
-                  <div style={{
-                    position:"absolute", inset:0,
-                    backgroundImage:`url(${copy.locationPhoto})`,
-                    backgroundSize:"cover",
-                    backgroundPosition:"center",
-                    filter:"none",
-                    opacity:0.70,
-                    borderRadius:4,
-                    zIndex:0,
-                  }}/>
+                  <>
+                    <div style={{
+                      position:"absolute", inset:0,
+                      backgroundImage:`url(${copy.locationPhoto})`,
+                      backgroundSize:"cover",
+                      backgroundPosition:"center",
+                      opacity:0.55,
+                      borderRadius:4,
+                      zIndex:0,
+                    }}/>
+                    <div style={{
+                      position:"absolute", inset:0,
+                      background:"linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 100%)",
+                      borderRadius:4,
+                      zIndex:0,
+                    }}/>
+                  </>
                 )}
                 <div style={{ position:"relative", zIndex:1 }}>
                 <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
