@@ -37,7 +37,7 @@ function extractContact(text) {
 // (commit + push → auto-deploys in ~30s). The admin panel no longer edits copy.
 const DEFAULT_COPY = {
   greeting: "How do you want me to get in touch with you?",
-  taglineLine1: "Personal Concierge",
+  taglineLine1: "Lifestyle Membership",
   taglineLine2: "Lifestyle Management",
   labelWhere: "Where is Emy.",
   locationPhoto: "/emy-location.jpg",  // ← paste a photo URL here to show it in the Where section
@@ -145,7 +145,7 @@ function EmyChat({ greeting }) {
   }, [started]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior:"smooth" });
+    bottomRef.current?.scrollIntoView({ behavior:"smooth", block:"nearest" });
   }, [messages, loading, phase, typed]);
 
   async function persist(allMessages, extra = {}) {
@@ -219,7 +219,7 @@ function EmyChat({ greeting }) {
   return (
     <div onMouseEnter={() => setStarted(true)}>
       {/* Messages — role-labeled, no bubbles, no timestamps */}
-      <div style={{ marginBottom: 22, display:"flex", flexDirection:"column", gap: 22 }}>
+      <div style={{ marginBottom: 22, display:"flex", flexDirection:"column", gap: 22, maxHeight:260, overflowY:"auto" }}>
         {/* Greeting while typing (before it enters messages array) */}
         {!greetingDone && (typing || typed) && (
           <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap: 6 }}>
@@ -423,7 +423,7 @@ export default function App() {
             color:"rgba(255,255,255,0.55)", fontWeight:700, textAlign:"right", lineHeight:1.6,
           }}>
             {copy.taglineLine1}
-            <span style={{ opacity:0, fontSize:0, userSelect:"none" }}><br/>{renderWithAdminLink(copy.taglineLine2)}</span>
+            <span style={{ display:"none" }}>{renderWithAdminLink(copy.taglineLine2)}</span>
           </div>
         </div>
       </div>
