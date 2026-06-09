@@ -43,7 +43,7 @@ const DEFAULT_COPY = {
   whoPhoto: "/emy-who.jpg",
   whoP1: "My name is Emy. After ten years in private aviation, I know what is expected — and what it takes to deliver.",
   whoP2: "I understand the standards, the discretion, the details that matter.",
-  whoP3: "That's why I started EMY — a personal concierge service for people who expect more. Based in Antwerp. Connected globally. I take care of everything, so you never have to think about it.",
+  whoP3: "That's why I started EMY — a personal concierge service for people who expect more. Based in Antwerp. Connected globally.",
   labelWhere: "Where is Emy.",
   locationPhoto: "/emy-location.jpg",  // ← paste a photo URL here to show it in the Where section
   labelTalk: "Talk to Emy.",
