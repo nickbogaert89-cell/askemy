@@ -39,6 +39,11 @@ const DEFAULT_COPY = {
   greeting: "How do you want me to get in touch with you?",
   taglineLine1: "Lifestyle Membership",
   taglineLine2: "Lifestyle Management",
+  labelWho: "Who is Emy.",
+  whoPhoto: "/emy-who.jpg",
+  whoP1: "Ten years in private aviation — working at the heart of the jet set world.",
+  whoP2: "I know this industry from the inside. The people, the processes, the details that turn a good experience into an exceptional one.",
+  whoP3: "Based in Antwerp. Connected where it counts. I take care of everything, so you never have to think about it.",
   labelWhere: "Where is Emy.",
   locationPhoto: "/emy-location.jpg",  // ← paste a photo URL here to show it in the Where section
   labelTalk: "Talk to Emy.",
@@ -446,6 +451,23 @@ export default function App() {
         <div className="emy-where-col">
           <div className="emy-col-inner">
             <Section delay={0.1}>
+              {/* Who is Emy */}
+              <Label>{copy.labelWho}</Label>
+              <div style={{ display:"flex", gap:18, marginBottom:32, alignItems:"flex-start" }}>
+                {copy.whoPhoto && (
+                  <img src={copy.whoPhoto} alt="Emy" style={{
+                    width:90, height:110, objectFit:"cover", objectPosition:"top",
+                    flexShrink:0, borderRadius:2,
+                  }}/>
+                )}
+                <div style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.72)", letterSpacing:"0.01em" }}>
+                  <p style={{ marginBottom:12 }}>{copy.whoP1}</p>
+                  <p style={{ marginBottom:12 }}>{copy.whoP2}</p>
+                  <p>{copy.whoP3}</p>
+                </div>
+              </div>
+
+              {/* Where is Emy */}
               <Label>{copy.labelWhere}</Label>
               <div style={{ position:"relative" }}>
                 {copy.locationPhoto && (
