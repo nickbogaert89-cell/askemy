@@ -49,8 +49,17 @@ const DEFAULT_COPY = {
   labelTalk: "Talk to Emy.",
   labelAbout: "About Emy.",
   aboutP1: "Some things are better left to someone who truly knows you.",
-  aboutP2: "One dedicated contact. A flight rebooked at midnight. A last-minute celebration. Access where others are turned away. The kind of request you'd rather not have to explain — handled before you ask twice.",
-  aboutP3: "Personal. Discreet. And over time, effortless — because I learn your preferences, your standards, your life. Not a service. A relationship.",
+  aboutP2: "One dedicated contact. A flight rebooked at midnight. Last-minute tickets for a race or a sold-out show. Access where others are turned away. The kind of request you'd rather not have to explain — handled before you ask twice.",
+  aboutP3: "Personal. Discreet. And over time, effortless — because I learn your preferences, your standards, your life.",
+  aboutP4: "Not a service. A relationship.",
+  membershipTitle: "Membership",
+  membershipSub: "Choose what fits your life.",
+  membershipSolo: "Solo",
+  membershipSoloPrice: "€ 150 / month",
+  membershipSoloDesc: "For one person. Restaurants, hotels, events, travel — arranged personally, whenever you need it.",
+  membershipFamily: "Family",
+  membershipFamilyPrice: "€ 275 / month",
+  membershipFamilyDesc: "For partners and families. Holidays, weekend escapes, travel — everything taken care of, for everyone who matters.",
   price: "",
 };
 
@@ -455,7 +464,32 @@ export default function App() {
         <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
           <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
           <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
-          <p>{copy.aboutP3}</p>
+          <p style={{ marginBottom:22 }}>{copy.aboutP3}</p>
+          <p style={{ marginBottom:48 }}>{copy.aboutP4}</p>
+        </div>
+
+        {/* Membership */}
+        <div style={{ borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:40 }}>
+          <div style={{ fontSize:20, letterSpacing:"0.12em", textTransform:"uppercase", color:"#fff", fontWeight:700, marginBottom:8 }}>{copy.membershipTitle}</div>
+          <div style={{ fontSize:12, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", marginBottom:36 }}>{copy.membershipSub}</div>
+          <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
+            {/* Solo */}
+            <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
+                <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{copy.membershipSolo}</div>
+                <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:"0.05em" }}>{copy.membershipSoloPrice}</div>
+              </div>
+              <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipSoloDesc}</p>
+            </div>
+            {/* Family */}
+            <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
+                <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{copy.membershipFamily}</div>
+                <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:"0.05em" }}>{copy.membershipFamilyPrice}</div>
+              </div>
+              <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipFamilyDesc}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
