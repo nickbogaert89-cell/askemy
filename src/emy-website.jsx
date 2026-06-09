@@ -453,18 +453,18 @@ export default function App() {
             <Section delay={0.1}>
               {/* Who is Emy */}
               <Label>{copy.labelWho}</Label>
-              <div style={{ display:"flex", gap:18, marginBottom:32, alignItems:"flex-start" }}>
-                {copy.whoPhoto && (
-                  <img src={copy.whoPhoto} alt="Emy" style={{
-                    width:140, height:180, objectFit:"cover", objectPosition:"top",
-                    flexShrink:0, borderRadius:2,
-                  }}/>
-                )}
-                <div style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.72)", letterSpacing:"0.01em" }}>
+              <div style={{ marginBottom:32 }}>
+                <div style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.72)", letterSpacing:"0.01em", marginBottom:20 }}>
                   <p style={{ marginBottom:12 }}>{copy.whoP1}</p>
                   <p style={{ marginBottom:12 }}>{copy.whoP2}</p>
                   <p>{copy.whoP3}</p>
                 </div>
+                {copy.whoPhoto && (
+                  <img src={copy.whoPhoto} alt="Emy" style={{
+                    width:"100%", height:260, objectFit:"cover", objectPosition:"top",
+                    borderRadius:2, display:"block",
+                  }}/>
+                )}
               </div>
 
               {/* Where is Emy */}
