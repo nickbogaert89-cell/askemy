@@ -442,6 +442,12 @@ export default function App() {
                 <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:10, color:"rgba(255,255,255,0.75)", textDecoration:"none", fontSize:14, letterSpacing:"0.04em" }}>
                   <span style={{ fontSize:16 }}>✉️</span> emy@ask-emy.com
                 </a>
+                {copy.whoPhoto && (
+                  <img src={copy.whoPhoto} alt="Emy" style={{
+                    width:"100%", height:320, objectFit:"cover", objectPosition:"top",
+                    borderRadius:2, display:"block", marginTop:24,
+                  }}/>
+                )}
               </div>
             </Section>
           </div>
@@ -453,18 +459,10 @@ export default function App() {
             <Section delay={0.1}>
               {/* Who is Emy */}
               <Label>{copy.labelWho}</Label>
-              <div style={{ marginBottom:32 }}>
-                <div style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.72)", letterSpacing:"0.01em", marginBottom:20 }}>
-                  <p style={{ marginBottom:12 }}>{copy.whoP1}</p>
-                  <p style={{ marginBottom:12 }}>{copy.whoP2}</p>
-                  <p>{copy.whoP3}</p>
-                </div>
-                {copy.whoPhoto && (
-                  <img src={copy.whoPhoto} alt="Emy" style={{
-                    width:"100%", height:260, objectFit:"cover", objectPosition:"top",
-                    borderRadius:2, display:"block",
-                  }}/>
-                )}
+              <div style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.72)", letterSpacing:"0.01em", marginBottom:32 }}>
+                <p style={{ marginBottom:12 }}>{copy.whoP1}</p>
+                <p style={{ marginBottom:12 }}>{copy.whoP2}</p>
+                <p>{copy.whoP3}</p>
               </div>
 
               {/* Where is Emy */}
