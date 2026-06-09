@@ -456,7 +456,7 @@ export default function App() {
               <div style={{ display:"flex", gap:18, marginBottom:32, alignItems:"flex-start" }}>
                 {copy.whoPhoto && (
                   <img src={copy.whoPhoto} alt="Emy" style={{
-                    width:90, height:110, objectFit:"cover", objectPosition:"top",
+                    width:140, height:180, objectFit:"cover", objectPosition:"top",
                     flexShrink:0, borderRadius:2,
                   }}/>
                 )}
