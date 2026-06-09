@@ -41,7 +41,7 @@ const DEFAULT_COPY = {
   taglineLine2: "Lifestyle Management",
   labelWho: "Who is Emy.",
   whoPhoto: "/emy-who.jpg",
-  whoP1: "My name is Emy. After ten years in private aviation, I know what people in this world expect — and exactly what it takes to deliver it.",
+  whoP1: "My name is Emy. After ten years in private aviation, I know what is expected — and what it takes to deliver.",
   whoP2: "I understand the standards, the discretion, the details that matter. I've built the contacts and the connections to make things happen, wherever and whatever it may be.",
   whoP3: "That's why I started EMY — a personal concierge service for people who expect more. Based in Antwerp. Connected globally. I take care of everything, so you never have to think about it.",
   labelWhere: "Where is Emy.",
