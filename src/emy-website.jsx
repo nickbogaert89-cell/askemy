@@ -444,7 +444,7 @@ export default function App() {
                 </a>
                 {copy.whoPhoto && (
                   <img src={copy.whoPhoto} alt="Emy" style={{
-                    width:"100%", height:420, objectFit:"cover", objectPosition:"center top",
+                    width:"100%", height:"auto", objectFit:"contain",
                     borderRadius:2, display:"block", marginTop:24,
                   }}/>
                 )}
