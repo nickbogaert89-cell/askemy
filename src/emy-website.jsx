@@ -55,11 +55,13 @@ const DEFAULT_COPY = {
   membershipTitle: "Membership",
   membershipSub: "Choose what fits your life.",
   membershipSolo: "Solo",
-  membershipSoloPrice: "€ 150 / month",
-  membershipSoloDesc: "For one person. Restaurants, hotels, events, travel — arranged personally, whenever you need it.",
+  membershipSoloPrice: "€ 150 / month excl. VAT",
+  membershipSoloDesc: "For one person. Restaurants, hotels, events, travel, sport experiences, luxury products — arranged personally, whenever you need it.",
   membershipFamily: "Family",
-  membershipFamilyPrice: "€ 275 / month",
-  membershipFamilyDesc: "For partners and families. Holidays, weekend escapes, travel — everything taken care of, for everyone who matters.",
+  membershipFamilyPrice: "€ 275 / month excl. VAT",
+  membershipFamilyDesc: "For partners and families. Holidays, weekend escapes, travel, sport events, luxury experiences — everything taken care of, for everyone who matters.",
+  membershipCta1: "Stop arranging. Start living.",
+  membershipCta2: "Get in touch.",
   price: "",
 };
 
@@ -489,6 +491,10 @@ export default function App() {
               </div>
               <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipFamilyDesc}</p>
             </div>
+          </div>
+          <div style={{ marginTop:40, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
+            <p style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:12 }}>{copy.membershipCta1}</p>
+            <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)", fontFamily:"inherit", fontWeight:700, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
           </div>
         </div>
       </div>
