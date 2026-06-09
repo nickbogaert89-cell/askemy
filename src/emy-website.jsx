@@ -41,9 +41,9 @@ const DEFAULT_COPY = {
   taglineLine2: "Lifestyle Management",
   labelWho: "Who is Emy.",
   whoPhoto: "/emy-who.jpg",
-  whoP1: "Ten years in private aviation — working at the heart of the jet set world.",
-  whoP2: "I know this industry from the inside. The people, the processes, the details that turn a good experience into an exceptional one.",
-  whoP3: "Based in Antwerp. Connected where it counts. I take care of everything, so you never have to think about it.",
+  whoP1: "My name is Emy. After ten years in private aviation, I know what people in this world expect — and exactly what it takes to deliver it.",
+  whoP2: "I understand the standards, the discretion, the details that matter. I've built the contacts and the connections to make things happen, wherever and whatever it may be.",
+  whoP3: "That's why I started EMY — a personal concierge service for people who expect more. Based in Antwerp. Connected globally. I take care of everything, so you never have to think about it.",
   labelWhere: "Where is Emy.",
   locationPhoto: "/emy-location.jpg",  // ← paste a photo URL here to show it in the Where section
   labelTalk: "Talk to Emy.",
@@ -444,7 +444,7 @@ export default function App() {
                 </a>
                 {copy.whoPhoto && (
                   <img src={copy.whoPhoto} alt="Emy" style={{
-                    width:"100%", height:320, objectFit:"cover", objectPosition:"top",
+                    width:"100%", height:420, objectFit:"cover", objectPosition:"center top",
                     borderRadius:2, display:"block", marginTop:24,
                   }}/>
                 )}
@@ -459,7 +459,7 @@ export default function App() {
             <Section delay={0.1}>
               {/* Who is Emy */}
               <Label>{copy.labelWho}</Label>
-              <div style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.72)", letterSpacing:"0.01em", marginBottom:32 }}>
+              <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:32 }}>
                 <p style={{ marginBottom:12 }}>{copy.whoP1}</p>
                 <p style={{ marginBottom:12 }}>{copy.whoP2}</p>
                 <p>{copy.whoP3}</p>
