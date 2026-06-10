@@ -112,7 +112,7 @@ function Rule() {
   return <div style={{ height:0, margin:"40px 0 0" }}/>;
 }
 function Label({ children }) {
-  return <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(237,232,225,0.45)", textTransform:"uppercase", marginBottom:28, fontWeight:400, fontFamily:"'Space Mono','Courier New',monospace" }}>{children}</div>;
+  return <div style={{ fontSize:11, letterSpacing:"0.28em", color:"rgba(255,255,255,0.72)", textTransform:"uppercase", marginBottom:28, fontWeight:700, fontFamily:"'Space Mono','Courier New',monospace" }}>{children}</div>;
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
@@ -362,25 +362,24 @@ export default function App() {
     })();
   }, []);
 
-  const baseStyle = { background:"#0e0c0b", minHeight:"100vh", fontFamily:"'Cormorant Garamond','Georgia',serif", color:"#ede8e1" };
+  const baseStyle = { background:"#000", minHeight:"100vh", fontFamily:"'Inter','Helvetica Neue',sans-serif", color:"#fff" };
   const globalCss = `
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
-    html,body{background:#0e0c0b;}
+    html,body{background:#000;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
     @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
     @keyframes dotPulse{0%,100%{opacity:0.15;}50%{opacity:0.65;}}
     @keyframes msgIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
     @keyframes caretBlink{0%,50%{opacity:0.9;}51%,100%{opacity:0;}}
-    .emy-caret{display:inline-block;margin-left:2px;color:rgba(237,232,225,0.4);animation:caretBlink 1s step-end infinite;}
+    .emy-caret{display:inline-block;margin-left:2px;color:rgba(255,255,255,0.55);animation:caretBlink 1s step-end infinite;}
     .emy-mono{font-family:'Space Mono','Courier New',monospace;}
-    .emy-sans{font-family:'Inter','Helvetica Neue',sans-serif;}
-    input,textarea{font-family:'Inter','Helvetica Neue',sans-serif;color:#ede8e1;background:transparent;}
-    input::placeholder,textarea::placeholder{color:rgba(237,232,225,0.28);}
+    input,textarea{font-family:'Inter','Helvetica Neue',sans-serif;}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.3);}
     ::-webkit-scrollbar{width:0;}
-    ::selection{background:rgba(237,232,225,0.12);}
-    .emy-page-content{animation:fadeIn 0.7s ease forwards;}
-    .emy-topbar{position:fixed;top:0;right:0;z-index:50;padding:24px 32px 20px;text-align:right;background:linear-gradient(to bottom,rgba(14,12,11,0.92) 60%,transparent);}
+    ::selection{background:rgba(255,255,255,0.12);}
+    .emy-page-content{animation:fadeIn 0.6s ease forwards;}
+    .emy-topbar{position:fixed;top:0;right:0;z-index:50;padding:24px 32px 20px;text-align:right;background:linear-gradient(to bottom,rgba(0,0,0,0.85) 60%,transparent);}
     .emy-hamburger{position:fixed;top:28px;left:28px;z-index:200;}
   `;
 
@@ -391,14 +390,14 @@ export default function App() {
     }}>
       {menuOpen ? (
         <div style={{ width:22, height:22, position:"relative" }}>
-          <div style={{ position:"absolute", top:"50%", left:0, width:"100%", height:1, background:"#ede8e1", transform:"rotate(45deg)" }}/>
-          <div style={{ position:"absolute", top:"50%", left:0, width:"100%", height:1, background:"#ede8e1", transform:"rotate(-45deg)" }}/>
+          <div style={{ position:"absolute", top:"50%", left:0, width:"100%", height:1.5, background:"#fff", transform:"rotate(45deg)" }}/>
+          <div style={{ position:"absolute", top:"50%", left:0, width:"100%", height:1.5, background:"#fff", transform:"rotate(-45deg)" }}/>
         </div>
       ) : (
         <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
-          <div style={{ width:22, height:1, background:"rgba(237,232,225,0.7)" }}/>
-          <div style={{ width:22, height:1, background:"rgba(237,232,225,0.7)" }}/>
-          <div style={{ width:22, height:1, background:"rgba(237,232,225,0.7)" }}/>
+          <div style={{ width:22, height:1.5, background:"#fff" }}/>
+          <div style={{ width:22, height:1.5, background:"#fff" }}/>
+          <div style={{ width:22, height:1.5, background:"#fff" }}/>
         </div>
       )}
     </button>
@@ -408,7 +407,7 @@ export default function App() {
   const MenuOverlay = () => (
     <div style={{
       position:"fixed", inset:0, zIndex:100,
-      background:"rgba(14,12,11,0.97)",
+      background:"rgba(0,0,0,0.96)",
       display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", gap:48,
     }}>
       {[
@@ -418,12 +417,12 @@ export default function App() {
       ].map(item => (
         <button key={item.key} onClick={() => goTo(item.key)} style={{
           background:"none", border:"none", cursor:"pointer",
-          fontSize:32, letterSpacing:"0.06em",
-          color:"rgba(237,232,225,0.8)", fontFamily:"'Cormorant Garamond','Georgia',serif", fontWeight:300,
+          fontSize:28, letterSpacing:"0.18em", textTransform:"uppercase",
+          color:"rgba(255,255,255,0.85)", fontFamily:"inherit", fontWeight:700,
           transition:"color 0.2s",
         }}
-        onMouseEnter={e => e.target.style.color="#ede8e1"}
-        onMouseLeave={e => e.target.style.color="rgba(237,232,225,0.8)"}
+        onMouseEnter={e => e.target.style.color="#fff"}
+        onMouseLeave={e => e.target.style.color="rgba(255,255,255,0.85)"}
         >{item.label}</button>
       ))}
     </div>
@@ -451,7 +450,7 @@ export default function App() {
       {menuOpen && <MenuOverlay/>}
       <div style={{ textAlign:"center", opacity:mounted?1:0, animation:mounted?"fadeIn 1s ease forwards":"none" }}>
         <Logo width={260}/>
-        <div style={{ marginTop:16, fontSize:10, letterSpacing:"0.26em", textTransform:"uppercase", color:"rgba(237,232,225,0.35)", fontWeight:400, fontFamily:"'Space Mono',monospace" }}>
+        <div style={{ marginTop:16, fontSize:10, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", fontWeight:700 }}>
           {copy.taglineLine1}
         </div>
       </div>
@@ -467,7 +466,7 @@ export default function App() {
       {menuOpen && <MenuOverlay/>}
       <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
         <Label>{copy.labelAbout}</Label>
-        <div style={{ fontSize:20, lineHeight:1.9, color:"rgba(237,232,225,0.85)", fontWeight:300 }}>
+        <div style={{ fontSize:17, lineHeight:1.85, color:"rgba(255,255,255,0.88)", letterSpacing:"0.01em" }}>
           <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
           <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
           <p style={{ marginBottom:22 }}>{copy.aboutP3}</p>
@@ -514,7 +513,7 @@ export default function App() {
       {menuOpen && <MenuOverlay/>}
       <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
         <Label>{copy.labelWho}</Label>
-        <div style={{ fontSize:20, lineHeight:1.9, color:"rgba(237,232,225,0.85)", fontWeight:300, marginBottom:40 }}>
+        <div style={{ fontSize:17, lineHeight:1.85, color:"rgba(255,255,255,0.88)", letterSpacing:"0.01em", marginBottom:40 }}>
           <p style={{ marginBottom:22 }}>{copy.whoP1}</p>
           <p style={{ marginBottom:22 }}>{copy.whoP2}</p>
           <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
