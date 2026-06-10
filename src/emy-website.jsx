@@ -112,7 +112,7 @@ function Rule() {
   return <div style={{ height:0, margin:"40px 0 0" }}/>;
 }
 function Label({ children }) {
-  return <div style={{ fontSize:11, letterSpacing:"0.28em", color:"rgba(255,255,255,0.72)", textTransform:"uppercase", marginBottom:28, fontWeight:700 }}>{children}</div>;
+  return <div style={{ fontSize:11, letterSpacing:"0.28em", color:"rgba(255,255,255,0.72)", textTransform:"uppercase", marginBottom:28, fontWeight:700, fontFamily:"'Space Mono','Courier New',monospace" }}>{children}</div>;
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
@@ -362,9 +362,9 @@ export default function App() {
     })();
   }, []);
 
-  const baseStyle = { background:"#000", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", color:"#fff" };
+  const baseStyle = { background:"#000", minHeight:"100vh", fontFamily:"'Inter','Helvetica Neue',sans-serif", color:"#fff" };
   const globalCss = `
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
     html,body{background:#000;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
@@ -373,16 +373,19 @@ export default function App() {
     @keyframes msgIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
     @keyframes caretBlink{0%,50%{opacity:0.9;}51%,100%{opacity:0;}}
     .emy-caret{display:inline-block;margin-left:2px;color:rgba(255,255,255,0.55);animation:caretBlink 1s step-end infinite;}
+    .emy-mono{font-family:'Space Mono','Courier New',monospace;}
+    input,textarea{font-family:'Inter','Helvetica Neue',sans-serif;}
     input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.3);}
     ::-webkit-scrollbar{width:0;}
     ::selection{background:rgba(255,255,255,0.12);}
     .emy-page-content{animation:fadeIn 0.6s ease forwards;}
+    .emy-topbar{position:fixed;top:0;right:0;z-index:50;padding:24px 32px 20px;text-align:right;background:linear-gradient(to bottom,rgba(0,0,0,0.85) 60%,transparent);}
+    .emy-hamburger{position:fixed;top:28px;left:28px;z-index:200;}
   `;
 
   // ── Hamburger button ──
   const HamburgerBtn = () => (
-    <button onClick={() => setMenuOpen(o => !o)} style={{
-      position:"fixed", top:28, left:28, zIndex:200,
+    <button onClick={() => setMenuOpen(o => !o)} className="emy-hamburger" style={{
       background:"none", border:"none", cursor:"pointer", padding:8,
     }}>
       {menuOpen ? (
@@ -427,11 +430,11 @@ export default function App() {
 
   // ── Top bar (logo + tagline, always top-right) ──
   const TopBar = () => (
-    <div style={{ position:"fixed", top:0, right:0, zIndex:50, padding:"24px 28px 0", textAlign:"right" }}>
+    <div className="emy-topbar emy-mono">
       <button onClick={() => goTo("landing")} style={{ background:"none", border:"none", cursor:"pointer", display:"block", marginLeft:"auto" }}>
-        <Logo width={120}/>
+        <Logo width={110}/>
       </button>
-      <div style={{ marginTop:8, fontSize:9, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", fontWeight:700 }}>
+      <div style={{ marginTop:6, fontSize:9, letterSpacing:"0.26em", textTransform:"uppercase", color:"rgba(255,255,255,0.4)", fontWeight:700 }}>
         {copy.taglineLine1}
         <span style={{ display:"none" }}>{renderWithAdminLink(copy.taglineLine2)}</span>
       </div>
@@ -461,9 +464,9 @@ export default function App() {
       <HamburgerBtn/>
       <TopBar/>
       {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:680, margin:"0 auto", padding:"120px 28px 80px" }}>
+      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
         <Label>{copy.labelAbout}</Label>
-        <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
+        <div style={{ fontSize:17, lineHeight:1.85, color:"rgba(255,255,255,0.88)", letterSpacing:"0.01em" }}>
           <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
           <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
           <p style={{ marginBottom:22 }}>{copy.aboutP3}</p>
@@ -508,15 +511,18 @@ export default function App() {
       <HamburgerBtn/>
       <TopBar/>
       {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:680, margin:"0 auto", padding:"120px 28px 80px" }}>
+      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
         <Label>{copy.labelWho}</Label>
-        <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:32 }}>
+        <div style={{ fontSize:17, lineHeight:1.85, color:"rgba(255,255,255,0.88)", letterSpacing:"0.01em", marginBottom:40 }}>
           <p style={{ marginBottom:22 }}>{copy.whoP1}</p>
           <p style={{ marginBottom:22 }}>{copy.whoP2}</p>
-          <p style={{ marginBottom:32 }}>{copy.whoP3}</p>
+          <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
         </div>
         {copy.whoPhoto && (
-          <img src={copy.whoPhoto} alt="Emy" style={{ width:"100%", height:"auto", borderRadius:2, display:"block" }}/>
+          <div style={{ margin:"0 -28px" }}>
+            <img src={copy.whoPhoto} alt="Emy Engels" style={{ width:"100%", height:"auto", display:"block" }}/>
+            <div style={{ padding:"12px 28px 0", fontSize:11, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.35)", fontFamily:"'Space Mono',monospace" }}>Emy Engels</div>
+          </div>
         )}
         <div style={{ marginTop:48 }}>
           <Label>{copy.labelWhere}</Label>
@@ -559,7 +565,7 @@ export default function App() {
       <HamburgerBtn/>
       <TopBar/>
       {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:680, margin:"0 auto", padding:"120px 28px 80px" }}>
+      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
         <Label>{copy.labelTalk}</Label>
         <EmyChat greeting={copy.greeting}/>
         <div style={{ marginTop:32, borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:24 }}>
