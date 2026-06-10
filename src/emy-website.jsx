@@ -362,9 +362,9 @@ export default function App() {
     })();
   }, []);
 
-  const baseStyle = { background:"#000", minHeight:"100vh", fontFamily:"'Inter','Helvetica Neue',sans-serif", color:"#fff" };
+  const baseStyle = { background:"#000", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", color:"#fff" };
   const globalCss = `
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
     html,body{background:#000;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
@@ -373,8 +373,6 @@ export default function App() {
     @keyframes msgIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
     @keyframes caretBlink{0%,50%{opacity:0.9;}51%,100%{opacity:0;}}
     .emy-caret{display:inline-block;margin-left:2px;color:rgba(255,255,255,0.55);animation:caretBlink 1s step-end infinite;}
-    .emy-mono{font-family:'Space Mono','Courier New',monospace;}
-    input,textarea{font-family:'Inter','Helvetica Neue',sans-serif;}
     input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.3);}
     ::-webkit-scrollbar{width:0;}
     ::selection{background:rgba(255,255,255,0.12);}
