@@ -55,11 +55,12 @@ const DEFAULT_COPY = {
   membershipTitle: "Membership",
   membershipSub: "Choose what fits your life.",
   membershipSolo: "Solo",
-  membershipSoloPrice: "€ 150 / month excl. VAT",
+  membershipSoloPrice: "€ 175 / month excl. VAT",
   membershipSoloDesc: "For one person. Restaurants, hotels, events, travel, sport experiences, luxury products — arranged personally, whenever you need it.",
   membershipFamily: "Family",
-  membershipFamilyPrice: "€ 275 / month excl. VAT",
+  membershipFamilyPrice: "€ 245 / month excl. VAT",
   membershipFamilyDesc: "For partners and families. Holidays, weekend escapes, travel, sport events, luxury experiences — everything taken care of, for everyone who matters.",
+  membershipCorporate: "Corporate & business memberships available on request.",
   membershipCta1: "Stop arranging. Start living.",
   membershipCta2: "Get in touch.",
   price: "",
@@ -493,7 +494,10 @@ export default function App() {
               <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipFamilyDesc}</p>
             </div>
           </div>
-          <div style={{ marginTop:40, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
+          <div style={{ marginTop:24, paddingTop:24, borderTop:"1px solid rgba(255,255,255,0.07)" }}>
+            <p style={{ fontSize:12, letterSpacing:"0.08em", color:"rgba(255,255,255,0.38)", fontStyle:"italic" }}>{copy.membershipCorporate}</p>
+          </div>
+          <div style={{ marginTop:32, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
             <p style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:12 }}>{copy.membershipCta1}</p>
             <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)", fontFamily:"inherit", fontWeight:700, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
           </div>
