@@ -363,11 +363,11 @@ export default function App() {
     })();
   }, []);
 
-  const baseStyle = { background:"#000", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", color:"#fff" };
+  const baseStyle = { background:"#111110", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", color:"#fff" };
   const globalCss = `
     @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
-    html,body{background:#000;}
+    html,body{background:#111110;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
     @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
     @keyframes dotPulse{0%,100%{opacity:0.15;}50%{opacity:0.65;}}
