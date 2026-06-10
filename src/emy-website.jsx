@@ -363,11 +363,11 @@ export default function App() {
     })();
   }, []);
 
-  const baseStyle = { background:"#111110", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", color:"#fff" };
+  const baseStyle = { background:"#1c1a19", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", color:"#fff" };
   const globalCss = `
     @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
-    html,body{background:#111110;}
+    html,body{background:#1c1a19;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
     @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
     @keyframes dotPulse{0%,100%{opacity:0.15;}50%{opacity:0.65;}}
@@ -378,7 +378,7 @@ export default function App() {
     ::-webkit-scrollbar{width:0;}
     ::selection{background:rgba(255,255,255,0.12);}
     .emy-page-content{animation:fadeIn 0.6s ease forwards;}
-    .emy-topbar{position:fixed;top:0;right:0;z-index:50;padding:24px 32px 20px;text-align:right;background:linear-gradient(to bottom,rgba(0,0,0,0.85) 60%,transparent);}
+    .emy-topbar{position:fixed;top:0;right:0;z-index:50;padding:24px 32px 20px;text-align:right;background:linear-gradient(to bottom,rgba(28,26,25,0.95) 60%,transparent);}
     .emy-hamburger{position:fixed;top:28px;left:28px;z-index:200;}
   `;
 
