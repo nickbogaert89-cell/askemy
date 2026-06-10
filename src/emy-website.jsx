@@ -464,7 +464,7 @@ export default function App() {
       {menuOpen && <MenuOverlay/>}
       <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
         <Label>{copy.labelAbout}</Label>
-        <div style={{ fontSize:17, lineHeight:1.85, color:"rgba(255,255,255,0.88)", letterSpacing:"0.01em" }}>
+        <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
           <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
           <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
           <p style={{ marginBottom:22 }}>{copy.aboutP3}</p>
@@ -511,7 +511,7 @@ export default function App() {
       {menuOpen && <MenuOverlay/>}
       <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
         <Label>{copy.labelWho}</Label>
-        <div style={{ fontSize:17, lineHeight:1.85, color:"rgba(255,255,255,0.88)", letterSpacing:"0.01em", marginBottom:40 }}>
+        <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:40 }}>
           <p style={{ marginBottom:22 }}>{copy.whoP1}</p>
           <p style={{ marginBottom:22 }}>{copy.whoP2}</p>
           <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
