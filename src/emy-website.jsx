@@ -49,7 +49,7 @@ const DEFAULT_COPY = {
   labelTalk: "Talk to Emy.",
   labelAbout: "About Emy.",
   aboutP1: "Some things are better left to someone who truly knows you.",
-  aboutP2: "One dedicated contact. A flight rebooked at midnight. Last-minute tickets for a race or a sold-out show. Access where others are turned away. The kind of request you'd rather not have to explain — handled before you ask twice.",
+  aboutP2: "One dedicated contact. A flight rebooked at midnight. Last-minute tickets for a race or a sold-out show. Access where others are turned away.",
   aboutP3: "Personal. Discreet. And over time, effortless — because I learn your preferences, your standards, your life.",
   aboutP4: "Not a service. A relationship.",
   membershipTitle: "Membership",
