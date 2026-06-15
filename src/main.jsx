@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./emy-website.jsx";
-import PasswordGate from "./PasswordGate.jsx";
 import AdminPanel from "./AdminPanel.jsx";
 
 function Root() {
@@ -13,11 +12,7 @@ function Root() {
   }, []);
 
   if (hash === "#/admin") return <AdminPanel />;
-  return (
-    <PasswordGate>
-      <App />
-    </PasswordGate>
-  );
+  return <App />;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(
