@@ -22,15 +22,26 @@ function trailOpacity(i, total) {
   return start + (end - start) * ((i - 1) / (rest - 1));
 }
 
-// Simple regex detection for email / phone
-const EMAIL_RE = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
-const PHONE_RE = /(?:\+?\d[\d\s\-().]{6,}\d)/;
-function extractContact(text) {
-  const em = text.match(EMAIL_RE);
-  if (em) return { contact: em[0], method: "email" };
-  const ph = text.match(PHONE_RE);
-  if (ph) return { contact: ph[0].replace(/\s+/g, " ").trim(), method: "phone" };
+// Detect contact intent from the visitor's first reply
+function detectIntent(text) {
+  const t = text.toLowerCase();
+  if (/telefoon|phone|whatsapp|\bwa\b|bellen|\bcall\b|gsm|\bnummer\b|\bnumber\b|\bsms\b|\bring\b|\bbel\b/.test(t)) return "phone";
+  if (/e-?mail|\bmail\b/.test(t)) return "email";
+  if (/meeting|afspraak|persoonlijk|ontmoet|kantoor|office|in person|visit|langskomen|\bkomen\b/.test(t)) return "meeting";
   return null;
+}
+
+// Send collected conversation data to emy@ask-emy.com (FormSubmit – no backend needed)
+async function sendToEmy(data) {
+  try {
+    await fetch("https://formsubmit.co/ajax/emy@ask-emy.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ _subject: "Nieuw contact via ask-emy.com", _captcha: "false", _template: "table", ...data }),
+    });
+  } catch (e) {
+    console.warn("email send failed:", e?.message || e);
+  }
 }
 
 // All site copy lives here. Edit these values to update the live site
@@ -117,33 +128,33 @@ function Label({ children }) {
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
-// Phases (linear intake):
-//   "awaiting-contact"  initial greeting shown, waiting for user to share phone/email
-//   "awaiting-when"     contact captured, asking when suits
-//   "done"              timing captured, chat closed
+// Phases:
+//   "start"            greeting shown, waiting for contact method choice
+//   "phone-timing"     phone/WA intent → ask when to call
+//   "phone-contact"    timing captured → ask name + phone number
+//   "email-address"    email intent → ask for email address
+//   "meeting-when"     meeting intent → ask when/where
+//   "meeting-contact"  when/where captured → ask contact details
+//   "done"             complete, email sent to emy@ask-emy.com
 function EmyChat({ greeting }) {
   const GREETING = greeting || DEFAULT_COPY.greeting;
   const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
-  const [phase, setPhase]       = useState("awaiting-contact");
-  const [typed, setTyped]       = useState("");
-  const [typing, setTyping]     = useState(false);
-  const [greetingDone, setGreetingDone] = useState(true);
-  const [started, setStarted]   = useState(false);  // flips true only on hover
-  const contactRef = useRef(null);
-  const docIdRef   = useRef(null);
-  const bottomRef  = useRef(null);
-  const inputRef   = useRef(null);
+  const [phase, setPhase]       = useState("start");
+  const dataRef  = useRef({});
+  const docIdRef = useRef(null);
+  const bottomRef = useRef(null);
+  const inputRef  = useRef(null);
 
-  // Show greeting immediately on mount, no typewriter.
+  // Show greeting immediately on mount.
   useEffect(() => {
     setMessages([{ role:"emy", text: GREETING, ts: Date.now() }]);
   }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior:"smooth", block:"nearest" });
-  }, [messages, loading, phase, typed]);
+  }, [messages, loading]);
 
   async function persist(allMessages, extra = {}) {
     try {
@@ -164,100 +175,112 @@ function EmyChat({ greeting }) {
     }
   }
 
+  // Helper: add Emy's reply after a short delay, then advance phase.
+  async function reply(withUser, botText, nextPhase, extra = {}) {
+    await new Promise(r => setTimeout(r, 420 + Math.random()*240));
+    const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
+    setMessages(all);
+    setLoading(false);
+    setPhase(nextPhase);
+    persist(all, { phase: nextPhase, ...extra });
+    setTimeout(() => inputRef.current?.focus(), 40);
+  }
+
   async function send() {
-    if (!input.trim() || loading || phase === "done" || !greetingDone) return;
+    if (!input.trim() || loading || phase === "done") return;
     const userText = input.trim();
     setInput("");
     const withUser = [...messages, { role:"user", text:userText, ts: Date.now() }];
     setMessages(withUser);
     setLoading(true);
-    await new Promise(r => setTimeout(r, 380 + Math.random()*260));
 
-    // awaiting-contact: try to parse phone or email. If missing, re-ask.
-    if (phase === "awaiting-contact") {
-      const found = extractContact(userText);
-      if (found) {
-        contactRef.current = found;
-        const botText = `Got it — ${found.contact}. When suits you?`;
-        const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
-        setMessages(all);
-        setLoading(false);
-        setPhase("awaiting-when");
-        persist(all, {
-          phase: "awaiting-when",
-          contact: found.contact,
-          method: found.method,
-          firstMessage: userText,
-        });
-        setTimeout(() => inputRef.current?.focus(), 40);
-        return;
+    // ── Detect intent from first message ──
+    if (phase === "start") {
+      const intent = detectIntent(userText);
+      dataRef.current = { intent: intent || "unknown", firstMessage: userText };
+      if (intent === "phone") {
+        await reply(withUser, "Wanneer kunnen we u best bereiken?", "phone-timing", dataRef.current);
+      } else if (intent === "email") {
+        await reply(withUser, "Wat is uw e-mailadres?", "email-address", dataRef.current);
+      } else if (intent === "meeting") {
+        await reply(withUser, "Wanneer en waar schikt het u het best?", "meeting-when", dataRef.current);
+      } else {
+        await reply(withUser, "Verkiest u een telefoongesprek, e-mail, of een persoonlijke afspraak?", "start", {});
       }
-      const botText = "What's the best number or email to reach you on?";
-      const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
-      setMessages(all);
-      setLoading(false);
-      persist(all, { phase: "awaiting-contact" });
-      setTimeout(() => inputRef.current?.focus(), 40);
       return;
     }
 
-    // awaiting-when: accept any free-text answer as a timing preference.
-    if (phase === "awaiting-when") {
-      const botText = "Got it. I'll be in touch.";
-      const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
-      setMessages(all);
-      setLoading(false);
-      setPhase("done");
-      persist(all, { phase: "done", when: userText, completed: true });
+    // ── Phone / WhatsApp branch ──
+    if (phase === "phone-timing") {
+      dataRef.current.timing = userText;
+      await reply(withUser, "Wat is uw naam en telefoonnummer?", "phone-contact", dataRef.current);
+      return;
+    }
+
+    if (phase === "phone-contact") {
+      dataRef.current.nameAndPhone = userText;
+      sendToEmy({
+        "Contact method": "Telefoon / WhatsApp",
+        "Eerste bericht": dataRef.current.firstMessage,
+        "Beste moment": dataRef.current.timing,
+        "Naam en telefoonnummer": userText,
+      });
+      await reply(withUser, "Bedankt. Emy neemt zo snel mogelijk contact op.", "done", { ...dataRef.current, completed: true });
+      return;
+    }
+
+    // ── Email branch ──
+    if (phase === "email-address") {
+      dataRef.current.emailAddress = userText;
+      sendToEmy({
+        "Contact method": "E-mail",
+        "Eerste bericht": dataRef.current.firstMessage,
+        "E-mailadres": userText,
+      });
+      await reply(withUser, "Bedankt. Emy neemt zo snel mogelijk contact op via e-mail.", "done", { ...dataRef.current, completed: true });
+      return;
+    }
+
+    // ── Personal meeting branch ──
+    if (phase === "meeting-when") {
+      dataRef.current.meetingWhen = userText;
+      await reply(withUser, "Kan u uw contactgegevens achterlaten, zodat we dit kunnen bevestigen?", "meeting-contact", dataRef.current);
+      return;
+    }
+
+    if (phase === "meeting-contact") {
+      dataRef.current.meetingContact = userText;
+      sendToEmy({
+        "Contact method": "Persoonlijke afspraak",
+        "Eerste bericht": dataRef.current.firstMessage,
+        "Wanneer en waar": dataRef.current.meetingWhen,
+        "Contactgegevens": userText,
+      });
+      await reply(withUser, "Bedankt. Emy neemt zo snel mogelijk contact op om te bevestigen.", "done", { ...dataRef.current, completed: true });
       return;
     }
   }
 
   return (
-    <div onMouseEnter={() => setStarted(true)}>
-      {/* Messages — role-labeled, no bubbles, no timestamps */}
-      <div style={{ marginBottom: 22, display:"flex", flexDirection:"column", gap: 22, maxHeight:260, overflowY:"auto" }}>
-        {/* Greeting while typing (before it enters messages array) */}
-        {!greetingDone && (typing || typed) && (
-          <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap: 6 }}>
-            <div style={{ fontSize:9, letterSpacing:"0.32em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase", fontWeight:700 }}>
-              emy
-            </div>
-            <div style={{
-              maxWidth:"88%", fontSize:15, lineHeight:1.7,
-              color:"rgba(255,255,255,0.62)", textAlign:"left", letterSpacing:"0.01em",
-            }}>
-              {typed}<span className="emy-caret">▍</span>
-            </div>
-          </div>
-        )}
-
+    <div>
+      {/* Messages */}
+      <div style={{ marginBottom:22, display:"flex", flexDirection:"column", gap:22, maxHeight:260, overflowY:"auto" }}>
         {messages.map((m, i) => {
           const isUser = m.role === "user";
           return (
             <div key={i} style={{
-              display:"flex",
-              flexDirection:"column",
+              display:"flex", flexDirection:"column",
               alignItems: isUser ? "flex-end" : "flex-start",
-              gap: 6,
-              animation: "msgIn 0.35s ease forwards",
+              gap:6, animation:"msgIn 0.35s ease forwards",
             }}>
-              <div style={{
-                fontSize: 9,
-                letterSpacing: "0.32em",
-                color: "rgba(255,255,255,0.45)",
-                textTransform: "uppercase",
-                fontWeight: 700,
-              }}>
+              <div style={{ fontSize:9, letterSpacing:"0.32em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase", fontWeight:700 }}>
                 {isUser ? "you" : "emy"}
               </div>
               <div style={{
-                maxWidth: "88%",
-                fontSize: 15,
-                lineHeight: 1.7,
+                maxWidth:"88%", fontSize:15, lineHeight:1.7,
                 color: isUser ? "rgba(255,255,255,0.98)" : "rgba(255,255,255,0.62)",
                 textAlign: isUser ? "right" : "left",
-                letterSpacing: "0.01em",
+                letterSpacing:"0.01em",
               }}>
                 {m.text}
               </div>
@@ -265,12 +288,10 @@ function EmyChat({ greeting }) {
           );
         })}
 
-        {/* Typing indicator (Emy "typing" in response) */}
+        {/* Typing indicator */}
         {loading && (
-          <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap: 6 }}>
-            <div style={{ fontSize:9, letterSpacing:"0.32em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase", fontWeight:700 }}>
-              emy
-            </div>
+          <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap:6 }}>
+            <div style={{ fontSize:9, letterSpacing:"0.32em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase", fontWeight:700 }}>emy</div>
             <div style={{ display:"flex", gap:5, padding:"6px 0" }}>
               {[0,1,2].map(i => (
                 <div key={i} style={{ width:3, height:3, borderRadius:"50%", background:"rgba(255,255,255,0.45)", animation:"dotPulse 1.2s ease-in-out infinite", animationDelay:`${i*0.2}s` }}/>
@@ -289,15 +310,15 @@ function EmyChat({ greeting }) {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key==="Enter" && send()}
-            placeholder={greetingDone ? "type here" : ""}
-            disabled={loading || !greetingDone}
+            placeholder="type here"
+            disabled={loading}
             style={{
               flex:1, background:"transparent", border:"none", outline:"none",
               color:"rgba(255,255,255,0.95)", fontFamily:"inherit", fontSize:15,
               letterSpacing:"0.01em", caretColor:"rgba(255,255,255,0.6)",
             }}
           />
-          <button onClick={send} disabled={loading||!input.trim()||!greetingDone} style={{
+          <button onClick={send} disabled={loading||!input.trim()} style={{
             background:"transparent", border:"none",
             cursor:input.trim()&&!loading?"pointer":"default",
             color:"rgba(255,255,255,0.7)", fontSize:18,
