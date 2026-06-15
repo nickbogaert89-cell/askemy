@@ -199,13 +199,13 @@ function EmyChat({ greeting }) {
       const intent = detectIntent(userText);
       dataRef.current = { intent: intent || "unknown", firstMessage: userText };
       if (intent === "phone") {
-        await reply(withUser, "Wanneer kunnen we u best bereiken?", "phone-timing", dataRef.current);
+        await reply(withUser, "When can we best reach you?", "phone-timing", dataRef.current);
       } else if (intent === "email") {
-        await reply(withUser, "Wat is uw e-mailadres?", "email-address", dataRef.current);
+        await reply(withUser, "What's your email address?", "email-address", dataRef.current);
       } else if (intent === "meeting") {
-        await reply(withUser, "Wanneer en waar schikt het u het best?", "meeting-when", dataRef.current);
+        await reply(withUser, "When and where would work best for you?", "meeting-when", dataRef.current);
       } else {
-        await reply(withUser, "Verkiest u een telefoongesprek, e-mail, of een persoonlijke afspraak?", "start", {});
+        await reply(withUser, "Would you prefer a call, email, or a personal meeting?", "start", {});
       }
       return;
     }
@@ -213,7 +213,7 @@ function EmyChat({ greeting }) {
     // ── Phone / WhatsApp branch ──
     if (phase === "phone-timing") {
       dataRef.current.timing = userText;
-      await reply(withUser, "Wat is uw naam en telefoonnummer?", "phone-contact", dataRef.current);
+      await reply(withUser, "And your name and phone number?", "phone-contact", dataRef.current);
       return;
     }
 
@@ -225,7 +225,7 @@ function EmyChat({ greeting }) {
         "Beste moment": dataRef.current.timing,
         "Naam en telefoonnummer": userText,
       });
-      await reply(withUser, "Bedankt. Emy neemt zo snel mogelijk contact op.", "done", { ...dataRef.current, completed: true });
+      await reply(withUser, "Perfect. I'll be in touch soon.", "done", { ...dataRef.current, completed: true });
       return;
     }
 
@@ -237,14 +237,14 @@ function EmyChat({ greeting }) {
         "Eerste bericht": dataRef.current.firstMessage,
         "E-mailadres": userText,
       });
-      await reply(withUser, "Bedankt. Emy neemt zo snel mogelijk contact op via e-mail.", "done", { ...dataRef.current, completed: true });
+      await reply(withUser, "Perfect. I'll reach out to you directly.", "done", { ...dataRef.current, completed: true });
       return;
     }
 
     // ── Personal meeting branch ──
     if (phase === "meeting-when") {
       dataRef.current.meetingWhen = userText;
-      await reply(withUser, "Kan u uw contactgegevens achterlaten, zodat we dit kunnen bevestigen?", "meeting-contact", dataRef.current);
+      await reply(withUser, "Could you leave your contact details so we can confirm?", "meeting-contact", dataRef.current);
       return;
     }
 
@@ -256,7 +256,7 @@ function EmyChat({ greeting }) {
         "Wanneer en waar": dataRef.current.meetingWhen,
         "Contactgegevens": userText,
       });
-      await reply(withUser, "Bedankt. Emy neemt zo snel mogelijk contact op om te bevestigen.", "done", { ...dataRef.current, completed: true });
+      await reply(withUser, "Perfect. I'll be in touch to confirm.", "done", { ...dataRef.current, completed: true });
       return;
     }
   }
