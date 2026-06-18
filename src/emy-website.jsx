@@ -399,8 +399,9 @@ export default function App() {
     ::-webkit-scrollbar{width:0;}
     ::selection{background:rgba(255,255,255,0.12);}
     .emy-page-content{animation:fadeIn 0.6s ease forwards;}
-    .emy-topbar{position:fixed;top:0;right:0;z-index:50;padding:24px 32px 20px;text-align:right;background:linear-gradient(to bottom,rgba(0,0,0,0.85) 60%,transparent);}
-    .emy-hamburger{position:fixed;top:28px;left:28px;z-index:200;}
+    .emy-topbar{position:fixed;top:0;left:0;right:0;z-index:50;padding:20px 32px 32px;text-align:right;background:linear-gradient(to bottom,rgba(0,0,0,0.96) 40%,rgba(0,0,0,0.6) 75%,transparent);pointer-events:none;}
+    .emy-topbar>*{pointer-events:auto;}
+    .emy-hamburger{position:fixed;top:24px;left:24px;z-index:200;}
   `;
 
   // ── Hamburger button ──
@@ -484,7 +485,7 @@ export default function App() {
       <HamburgerBtn/>
       <TopBar/>
       {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
+      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"120px 28px 80px" }}>
         <Label>{copy.labelAbout}</Label>
         <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
           <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
@@ -534,7 +535,7 @@ export default function App() {
       <HamburgerBtn/>
       <TopBar/>
       {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
+      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"120px 28px 80px" }}>
         <Label>{copy.labelWho}</Label>
         <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:40 }}>
           <p style={{ marginBottom:22 }}>{copy.whoP1}</p>
@@ -588,7 +589,7 @@ export default function App() {
       <HamburgerBtn/>
       <TopBar/>
       {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"140px 28px 80px" }}>
+      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"120px 28px 80px" }}>
         <Label>{copy.labelTalk}</Label>
         <EmyChat greeting={copy.greeting}/>
         <div style={{ marginTop:32, borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:24 }}>
