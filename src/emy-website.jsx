@@ -22,13 +22,35 @@ function trailOpacity(i, total) {
   return start + (end - start) * ((i - 1) / (rest - 1));
 }
 
-// Detect contact intent from the visitor's first reply
-function detectIntent(text) {
-  const t = text.toLowerCase();
-  if (/telefoon|phone|whatsapp|\bwa\b|bellen|\bcall\b|gsm|\bnummer\b|\bnumber\b|\bsms\b|\bring\b|\bbel\b/.test(t)) return "phone";
-  if (/e-?mail|\bmail\b/.test(t)) return "email";
-  if (/meeting|afspraak|persoonlijk|ontmoet|kantoor|office|in person|visit|langskomen|\bkomen\b/.test(t)) return "meeting";
+// Extract email or phone number from any message
+const EMAIL_RE = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
+const PHONE_RE = /(?:\+?\d[\d\s\-().]{6,}\d)/;
+function extractContactInfo(text) {
+  const em = text.match(EMAIL_RE);
+  if (em) return { value: em[0], method: "email" };
+  const ph = text.match(PHONE_RE);
+  if (ph) return { value: ph[0].replace(/\s+/g, " ").trim(), method: "phone" };
   return null;
+}
+
+// Smart reply based on what the visitor said
+function smartReply(userText, attemptCount) {
+  const t = userText.toLowerCase();
+  if (/prijs|price|cost|kost|hoeveel|how much|€|euro|fee|plan|membership|tarief|lid worden/.test(t))
+    return "We have two membership plans — Solo at €175/month and Family at €245/month (excl. VAT). Both include fully personal, dedicated service. I'd love for Emy to tell you more — could I take your email address or phone number?";
+  if (/restaurant|hotel|vlucht|flight|ticket|event|travel|reis|reis|sport|concert|arrange|reserv/.test(t))
+    return "That's exactly what Emy is here for. From restaurant reservations to last-minute flights and sold-out events — she handles it all personally. What's the best way to reach you so she can follow up?";
+  if (/who|wie|about emy|over emy|experience|background|aviation|achtergrond/.test(t))
+    return "Emy spent ten years in private aviation, where she learned exactly what exceptional service looks like. She started EMY to bring that same level of care to people who expect more. Want to connect with her directly? Just share your email or phone.";
+  if (/where|waar|antwerp|antwerpen|belgi|based|location/.test(t))
+    return "Emy is based in Antwerp but works globally — wherever you need her. Could I take your contact details so she can reach out?";
+  if (/how.*work|hoe.*werk|wat.*is|what.*is|explain|uitleg|more info|meer info/.test(t))
+    return "EMY is a personal concierge membership — one dedicated contact who handles everything for you, whenever you need it. Think of it as always having the right person on the phone. I'd love to get you in touch with Emy directly — email or phone?";
+  if (/\b(hi|hello|hey|hoi|hallo|goeie|dag|good)\b/.test(t))
+    return "Hi! Great to hear from you. Feel free to ask me anything about EMY — or if you'd like Emy to reach out personally, just share your email or phone number.";
+  if (attemptCount >= 2)
+    return "I just need your email address or phone number and Emy will take it from there!";
+  return "Thanks for reaching out! To make sure Emy can get back to you personally, could I take your email address or phone number?";
 }
 
 // Send collected conversation data to emy@ask-emy.com (FormSubmit – no backend needed)
@@ -47,7 +69,7 @@ async function sendToEmy(data) {
 // All site copy lives here. Edit these values to update the live site
 // (commit + push → auto-deploys in ~30s). The admin panel no longer edits copy.
 const DEFAULT_COPY = {
-  greeting: "How do you want me to get in touch with you?",
+  greeting: "Hi! How can I help you today?",
   taglineLine1: "Lifestyle Membership",
   taglineLine2: "Lifestyle Management",
   labelWho: "Who is Emy.",
@@ -129,25 +151,19 @@ function Label({ children }) {
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
 // Phases:
-//   "start"            greeting shown, waiting for contact method choice
-//   "phone-timing"     phone/WA intent → ask when to call
-//   "phone-contact"    timing captured → ask name + phone number
-//   "email-address"    email intent → ask for email address
-//   "meeting-when"     meeting intent → ask when/where
-//   "meeting-contact"  when/where captured → ask contact details
-//   "done"             complete, email sent to emy@ask-emy.com
+//   "collecting"   greeting shown, smart replies, keeps asking until email/phone found
+//   "done"         contact captured, email sent to emy@ask-emy.com
 function EmyChat({ greeting }) {
   const GREETING = greeting || DEFAULT_COPY.greeting;
   const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
-  const [phase, setPhase]       = useState("start");
-  const dataRef  = useRef({});
-  const docIdRef = useRef(null);
-  const bottomRef = useRef(null);
-  const inputRef  = useRef(null);
+  const [phase, setPhase]       = useState("collecting");
+  const attemptRef = useRef(0);
+  const docIdRef   = useRef(null);
+  const bottomRef  = useRef(null);
+  const inputRef   = useRef(null);
 
-  // Show greeting immediately on mount.
   useEffect(() => {
     setMessages([{ role:"emy", text: GREETING, ts: Date.now() }]);
   }, []);
@@ -160,7 +176,6 @@ function EmyChat({ greeting }) {
     try {
       const base = {
         messages: allMessages.map(m => ({ role:m.role, text:m.text, ts:m.ts })),
-        waTarget: WA_NUMBER_INTL,
         updatedAt: serverTimestamp(),
         ...extra,
       };
@@ -175,9 +190,8 @@ function EmyChat({ greeting }) {
     }
   }
 
-  // Helper: add Emy's reply after a short delay, then advance phase.
   async function reply(withUser, botText, nextPhase, extra = {}) {
-    await new Promise(r => setTimeout(r, 420 + Math.random()*240));
+    await new Promise(r => setTimeout(r, 420 + Math.random()*280));
     const all = [...withUser, { role:"emy", text:botText, ts: Date.now() }];
     setMessages(all);
     setLoading(false);
@@ -194,71 +208,25 @@ function EmyChat({ greeting }) {
     setMessages(withUser);
     setLoading(true);
 
-    // ── Detect intent from first message ──
-    if (phase === "start") {
-      const intent = detectIntent(userText);
-      dataRef.current = { intent: intent || "unknown", firstMessage: userText };
-      if (intent === "phone") {
-        await reply(withUser, "When can we best reach you?", "phone-timing", dataRef.current);
-      } else if (intent === "email") {
-        await reply(withUser, "What's your email address?", "email-address", dataRef.current);
-      } else if (intent === "meeting") {
-        await reply(withUser, "When and where would work best for you?", "meeting-when", dataRef.current);
-      } else {
-        await reply(withUser, "Would you prefer a call, email, or a personal meeting?", "start", {});
-      }
-      return;
-    }
-
-    // ── Phone / WhatsApp branch ──
-    if (phase === "phone-timing") {
-      dataRef.current.timing = userText;
-      await reply(withUser, "And your name and phone number?", "phone-contact", dataRef.current);
-      return;
-    }
-
-    if (phase === "phone-contact") {
-      dataRef.current.nameAndPhone = userText;
+    // Check if this message contains an email or phone number
+    const contact = extractContactInfo(userText);
+    if (contact) {
+      const transcript = withUser
+        .map(m => `${m.role === "emy" ? "EMY" : "VISITOR"}: ${m.text}`)
+        .join("\n");
       sendToEmy({
-        "Contact method": "Telefoon / WhatsApp",
-        "Eerste bericht": dataRef.current.firstMessage,
-        "Beste moment": dataRef.current.timing,
-        "Naam en telefoonnummer": userText,
+        "Contact": contact.value,
+        "Method": contact.method,
+        "Conversation": transcript,
       });
-      await reply(withUser, "Perfect. I'll be in touch soon.", "done", { ...dataRef.current, completed: true });
+      await reply(withUser, "Perfect, got it! Emy will be in touch with you shortly.", "done", { contact: contact.value, method: contact.method, completed: true });
       return;
     }
 
-    // ── Email branch ──
-    if (phase === "email-address") {
-      dataRef.current.emailAddress = userText;
-      sendToEmy({
-        "Contact method": "E-mail",
-        "Eerste bericht": dataRef.current.firstMessage,
-        "E-mailadres": userText,
-      });
-      await reply(withUser, "Perfect. I'll reach out to you directly.", "done", { ...dataRef.current, completed: true });
-      return;
-    }
-
-    // ── Personal meeting branch ──
-    if (phase === "meeting-when") {
-      dataRef.current.meetingWhen = userText;
-      await reply(withUser, "Could you leave your contact details so we can confirm?", "meeting-contact", dataRef.current);
-      return;
-    }
-
-    if (phase === "meeting-contact") {
-      dataRef.current.meetingContact = userText;
-      sendToEmy({
-        "Contact method": "Persoonlijke afspraak",
-        "Eerste bericht": dataRef.current.firstMessage,
-        "Wanneer en waar": dataRef.current.meetingWhen,
-        "Contactgegevens": userText,
-      });
-      await reply(withUser, "Perfect. I'll be in touch to confirm.", "done", { ...dataRef.current, completed: true });
-      return;
-    }
+    // No contact info yet — give a smart response and ask again
+    attemptRef.current += 1;
+    const botText = smartReply(userText, attemptRef.current);
+    await reply(withUser, botText, "collecting", { attempt: attemptRef.current });
   }
 
   return (
