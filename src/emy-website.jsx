@@ -398,9 +398,11 @@ export default function App() {
     .ti{font-size:20px;color:rgba(255,255,255,0.55);}
     .emy-section{max-width:1080px;margin:0 auto;padding:100px 72px 80px;}
     .emy-divider{max-width:1080px;margin:0 auto;padding:0 72px;}
+    .emy-for-whom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid rgba(255,255,255,0.08);}
     @media(max-width:680px){
       .emy-section{padding:90px 28px 70px;}
       .emy-divider{padding:0 28px;}
+      .emy-for-whom-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
     }
   `;
 
@@ -492,7 +494,7 @@ export default function App() {
             <p style={{ fontSize:14, lineHeight:1.75, color:"rgba(255,255,255,0.55)", marginBottom:32 }}>
               Because your time is better spent elsewhere.
             </p>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:1, border:"1px solid rgba(255,255,255,0.08)" }}>
+            <div className="emy-for-whom-grid">
               {FOR_WHOM.map((p, i) => (
                 <div key={i} style={{ padding:"22px 18px", borderRight:"1px solid rgba(255,255,255,0.08)", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
                   <i className={`ti ${p.icon}`} style={{ fontSize:20, color:"rgba(255,255,255,0.45)", display:"block", marginBottom:12 }}/>
