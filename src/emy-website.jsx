@@ -327,13 +327,21 @@ function renderWithAdminLink(text) {
 export default function App() {
   const [mounted, setMounted] = useState(false);
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
-  const [page, setPage] = useState("landing");
   const [menuOpen, setMenuOpen] = useState(false);
-  // Copy is sourced from code only. Edit DEFAULT_COPY above to change site text.
   const copy = DEFAULT_COPY;
+
+  const aboutRef = useRef(null);
+  const whoRef   = useRef(null);
+  const talkRef  = useRef(null);
+
   useEffect(() => { setTimeout(() => setMounted(true), 80); window.scrollTo(0, 0); }, []);
 
-  const goTo = (p) => { setPage(p); setMenuOpen(false); window.scrollTo(0,0); };
+  const goTo = (key) => {
+    setMenuOpen(false);
+    if (key === "landing") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    const refs = { about: aboutRef, who: whoRef, talk: talkRef };
+    refs[key]?.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     (async () => {
@@ -366,17 +374,13 @@ export default function App() {
     input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.3);}
     ::-webkit-scrollbar{width:0;}
     ::selection{background:rgba(255,255,255,0.12);}
-    .emy-page-content{animation:fadeIn 0.6s ease forwards;}
     .emy-topbar{position:fixed;top:0;left:0;right:0;z-index:50;padding:20px 32px 32px;text-align:right;background:linear-gradient(to bottom,rgba(0,0,0,0.96) 40%,rgba(0,0,0,0.6) 75%,transparent);pointer-events:none;}
     .emy-topbar>*{pointer-events:auto;}
     .emy-hamburger{position:fixed;top:24px;left:24px;z-index:200;}
   `;
 
-  // ── Hamburger button ──
   const HamburgerBtn = () => (
-    <button onClick={() => setMenuOpen(o => !o)} className="emy-hamburger" style={{
-      background:"none", border:"none", cursor:"pointer", padding:8,
-    }}>
+    <button onClick={() => setMenuOpen(o => !o)} className="emy-hamburger" style={{ background:"none", border:"none", cursor:"pointer", padding:8 }}>
       {menuOpen ? (
         <div style={{ width:22, height:22, position:"relative" }}>
           <div style={{ position:"absolute", top:"50%", left:0, width:"100%", height:1.5, background:"#fff", transform:"rotate(45deg)" }}/>
@@ -392,34 +396,23 @@ export default function App() {
     </button>
   );
 
-  // ── Menu overlay ──
   const MenuOverlay = () => (
-    <div style={{
-      position:"fixed", inset:0, zIndex:100,
-      background:"rgba(0,0,0,0.96)",
-      display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", gap:48,
-    }}>
+    <div style={{ position:"fixed", inset:0, zIndex:100, background:"rgba(0,0,0,0.96)", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", gap:48 }}>
       {[
         { label:"About Emy.", key:"about" },
         { label:"Who is Emy.", key:"who" },
         { label:"Talk to Emy.", key:"talk" },
       ].map(item => (
-        <button key={item.key} onClick={() => goTo(item.key)} style={{
-          background:"none", border:"none", cursor:"pointer",
-          fontSize:28, letterSpacing:"0.18em", textTransform:"uppercase",
-          color:"rgba(255,255,255,0.85)", fontFamily:"inherit", fontWeight:700,
-          transition:"color 0.2s",
-        }}
-        onMouseEnter={e => e.target.style.color="#fff"}
-        onMouseLeave={e => e.target.style.color="rgba(255,255,255,0.85)"}
+        <button key={item.key} onClick={() => goTo(item.key)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:28, letterSpacing:"0.18em", textTransform:"uppercase", color:"rgba(255,255,255,0.85)", fontFamily:"inherit", fontWeight:700, transition:"color 0.2s" }}
+          onMouseEnter={e => e.target.style.color="#fff"}
+          onMouseLeave={e => e.target.style.color="rgba(255,255,255,0.85)"}
         >{item.label}</button>
       ))}
     </div>
   );
 
-  // ── Top bar (logo + tagline, always top-right) ──
   const TopBar = () => (
-    <div className="emy-topbar emy-mono">
+    <div className="emy-topbar">
       <button onClick={() => goTo("landing")} style={{ background:"none", border:"none", cursor:"pointer", display:"block", marginLeft:"auto" }}>
         <Logo width={110}/>
       </button>
@@ -430,148 +423,136 @@ export default function App() {
     </div>
   );
 
-  // ── Landing page ──
-  if (page === "landing") return (
-    <div style={{ ...baseStyle, display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <style>{globalCss}</style>
-      <HamburgerBtn/>
-      <TopBar/>
-      {menuOpen && <MenuOverlay/>}
-      <div style={{ textAlign:"center", opacity:mounted?1:0, animation:mounted?"fadeIn 1s ease forwards":"none" }}>
-        <Logo width={260}/>
-        <div style={{ marginTop:16, fontSize:10, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", fontWeight:700 }}>
-          {copy.taglineLine1}
-        </div>
-      </div>
-    </div>
-  );
+  const sp = { maxWidth:580, margin:"0 auto", padding:"100px 28px 80px" };
+  const Divider = () => <div style={{ maxWidth:580, margin:"0 auto 0", padding:"0 28px" }}><div style={{ height:1, background:"rgba(255,255,255,0.07)" }}/></div>;
 
-  // ── About page ──
-  if (page === "about") return (
+  return (
     <div style={baseStyle}>
       <style>{globalCss}</style>
       <HamburgerBtn/>
       <TopBar/>
       {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"120px 28px 80px" }}>
-        <Label>{copy.labelAbout}</Label>
-        <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
-          <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
-          <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
-          <p style={{ marginBottom:22 }}>{copy.aboutP3}</p>
-          <p style={{ marginBottom:48 }}>{copy.aboutP4}</p>
-        </div>
 
-        {/* Membership */}
-        <div style={{ borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:40 }}>
-          <div style={{ fontSize:20, letterSpacing:"0.12em", textTransform:"uppercase", color:"#fff", fontWeight:700, marginBottom:8 }}>{copy.membershipTitle}</div>
-          <div style={{ fontSize:12, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", marginBottom:36 }}>{copy.membershipSub}</div>
-          <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
-            {/* Solo */}
-            <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
-                <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{copy.membershipSolo}</div>
-                <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:"0.05em" }}>{copy.membershipSoloPrice}</div>
+      {/* ── Landing ── */}
+      <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", opacity:mounted?1:0, transition:"opacity 1s ease" }}>
+        <div style={{ textAlign:"center" }}>
+          <Logo width={260}/>
+          <div style={{ marginTop:16, fontSize:10, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", fontWeight:700 }}>
+            {copy.taglineLine1}
+          </div>
+        </div>
+      </div>
+
+      <Divider/>
+
+      {/* ── About ── */}
+      <div ref={aboutRef} style={sp}>
+        <Section>
+          <Label>{copy.labelAbout}</Label>
+          <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
+            <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
+            <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
+            <p style={{ marginBottom:22 }}>{copy.aboutP3}</p>
+            <p style={{ marginBottom:48 }}>{copy.aboutP4}</p>
+          </div>
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:40 }}>
+            <div style={{ fontSize:20, letterSpacing:"0.12em", textTransform:"uppercase", color:"#fff", fontWeight:700, marginBottom:8 }}>{copy.membershipTitle}</div>
+            <div style={{ fontSize:12, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", marginBottom:36 }}>{copy.membershipSub}</div>
+            <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
+              <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
+                  <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{copy.membershipSolo}</div>
+                  <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:"0.05em" }}>{copy.membershipSoloPrice}</div>
+                </div>
+                <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipSoloDesc}</p>
               </div>
-              <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipSoloDesc}</p>
-            </div>
-            {/* Family */}
-            <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
-                <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{copy.membershipFamily}</div>
-                <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:"0.05em" }}>{copy.membershipFamilyPrice}</div>
+              <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
+                  <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{copy.membershipFamily}</div>
+                  <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:"0.05em" }}>{copy.membershipFamilyPrice}</div>
+                </div>
+                <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipFamilyDesc}</p>
               </div>
-              <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipFamilyDesc}</p>
+            </div>
+            <div style={{ marginTop:24, paddingTop:24, borderTop:"1px solid rgba(255,255,255,0.07)" }}>
+              <p style={{ fontSize:12, letterSpacing:"0.08em", color:"rgba(255,255,255,0.38)", fontStyle:"italic" }}>{copy.membershipCorporate}</p>
+            </div>
+            <div style={{ marginTop:32, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
+              <p style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:12 }}>{copy.membershipCta1}</p>
+              <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)", fontFamily:"inherit", fontWeight:700, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
             </div>
           </div>
-          <div style={{ marginTop:24, paddingTop:24, borderTop:"1px solid rgba(255,255,255,0.07)" }}>
-            <p style={{ fontSize:12, letterSpacing:"0.08em", color:"rgba(255,255,255,0.38)", fontStyle:"italic" }}>{copy.membershipCorporate}</p>
-          </div>
-          <div style={{ marginTop:32, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
-            <p style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:12 }}>{copy.membershipCta1}</p>
-            <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)", fontFamily:"inherit", fontWeight:700, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
-          </div>
-        </div>
+        </Section>
       </div>
-    </div>
-  );
 
-  // ── Who page ──
-  if (page === "who") return (
-    <div style={baseStyle}>
-      <style>{globalCss}</style>
-      <HamburgerBtn/>
-      <TopBar/>
-      {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"120px 28px 80px" }}>
-        <Label>{copy.labelWho}</Label>
-        <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:40 }}>
-          <p style={{ marginBottom:22 }}>{copy.whoP1}</p>
-          <p style={{ marginBottom:22 }}>{copy.whoP2}</p>
-          <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
-        </div>
-        {copy.whoPhoto && (
-          <div style={{ margin:"0 -28px" }}>
-            <img src={copy.whoPhoto} alt="Emy Engels" style={{ width:"100%", height:"auto", display:"block" }}/>
-            <div style={{ padding:"12px 28px 0", fontSize:11, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.35)", fontFamily:"'Space Mono',monospace" }}>Emy Engels</div>
+      <Divider/>
+
+      {/* ── Who ── */}
+      <div ref={whoRef} style={sp}>
+        <Section>
+          <Label>{copy.labelWho}</Label>
+          <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:40 }}>
+            <p style={{ marginBottom:22 }}>{copy.whoP1}</p>
+            <p style={{ marginBottom:22 }}>{copy.whoP2}</p>
+            <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
           </div>
-        )}
-        <div style={{ marginTop:48 }}>
-          <Label>{copy.labelWhere}</Label>
-          <div style={{ position:"relative" }}>
-            {copy.locationPhoto && (
-              <>
-                <div style={{ position:"absolute", inset:0, backgroundImage:`url(${copy.locationPhoto})`, backgroundSize:"cover", backgroundPosition:"center", opacity:0.50, filter:"blur(4px)", borderRadius:4, zIndex:0 }}/>
-                <div style={{ position:"absolute", inset:0, background:"linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 100%)", borderRadius:4, zIndex:0 }}/>
-              </>
-            )}
-            <div style={{ position:"relative", zIndex:1 }}>
-              <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
-              {locations.map((loc, i) => {
-                const isCurrent = i===0;
-                const op = trailOpacity(i, locations.length);
-                return (
-                  <div key={i} style={{ display:"flex", alignItems:"center", gap:22, padding:"12px 0", opacity:op, borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
-                    <div style={{ width:isCurrent?14:7, height:isCurrent?14:7, borderRadius:"50%", border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.9:0.38})`, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:isCurrent?"blink 3s ease-in-out infinite":"none" }}>
-                      {isCurrent && <div style={{ width:6, height:6, borderRadius:"50%", background:"#fff" }}/>}
+          {copy.whoPhoto && (
+            <div style={{ margin:"0 -28px" }}>
+              <img src={copy.whoPhoto} alt="Emy Engels" style={{ width:"100%", height:"auto", display:"block" }}/>
+              <div style={{ padding:"12px 28px 0", fontSize:11, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.35)", fontFamily:"'Space Mono',monospace" }}>Emy Engels</div>
+            </div>
+          )}
+          <div style={{ marginTop:48 }}>
+            <Label>{copy.labelWhere}</Label>
+            <div style={{ position:"relative" }}>
+              {copy.locationPhoto && (
+                <>
+                  <div style={{ position:"absolute", inset:0, backgroundImage:`url(${copy.locationPhoto})`, backgroundSize:"cover", backgroundPosition:"center", opacity:0.50, filter:"blur(4px)", borderRadius:4, zIndex:0 }}/>
+                  <div style={{ position:"absolute", inset:0, background:"linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 100%)", borderRadius:4, zIndex:0 }}/>
+                </>
+              )}
+              <div style={{ position:"relative", zIndex:1 }}>
+                <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
+                {locations.map((loc, i) => {
+                  const isCurrent = i===0;
+                  const op = trailOpacity(i, locations.length);
+                  return (
+                    <div key={i} style={{ display:"flex", alignItems:"center", gap:22, padding:"12px 0", opacity:op, borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
+                      <div style={{ width:isCurrent?14:7, height:isCurrent?14:7, borderRadius:"50%", border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.9:0.38})`, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:isCurrent?"blink 3s ease-in-out infinite":"none" }}>
+                        {isCurrent && <div style={{ width:6, height:6, borderRadius:"50%", background:"#fff" }}/>}
+                      </div>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontSize:isCurrent?22:17, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
+                        {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.55)", marginTop:5, textTransform:"uppercase" }}>{loc.country}</div>}
+                      </div>
+                      {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.65)", border:"1px solid rgba(255,255,255,0.22)", padding:"5px 10px", fontWeight:700 }}>now</div>}
                     </div>
-                    <div style={{ flex:1 }}>
-                      <div style={{ fontSize:isCurrent?22:17, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
-                      {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.55)", marginTop:5, textTransform:"uppercase" }}>{loc.country}</div>}
-                    </div>
-                    {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.65)", border:"1px solid rgba(255,255,255,0.22)", padding:"5px 10px", fontWeight:700 }}>now</div>}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
+        </Section>
+      </div>
+
+      <Divider/>
+
+      {/* ── Talk ── */}
+      <div ref={talkRef} style={{ ...sp, paddingBottom:120 }}>
+        <Section>
+          <Label>{copy.labelTalk}</Label>
+          <EmyChat greeting={copy.greeting}/>
+          <div style={{ marginTop:32, borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:24 }}>
+            <div style={{ fontSize:15, fontWeight:700, letterSpacing:"0.06em", color:"#fff", marginBottom:14 }}>Emy Engels</div>
+            <a href="tel:+32471481010" style={{ display:"flex", alignItems:"center", gap:10, color:"rgba(255,255,255,0.75)", textDecoration:"none", fontSize:14, letterSpacing:"0.04em", marginBottom:10 }}>
+              <span style={{ fontSize:16 }}>📞</span> +32 471 48 10 10
+            </a>
+            <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:10, color:"rgba(255,255,255,0.75)", textDecoration:"none", fontSize:14, letterSpacing:"0.04em" }}>
+              <span style={{ fontSize:16 }}>✉️</span> emy@ask-emy.com
+            </a>
+          </div>
+        </Section>
       </div>
     </div>
   );
-
-  // ── Talk page ──
-  if (page === "talk") return (
-    <div style={baseStyle}>
-      <style>{globalCss}</style>
-      <HamburgerBtn/>
-      <TopBar/>
-      {menuOpen && <MenuOverlay/>}
-      <div className="emy-page-content" style={{ maxWidth:580, margin:"0 auto", padding:"120px 28px 80px" }}>
-        <Label>{copy.labelTalk}</Label>
-        <EmyChat greeting={copy.greeting}/>
-        <div style={{ marginTop:32, borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:24 }}>
-          <div style={{ fontSize:15, fontWeight:700, letterSpacing:"0.06em", color:"#fff", marginBottom:14 }}>Emy Engels</div>
-          <a href="tel:+32471481010" style={{ display:"flex", alignItems:"center", gap:10, color:"rgba(255,255,255,0.75)", textDecoration:"none", fontSize:14, letterSpacing:"0.04em", marginBottom:10 }}>
-            <span style={{ fontSize:16 }}>📞</span> +32 471 48 10 10
-          </a>
-          <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:10, color:"rgba(255,255,255,0.75)", textDecoration:"none", fontSize:14, letterSpacing:"0.04em" }}>
-            <span style={{ fontSize:16 }}>✉️</span> emy@ask-emy.com
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-
-  return null;
 }
