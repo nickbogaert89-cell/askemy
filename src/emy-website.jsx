@@ -89,12 +89,17 @@ const DEFAULT_COPY = {
   membershipSub: "Choose what fits your life.",
   membershipSolo: "Solo",
   membershipSoloPrice: "€ 175 / month excl. VAT",
-  membershipSoloDesc: "For one person. Restaurants, hotels, events, travel, sport experiences, luxury products — arranged personally, whenever you need it.",
+  membershipSoloSub: "For individuals who want one person to handle it all.",
+  membershipSoloDesc: "One dedicated contact. Available when you need it. No requests too small, no details overlooked.",
   membershipFamily: "Family",
-  membershipFamilyPrice: "€ 245 / month excl. VAT",
-  membershipFamilyDesc: "For partners and families. Holidays, weekend escapes, travel, sport events, luxury experiences — everything taken care of, for everyone who matters.",
-  membershipCorporate: "Corporate & business memberships available on request.",
-  membershipCta1: "Stop arranging. Start living.",
+  membershipFamilyPrice: "On request",
+  membershipFamilySub: "For families with a full schedule and high expectations.",
+  membershipFamilyDesc: "Multiple people, multiple properties, multiple needs — handled by one person who knows your family. Every family is different. Let's talk about what works for yours.",
+  membershipBusiness: "Business",
+  membershipBusinessPrice: "Tailored to your needs",
+  membershipBusinessSub: "For entrepreneurs, executives, and their teams.",
+  membershipBusinessDesc: "Whether it's travel for your management team, client entertainment, or personal support for your key people — I build a setup that fits your business. No standard packages. Just what you actually need.",
+  membershipCta1: "Not sure which membership fits? One conversation is usually enough to find out.",
   membershipCta2: "Get in touch.",
   price: "",
 };
@@ -530,28 +535,24 @@ export default function App() {
           {/* Membership */}
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48 }}>
             <Label>{copy.membershipTitle}</Label>
-            <div style={{ fontSize:12, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", marginBottom:32 }}>{copy.membershipSub}</div>
-            <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
-              <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
-                  <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{copy.membershipSolo}</div>
-                  <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:"0.05em" }}>{copy.membershipSoloPrice}</div>
+            <div style={{ display:"flex", flexDirection:"column" }}>
+              {[
+                { title: copy.membershipSolo,     price: copy.membershipSoloPrice,     sub: copy.membershipSoloSub,     desc: copy.membershipSoloDesc },
+                { title: copy.membershipFamily,   price: copy.membershipFamilyPrice,   sub: copy.membershipFamilySub,   desc: copy.membershipFamilyDesc },
+                { title: copy.membershipBusiness, price: copy.membershipBusinessPrice, sub: copy.membershipBusinessSub, desc: copy.membershipBusinessDesc },
+              ].map((tier, i) => (
+                <div key={i} style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:28, paddingBottom:28 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
+                    <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{tier.title}</div>
+                    <div style={{ fontSize:13, color:"rgba(255,255,255,0.5)", letterSpacing:"0.04em" }}>{tier.price}</div>
+                  </div>
+                  <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.85)", marginBottom:10 }}>{tier.sub}</p>
+                  <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.5)" }}>{tier.desc}</p>
                 </div>
-                <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipSoloDesc}</p>
-              </div>
-              <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
-                  <div style={{ fontSize:14, letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:700, color:"#fff" }}>{copy.membershipFamily}</div>
-                  <div style={{ fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:"0.05em" }}>{copy.membershipFamilyPrice}</div>
-                </div>
-                <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipFamilyDesc}</p>
-              </div>
+              ))}
             </div>
-            <div style={{ marginTop:20, paddingTop:20, borderTop:"1px solid rgba(255,255,255,0.07)" }}>
-              <p style={{ fontSize:12, letterSpacing:"0.08em", color:"rgba(255,255,255,0.35)", fontStyle:"italic" }}>{copy.membershipCorporate}</p>
-            </div>
-            <div style={{ marginTop:32, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
-              <p style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:12 }}>{copy.membershipCta1}</p>
+            <div style={{ marginTop:8, paddingTop:28, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
+              <p style={{ fontSize:14, lineHeight:1.75, color:"rgba(255,255,255,0.6)", marginBottom:16 }}>{copy.membershipCta1}</p>
               <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)", fontFamily:"inherit", fontWeight:700, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
             </div>
           </div>
