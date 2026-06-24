@@ -106,8 +106,7 @@ const FOR_WHOM = [
   { icon:"ti-plane",     title:"Frequent travellers",        desc:"From private aviation to hotel suites — every detail arranged before you ask." },
   { icon:"ti-world",     title:"Expats in Antwerp",          desc:"New to Belgium. Everything arranged: schools, housing, daily life." },
   { icon:"ti-users",     title:"Families",                   desc:"Complex schedules, multiple properties, children — one person handles it all." },
-  { icon:"ti-building-bank", title:"Private banking clients",desc:"The lifestyle complement to your financial advisor. Discreet by design." },
-  { icon:"ti-star",      title:"Those who simply know",      desc:"When you have experienced real service, nothing else will do." },
+  { icon:"ti-building-bank", title:"Private banking clients",desc:"Referred by your wealth manager. Expects the same level of service in daily life." },
 ];
 
 const WHAT_I_DO = [
