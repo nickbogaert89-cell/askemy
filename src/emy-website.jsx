@@ -107,6 +107,7 @@ const FOR_WHOM = [
   { icon:"ti-world",     title:"Expats in Antwerp",          desc:"New to Belgium. Everything arranged: schools, housing, daily life." },
   { icon:"ti-users",     title:"Families",                   desc:"Complex schedules, multiple properties, children — one person handles it all." },
   { icon:"ti-building-bank", title:"Private banking clients",desc:"Referred by your wealth manager. Expects the same level of service in daily life." },
+  { icon:"ti-star",      title:"Those who simply know",      desc:"You know what you want. You just need someone to make it happen." },
 ];
 
 const WHAT_I_DO = [
