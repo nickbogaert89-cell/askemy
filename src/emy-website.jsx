@@ -397,6 +397,12 @@ export default function App() {
     .emy-topbar>*{pointer-events:auto;}
     .emy-hamburger{position:fixed;top:24px;left:24px;z-index:200;}
     .ti{font-size:20px;color:rgba(255,255,255,0.55);}
+    .emy-section{max-width:1080px;margin:0 auto;padding:100px 72px 80px;}
+    .emy-divider{max-width:1080px;margin:0 auto;padding:0 72px;}
+    @media(max-width:680px){
+      .emy-section{padding:90px 28px 70px;}
+      .emy-divider{padding:0 28px;}
+    }
   `;
 
   const HamburgerBtn = () => (
@@ -445,8 +451,7 @@ export default function App() {
     </div>
   );
 
-  const sp = { maxWidth:580, margin:"0 auto", padding:"100px 28px 80px" };
-  const Divider = () => <div style={{ maxWidth:580, margin:"0 auto 0", padding:"0 28px" }}><div style={{ height:1, background:"rgba(255,255,255,0.07)" }}/></div>;
+  const Divider = () => <div className="emy-divider"><div style={{ height:1, background:"rgba(255,255,255,0.07)" }}/></div>;
 
   return (
     <div style={baseStyle}>
@@ -471,7 +476,7 @@ export default function App() {
       <Divider/>
 
       {/* ── About ── */}
-      <div ref={aboutRef} style={sp}>
+      <div ref={aboutRef} className="emy-section">
         <Section>
           <Label>{copy.labelAbout}</Label>
           <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
@@ -513,7 +518,7 @@ export default function App() {
       <Divider/>
 
       {/* ── For Whom ── */}
-      <div ref={forWhomRef} style={sp}>
+      <div ref={forWhomRef} className="emy-section">
         <Section>
           <Label>For whom.</Label>
           <div style={{ fontSize:22, letterSpacing:"0.04em", color:"#fff", fontWeight:700, marginBottom:12 }}>
@@ -537,7 +542,7 @@ export default function App() {
       <Divider/>
 
       {/* ── What I Do ── */}
-      <div ref={whatIDoRef} style={sp}>
+      <div ref={whatIDoRef} className="emy-section">
         <Section>
           <Label>What I do.</Label>
           <div style={{ fontSize:22, letterSpacing:"0.04em", color:"#fff", fontWeight:700, marginBottom:12 }}>
@@ -566,7 +571,7 @@ export default function App() {
       <Divider/>
 
       {/* ── Who ── */}
-      <div ref={whoRef} style={sp}>
+      <div ref={whoRef} className="emy-section">
         <Section>
           <Label>{copy.labelWho}</Label>
           <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:40 }}>
@@ -616,7 +621,7 @@ export default function App() {
       <Divider/>
 
       {/* ── Talk ── */}
-      <div ref={talkRef} style={{ ...sp, paddingBottom:120 }}>
+      <div ref={talkRef} className="emy-section" style={{ paddingBottom:120 }}>
         <Section>
           <Label>{copy.labelTalk}</Label>
           <p style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.6)", marginBottom:32 }}>
