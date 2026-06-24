@@ -354,9 +354,10 @@ export default function App() {
 
   const goTo = (key) => {
     setMenuOpen(false);
-    if (key === "landing") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    const smooth = window.innerWidth <= 680;
+    if (key === "landing") { window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "instant" }); return; }
     const refs = { about: aboutRef, who: whoRef, talk: talkRef };
-    refs[key]?.current?.scrollIntoView({ behavior: "smooth" });
+    refs[key]?.current?.scrollIntoView({ behavior: smooth ? "smooth" : "instant" });
   };
 
   useEffect(() => {
