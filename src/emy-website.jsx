@@ -627,17 +627,13 @@ export default function App() {
           <p style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.6)", marginBottom:32 }}>
             No forms, no waiting. Reach out directly — and within 24 hours you will know if we are a good match.
           </p>
-          <div style={{ display:"flex", flexDirection:"column", gap:14, marginBottom:48 }}>
+          <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
             <a href="https://wa.me/32471481010" target="_blank" rel="noreferrer" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.2)", color:"#fff", textDecoration:"none", fontSize:13, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:700, fontFamily:"inherit" }}>
               <i className="ti ti-brand-whatsapp" style={{ fontSize:18 }}/> WhatsApp
             </a>
             <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.65)", textDecoration:"none", fontSize:13, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:700, fontFamily:"inherit" }}>
               <i className="ti ti-mail" style={{ fontSize:18 }}/> emy@ask-emy.com
             </a>
-          </div>
-          <div style={{ borderTop:"1px solid rgba(255,255,255,0.08)", paddingTop:32 }}>
-            <Label>{copy.labelTalk}</Label>
-            <EmyChat greeting={copy.greeting}/>
           </div>
         </Section>
       </div>
