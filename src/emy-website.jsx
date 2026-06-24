@@ -83,7 +83,7 @@ const DEFAULT_COPY = {
   labelAbout: "About Emy.",
   aboutP1: "Some things are better left to someone who truly knows you.",
   aboutP2: "One dedicated contact. A flight rebooked at midnight. Last-minute tickets for a race or a sold-out show. Access where others are turned away.",
-  aboutP3: "Personal. Discreet. And over time, effortless — because I learn your preferences, your standards, your life.",
+  aboutP3: "Personal. Discreet. And over time, effortless — because we learn your preferences, your standards, your life.",
   aboutP4: "Not a service. A relationship.",
   membershipTitle: "Membership",
   membershipSub: "Choose what fits your life.",
@@ -112,10 +112,10 @@ const FOR_WHOM = [
 
 const WHAT_I_DO = [
   { icon:"ti-plane",        title:"Private jets & helicopters", desc:"Access to the right aircraft, at the right price, at the right time. Ten years of aviation expertise — and the network to match." },
-  { icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. I source, negotiate, and arrange everything on board." },
+  { icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board." },
   { icon:"ti-map",          title:"Hotels & travel",            desc:"Bespoke travel from start to finish. The right suite, the right itinerary, the right experience — curated for you personally." },
   { icon:"ti-confetti",     title:"Events & reservations",      desc:"A table at a fully booked restaurant, tickets to a sold-out event, a private gathering organised to the last detail." },
-  { icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. I find it, source it, and deliver it — without you lifting a finger." },
+  { icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it — without you lifting a finger." },
 ];
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
@@ -346,18 +346,16 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const copy = DEFAULT_COPY;
 
-  const aboutRef    = useRef(null);
-  const forWhomRef  = useRef(null);
-  const whatIDoRef  = useRef(null);
-  const whoRef      = useRef(null);
-  const talkRef     = useRef(null);
+  const aboutRef = useRef(null);
+  const whoRef   = useRef(null);
+  const talkRef  = useRef(null);
 
   useEffect(() => { setTimeout(() => setMounted(true), 80); window.scrollTo(0, 0); }, []);
 
   const goTo = (key) => {
     setMenuOpen(false);
     if (key === "landing") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
-    const refs = { about: aboutRef, "for-whom": forWhomRef, "what-i-do": whatIDoRef, who: whoRef, talk: talkRef };
+    const refs = { about: aboutRef, who: whoRef, talk: talkRef };
     refs[key]?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -426,8 +424,6 @@ export default function App() {
     <div style={{ position:"fixed", inset:0, zIndex:100, background:"rgba(0,0,0,0.96)", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", gap:36, overflowY:"auto", padding:"40px 0" }}>
       {[
         { label:"About Emy.", key:"about" },
-        { label:"For Whom.", key:"for-whom" },
-        { label:"What I Do.", key:"what-i-do" },
         { label:"Who is Emy.", key:"who" },
         { label:"Talk to Emy.", key:"talk" },
       ].map(item => (
@@ -479,15 +475,62 @@ export default function App() {
       <div ref={aboutRef} className="emy-section">
         <Section>
           <Label>{copy.labelAbout}</Label>
-          <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)" }}>
+          <div style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:56 }}>
             <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
             <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
             <p style={{ marginBottom:22 }}>{copy.aboutP3}</p>
-            <p style={{ marginBottom:48 }}>{copy.aboutP4}</p>
+            <p style={{ marginBottom:0 }}>{copy.aboutP4}</p>
           </div>
-          <div style={{ borderTop:"1px solid rgba(255,255,255,0.12)", paddingTop:40 }}>
-            <div style={{ fontSize:20, letterSpacing:"0.12em", textTransform:"uppercase", color:"#fff", fontWeight:700, marginBottom:8 }}>{copy.membershipTitle}</div>
-            <div style={{ fontSize:12, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", marginBottom:36 }}>{copy.membershipSub}</div>
+
+          {/* For Whom */}
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
+            <Label>For whom.</Label>
+            <div style={{ fontSize:20, letterSpacing:"0.04em", color:"#fff", fontWeight:700, marginBottom:10 }}>
+              A lifestyle membership for those who expect more.
+            </div>
+            <p style={{ fontSize:14, lineHeight:1.75, color:"rgba(255,255,255,0.55)", marginBottom:32 }}>
+              Because your time is better spent elsewhere.
+            </p>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:1, border:"1px solid rgba(255,255,255,0.08)" }}>
+              {FOR_WHOM.map((p, i) => (
+                <div key={i} style={{ padding:"22px 18px", borderRight:"1px solid rgba(255,255,255,0.08)", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
+                  <i className={`ti ${p.icon}`} style={{ fontSize:20, color:"rgba(255,255,255,0.45)", display:"block", marginBottom:12 }}/>
+                  <div style={{ fontSize:11, letterSpacing:"0.14em", textTransform:"uppercase", color:"#fff", fontWeight:700, marginBottom:8 }}>{p.title}</div>
+                  <p style={{ fontSize:12, lineHeight:1.65, color:"rgba(255,255,255,0.5)" }}>{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* What we do */}
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
+            <Label>What we do.</Label>
+            <div style={{ fontSize:20, letterSpacing:"0.04em", color:"#fff", fontWeight:700, marginBottom:10 }}>
+              Everything that costs you time.
+            </div>
+            <p style={{ fontSize:14, lineHeight:1.75, color:"rgba(255,255,255,0.55)", marginBottom:8 }}>
+              From a private jet to a dinner reservation — we handle the details so you never have to think about them.
+            </p>
+            <div style={{ display:"flex", flexDirection:"column", marginTop:24 }}>
+              {WHAT_I_DO.map((s, i) => (
+                <div key={i} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)" }}>
+                  <i className={`ti ${s.icon}`} style={{ fontSize:20, color:"rgba(255,255,255,0.45)", flexShrink:0, marginTop:2 }}/>
+                  <div>
+                    <div style={{ fontSize:13, letterSpacing:"0.14em", textTransform:"uppercase", color:"#fff", fontWeight:700, marginBottom:8 }}>{s.title}</div>
+                    <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.55)" }}>{s.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p style={{ marginTop:24, fontSize:13, lineHeight:1.7, color:"rgba(255,255,255,0.35)", fontStyle:"italic", borderTop:"1px solid rgba(255,255,255,0.08)", paddingTop:20 }}>
+              Don't see what you need? Ask anyway. If it can be arranged, we will arrange it.
+            </p>
+          </div>
+
+          {/* Membership */}
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48 }}>
+            <Label>{copy.membershipTitle}</Label>
+            <div style={{ fontSize:12, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", marginBottom:32 }}>{copy.membershipSub}</div>
             <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
               <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
@@ -504,67 +547,14 @@ export default function App() {
                 <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.65)" }}>{copy.membershipFamilyDesc}</p>
               </div>
             </div>
-            <div style={{ marginTop:24, paddingTop:24, borderTop:"1px solid rgba(255,255,255,0.07)" }}>
-              <p style={{ fontSize:12, letterSpacing:"0.08em", color:"rgba(255,255,255,0.38)", fontStyle:"italic" }}>{copy.membershipCorporate}</p>
+            <div style={{ marginTop:20, paddingTop:20, borderTop:"1px solid rgba(255,255,255,0.07)" }}>
+              <p style={{ fontSize:12, letterSpacing:"0.08em", color:"rgba(255,255,255,0.35)", fontStyle:"italic" }}>{copy.membershipCorporate}</p>
             </div>
             <div style={{ marginTop:32, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
               <p style={{ fontSize:16, lineHeight:1.75, color:"rgba(255,255,255,0.92)", marginBottom:12 }}>{copy.membershipCta1}</p>
               <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)", fontFamily:"inherit", fontWeight:700, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
             </div>
           </div>
-        </Section>
-      </div>
-
-      <Divider/>
-
-      {/* ── For Whom ── */}
-      <div ref={forWhomRef} className="emy-section">
-        <Section>
-          <Label>For whom.</Label>
-          <div style={{ fontSize:22, letterSpacing:"0.04em", color:"#fff", fontWeight:700, marginBottom:12 }}>
-            A lifestyle membership for those who expect more.
-          </div>
-          <p style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.6)", marginBottom:40 }}>
-            Because your time is better spent elsewhere.
-          </p>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:1, border:"1px solid rgba(255,255,255,0.08)" }}>
-            {FOR_WHOM.map((p, i) => (
-              <div key={i} style={{ padding:"22px 18px", borderRight:"1px solid rgba(255,255,255,0.08)", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-                <i className={`ti ${p.icon}`} style={{ fontSize:20, color:"rgba(255,255,255,0.45)", display:"block", marginBottom:12 }}/>
-                <div style={{ fontSize:11, letterSpacing:"0.14em", textTransform:"uppercase", color:"#fff", fontWeight:700, marginBottom:8 }}>{p.title}</div>
-                <p style={{ fontSize:12, lineHeight:1.65, color:"rgba(255,255,255,0.5)" }}>{p.desc}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
-      </div>
-
-      <Divider/>
-
-      {/* ── What I Do ── */}
-      <div ref={whatIDoRef} className="emy-section">
-        <Section>
-          <Label>What I do.</Label>
-          <div style={{ fontSize:22, letterSpacing:"0.04em", color:"#fff", fontWeight:700, marginBottom:12 }}>
-            Everything that costs you time.
-          </div>
-          <p style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.6)", marginBottom:40 }}>
-            From a private jet to a dinner reservation — I handle the details so you never have to think about them.
-          </p>
-          <div style={{ display:"flex", flexDirection:"column" }}>
-            {WHAT_I_DO.map((s, i) => (
-              <div key={i} style={{ display:"flex", gap:18, padding:"24px 0", borderTop:"1px solid rgba(255,255,255,0.08)" }}>
-                <i className={`ti ${s.icon}`} style={{ fontSize:20, color:"rgba(255,255,255,0.45)", flexShrink:0, marginTop:2 }}/>
-                <div>
-                  <div style={{ fontSize:13, letterSpacing:"0.14em", textTransform:"uppercase", color:"#fff", fontWeight:700, marginBottom:8 }}>{s.title}</div>
-                  <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.55)" }}>{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p style={{ marginTop:32, fontSize:13, lineHeight:1.7, color:"rgba(255,255,255,0.38)", fontStyle:"italic", borderTop:"1px solid rgba(255,255,255,0.08)", paddingTop:24 }}>
-            Don't see what you need? Ask anyway. If it can be arranged, I will arrange it.
-          </p>
         </Section>
       </div>
 
