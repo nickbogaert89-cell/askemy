@@ -506,13 +506,10 @@ export default function App() {
           {/* What we do */}
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
             <Label>What we do.</Label>
-            <div style={{ fontSize:20, letterSpacing:"0.04em", color:"#fff", fontWeight:700, marginBottom:10 }}>
+            <div style={{ fontSize:20, letterSpacing:"0.04em", color:"#fff", fontWeight:700, marginBottom:24 }}>
               Everything that costs you time.
             </div>
-            <p style={{ fontSize:14, lineHeight:1.75, color:"rgba(255,255,255,0.55)", marginBottom:8 }}>
-              From a private jet to a dinner reservation — we handle the details so you never have to think about them.
-            </p>
-            <div style={{ display:"flex", flexDirection:"column", marginTop:24 }}>
+            <div style={{ display:"flex", flexDirection:"column" }}>
               {WHAT_I_DO.map((s, i) => (
                 <div key={i} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)" }}>
                   <i className={`ti ${s.icon}`} style={{ fontSize:20, color:"rgba(255,255,255,0.45)", flexShrink:0, marginTop:2 }}/>
@@ -576,36 +573,6 @@ export default function App() {
               <div style={{ padding:"12px 28px 0", fontSize:11, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.35)", fontFamily:"'Space Mono',monospace" }}>Emy Engels</div>
             </div>
           )}
-          <div style={{ marginTop:48 }}>
-            <Label>{copy.labelWhere}</Label>
-            <div style={{ position:"relative" }}>
-              {copy.locationPhoto && (
-                <>
-                  <div style={{ position:"absolute", inset:0, backgroundImage:`url(${copy.locationPhoto})`, backgroundSize:"cover", backgroundPosition:"center", opacity:0.50, filter:"blur(4px)", borderRadius:4, zIndex:0 }}/>
-                  <div style={{ position:"absolute", inset:0, background:"linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 100%)", borderRadius:4, zIndex:0 }}/>
-                </>
-              )}
-              <div style={{ position:"relative", zIndex:1 }}>
-                <div style={{ position:"absolute", left:6, top:8, bottom:8, width:1, background:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.02))" }}/>
-                {locations.map((loc, i) => {
-                  const isCurrent = i===0;
-                  const op = trailOpacity(i, locations.length);
-                  return (
-                    <div key={i} style={{ display:"flex", alignItems:"center", gap:22, padding:"12px 0", opacity:op, borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
-                      <div style={{ width:isCurrent?14:7, height:isCurrent?14:7, borderRadius:"50%", border:`${isCurrent?"1.5px":"1px"} solid rgba(255,255,255,${isCurrent?0.9:0.38})`, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:isCurrent?"blink 3s ease-in-out infinite":"none" }}>
-                        {isCurrent && <div style={{ width:6, height:6, borderRadius:"50%", background:"#fff" }}/>}
-                      </div>
-                      <div style={{ flex:1 }}>
-                        <div style={{ fontSize:isCurrent?22:17, letterSpacing:"0.05em", color:"#fff", fontWeight:isCurrent?700:400 }}>{loc.city}</div>
-                        {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.55)", marginTop:5, textTransform:"uppercase" }}>{loc.country}</div>}
-                      </div>
-                      {isCurrent && <div style={{ fontSize:10, letterSpacing:"0.26em", color:"rgba(255,255,255,0.65)", border:"1px solid rgba(255,255,255,0.22)", padding:"5px 10px", fontWeight:700 }}>now</div>}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
         </Section>
       </div>
 
