@@ -430,17 +430,22 @@ export default function App() {
   );
 
   const MenuOverlay = () => (
-    <div style={{ position:"fixed", inset:0, zIndex:100, background:"rgba(16,15,13,0.97)", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", gap:36, overflowY:"auto", padding:"40px 0" }}>
-      {[
-        { label:"About Emy.", key:"about" },
-        { label:"Who is Emy.", key:"who" },
-        { label:"Talk to Emy.", key:"talk" },
-      ].map(item => (
-        <button key={item.key} onClick={() => goTo(item.key)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:26, letterSpacing:"0.04em", color:"rgba(255,255,255,0.8)", fontFamily:"inherit", fontWeight:300, fontStyle:"italic", transition:"color 0.2s" }}
-          onMouseEnter={e => e.target.style.color="#fff"}
-          onMouseLeave={e => e.target.style.color="rgba(255,255,255,0.8)"}
-        >{item.label}</button>
-      ))}
+    <div style={{ position:"fixed", inset:0, zIndex:100, background:"#100f0d", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"stretch", overflowY:"auto", padding:"40px 28px" }}>
+      <div style={{ maxWidth:420, margin:"0 auto", width:"100%" }}>
+        {[
+          { label:"About Emy.", key:"about" },
+          { label:"Who is Emy.", key:"who" },
+          { label:"Talk to Emy.", key:"talk" },
+        ].map((item, i, arr) => (
+          <button key={item.key} onClick={() => goTo(item.key)} style={{ display:"flex", alignItems:"center", gap:18, width:"100%", background:"none", border:"none", borderBottom: i < arr.length-1 ? "1px solid rgba(255,255,255,0.08)" : "none", cursor:"pointer", padding:"22px 0", fontFamily:"inherit", transition:"color 0.2s" }}
+            onMouseEnter={e => e.currentTarget.style.color="#fff"}
+            onMouseLeave={e => e.currentTarget.style.color="inherit"}
+          >
+            <span style={{ fontSize:11, color:"rgba(255,255,255,0.3)", flexShrink:0 }}>{String(i+1).padStart(2,"0")}</span>
+            <span style={{ fontSize:24, letterSpacing:"0.02em", color:"rgba(255,255,255,0.85)", fontWeight:300, fontStyle:"italic" }}>{item.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 
