@@ -121,6 +121,7 @@ const WHAT_I_DO = [
   { icon:"ti-map",          title:"Hotels & travel",            desc:"Bespoke travel from start to finish. The right suite, the right itinerary, the right experience — curated for you personally." },
   { icon:"ti-confetti",     title:"Events & reservations",      desc:"A table at a fully booked restaurant, tickets to a sold-out event, a private gathering organised to the last detail." },
   { icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it — without you lifting a finger." },
+  { icon:"ti-home-2",       title:"Relocation & family life",   desc:"Settling in somewhere new, or simply keeping a busy household running smoothly." },
 ];
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
