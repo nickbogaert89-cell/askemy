@@ -405,6 +405,13 @@ export default function App() {
     .emy-section{max-width:1080px;margin:0 auto;padding:100px 72px 80px;}
     .emy-divider{max-width:1080px;margin:0 auto;padding:0 72px;}
     .emy-for-whom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid rgba(255,255,255,0.06);}
+    .emy-body{font-size:14px;line-height:1.9;color:rgba(255,255,255,0.65);}
+    .emy-section p{font-size:14px;line-height:1.9;}
+    @media(min-width:681px){
+      .emy-body{font-size:17px;line-height:1.9;}
+      .emy-section p{font-size:17px;line-height:1.9;}
+      .emy-section .emy-item-title{font-size:17px;}
+    }
     @media(max-width:680px){
       .emy-section{padding:90px 28px 70px;}
       .emy-divider{padding:0 28px;}
@@ -489,7 +496,7 @@ export default function App() {
       <div ref={aboutRef} className="emy-section">
         <Section>
           <Label>{copy.labelAbout}</Label>
-          <div style={{ fontSize:15, lineHeight:1.9, color:"rgba(255,255,255,0.65)", marginBottom:56 }}>
+          <div className="emy-body" style={{ marginBottom:56 }}>
             <p style={{ marginBottom:18 }}>{copy.aboutP1}</p>
             <p style={{ marginBottom:18 }}>{copy.aboutP2}</p>
             <p style={{ marginBottom:18 }}>{copy.aboutP3}</p>
@@ -509,8 +516,8 @@ export default function App() {
               {FOR_WHOM.map((p, i) => (
                 <div key={i} style={{ padding:"22px 18px", borderRight:"1px solid rgba(255,255,255,0.08)", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
                   <i className={`ti ${p.icon}`} style={{ fontSize:16, color:"rgba(255,255,255,0.32)", display:"block", marginBottom:10 }}/>
-                  <div style={{ fontSize:13, color:"rgba(255,255,255,0.72)", marginBottom:6 }}>{p.title}</div>
-                  <p style={{ fontSize:13, lineHeight:1.7, color:"rgba(255,255,255,0.38)" }}>{p.desc}</p>
+                  <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.72)", marginBottom:6 }}>{p.title}</div>
+                  <p style={{ color:"rgba(255,255,255,0.38)" }}>{p.desc}</p>
                 </div>
               ))}
             </div>
@@ -527,8 +534,8 @@ export default function App() {
                 <div key={i} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)" }}>
                   <i className={`ti ${s.icon}`} style={{ fontSize:18, color:"rgba(255,255,255,0.35)", flexShrink:0, marginTop:4 }}/>
                   <div>
-                    <div style={{ fontSize:15, color:"rgba(255,255,255,0.72)", marginBottom:6 }}>{s.title}</div>
-                    <p style={{ fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.42)" }}>{s.desc}</p>
+                    <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.72)", marginBottom:6 }}>{s.title}</div>
+                    <p style={{ color:"rgba(255,255,255,0.42)" }}>{s.desc}</p>
                   </div>
                 </div>
               ))}
@@ -549,8 +556,8 @@ export default function App() {
               ].map((tier, i) => (
                 <div key={i} style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:28, paddingBottom:28 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
-                    <div style={{ fontSize:15, color:"rgba(255,255,255,0.82)" }}>{tier.title}</div>
-                    <div style={{ fontSize:15, color:"rgba(255,255,255,0.38)" }}>{tier.price}</div>
+                    <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.82)" }}>{tier.title}</div>
+                    <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.38)" }}>{tier.price}</div>
                   </div>
                   <p style={{ fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.62)", marginBottom:8 }}>{tier.sub}</p>
                   <p style={{ fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.38)" }}>{tier.desc}</p>
@@ -571,7 +578,7 @@ export default function App() {
       <div ref={whoRef} className="emy-section">
         <Section>
           <Label>{copy.labelWho}</Label>
-          <div style={{ fontSize:15, lineHeight:1.9, color:"rgba(255,255,255,0.65)", marginBottom:40 }}>
+          <div className="emy-body" style={{ marginBottom:40 }}>
             <p style={{ marginBottom:18 }}>{copy.whoP1}</p>
             <p style={{ marginBottom:18 }}>{copy.whoP2}</p>
             <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
