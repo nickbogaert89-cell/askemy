@@ -473,11 +473,11 @@ export default function App() {
       {/* ── Landing ── */}
       <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", opacity:mounted?1:0, transition:"opacity 1s ease" }}>
         <div style={{ textAlign:"center" }}>
-          <Logo width={260}/>
-          <div style={{ marginTop:18, fontSize:10, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.38)", fontWeight:400 }}>
+          <Logo width={420}/>
+          <div style={{ marginTop:24, fontSize:12, letterSpacing:"0.3em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", fontWeight:400 }}>
             {copy.taglineLine1}
           </div>
-          <div style={{ marginTop:28, fontSize:13, letterSpacing:"0.04em", color:"rgba(255,255,255,0.35)", fontWeight:400, fontStyle:"italic" }}>
+          <div style={{ marginTop:36, fontSize:22, letterSpacing:"0.02em", color:"rgba(255,255,255,0.55)", fontWeight:400, fontStyle:"italic" }}>
             Stop arranging. Start living.
           </div>
         </div>
