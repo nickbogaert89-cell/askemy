@@ -499,18 +499,18 @@ export default function App() {
           {/* For Whom */}
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
             <Label>For whom.</Label>
-            <div style={{ fontSize:16, color:"rgba(255,255,255,0.78)", fontWeight:700, marginBottom:10, lineHeight:1.6 }}>
+            <p style={{ fontSize:15, lineHeight:1.85, color:"rgba(255,255,255,0.72)", marginBottom:6 }}>
               A lifestyle membership for those who expect more.
-            </div>
-            <p style={{ fontSize:13, lineHeight:1.75, color:"rgba(255,255,255,0.38)", marginBottom:32 }}>
+            </p>
+            <p style={{ fontSize:15, lineHeight:1.85, color:"rgba(255,255,255,0.38)", marginBottom:32 }}>
               Because your time is better spent elsewhere.
             </p>
             <div className="emy-for-whom-grid">
               {FOR_WHOM.map((p, i) => (
                 <div key={i} style={{ padding:"22px 18px", borderRight:"1px solid rgba(255,255,255,0.08)", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
                   <i className={`ti ${p.icon}`} style={{ fontSize:16, color:"rgba(255,255,255,0.32)", display:"block", marginBottom:10 }}/>
-                  <div style={{ fontSize:11, letterSpacing:"0.08em", color:"rgba(255,255,255,0.72)", fontWeight:700, marginBottom:8 }}>{p.title}</div>
-                  <p style={{ fontSize:12, lineHeight:1.7, color:"rgba(255,255,255,0.38)" }}>{p.desc}</p>
+                  <div style={{ fontSize:13, color:"rgba(255,255,255,0.72)", marginBottom:6 }}>{p.title}</div>
+                  <p style={{ fontSize:13, lineHeight:1.7, color:"rgba(255,255,255,0.38)" }}>{p.desc}</p>
                 </div>
               ))}
             </div>
@@ -519,21 +519,21 @@ export default function App() {
           {/* What we do */}
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
             <Label>What we do.</Label>
-            <div style={{ fontSize:16, color:"rgba(255,255,255,0.78)", fontWeight:700, marginBottom:24, lineHeight:1.6 }}>
+            <p style={{ fontSize:15, color:"rgba(255,255,255,0.72)", marginBottom:24, lineHeight:1.85 }}>
               Everything that costs you time.
-            </div>
+            </p>
             <div style={{ display:"flex", flexDirection:"column" }}>
               {WHAT_I_DO.map((s, i) => (
                 <div key={i} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)" }}>
                   <i className={`ti ${s.icon}`} style={{ fontSize:18, color:"rgba(255,255,255,0.35)", flexShrink:0, marginTop:4 }}/>
                   <div>
-                    <div style={{ fontSize:12, letterSpacing:"0.08em", color:"rgba(255,255,255,0.72)", fontWeight:700, marginBottom:6 }}>{s.title}</div>
-                    <p style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.42)" }}>{s.desc}</p>
+                    <div style={{ fontSize:15, color:"rgba(255,255,255,0.72)", marginBottom:6 }}>{s.title}</div>
+                    <p style={{ fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.42)" }}>{s.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <p style={{ marginTop:24, fontSize:16, lineHeight:1.8, color:"rgba(255,255,255,0.35)", fontStyle:"italic", fontWeight:300, borderTop:"1px solid rgba(255,255,255,0.07)", paddingTop:20 }}>
+            <p style={{ marginTop:24, fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.35)", borderTop:"1px solid rgba(255,255,255,0.07)", paddingTop:20 }}>
               Don't see what you need? Ask anyway. If it can be arranged, we will arrange it.
             </p>
           </div>
@@ -549,16 +549,16 @@ export default function App() {
               ].map((tier, i) => (
                 <div key={i} style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:28, paddingBottom:28 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
-                    <div style={{ fontSize:14, letterSpacing:"0.06em", fontWeight:700, color:"rgba(255,255,255,0.82)" }}>{tier.title}</div>
-                    <div style={{ fontSize:12, color:"rgba(255,255,255,0.38)", letterSpacing:"0.04em" }}>{tier.price}</div>
+                    <div style={{ fontSize:15, color:"rgba(255,255,255,0.82)" }}>{tier.title}</div>
+                    <div style={{ fontSize:15, color:"rgba(255,255,255,0.38)" }}>{tier.price}</div>
                   </div>
-                  <p style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.62)", marginBottom:10 }}>{tier.sub}</p>
-                  <p style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.38)" }}>{tier.desc}</p>
+                  <p style={{ fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.62)", marginBottom:8 }}>{tier.sub}</p>
+                  <p style={{ fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.38)" }}>{tier.desc}</p>
                 </div>
               ))}
             </div>
             <div style={{ marginTop:8, paddingTop:28, borderTop:"1px solid rgba(255,255,255,0.07)" }}>
-              <p style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.5)", marginBottom:16, fontStyle:"italic" }}>{copy.membershipCta1}</p>
+              <p style={{ fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.45)", marginBottom:16 }}>{copy.membershipCta1}</p>
               <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:11, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", fontFamily:"inherit", fontWeight:400, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
             </div>
           </div>
@@ -591,7 +591,7 @@ export default function App() {
       <div ref={talkRef} className="emy-section" style={{ paddingBottom:120 }}>
         <Section>
           <Label>{copy.labelTalk}</Label>
-          <p style={{ fontSize:14, lineHeight:1.85, color:"rgba(255,255,255,0.45)", marginBottom:32, fontStyle:"italic" }}>
+          <p style={{ fontSize:15, lineHeight:1.85, color:"rgba(255,255,255,0.45)", marginBottom:32 }}>
             No forms, no waiting. Reach out directly — and within 24 hours you will know if we are a good match.
           </p>
           <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
