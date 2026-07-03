@@ -168,7 +168,7 @@ function Rule() {
   return <div style={{ height:0, margin:"40px 0 0" }}/>;
 }
 function Label({ children }) {
-  return <div style={{ fontSize:10, letterSpacing:"0.32em", color:"rgba(255,255,255,0.35)", textTransform:"uppercase", marginBottom:28, fontWeight:400, fontFamily:"'Cormorant Garamond', Georgia, serif" }}>{children}</div>;
+  return <div style={{ fontSize:10, letterSpacing:"0.22em", color:"rgba(255,255,255,0.38)", textTransform:"uppercase", marginBottom:24, fontWeight:400, fontFamily:"'Courier Prime','Courier New',monospace" }}>{children}</div>;
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
@@ -383,12 +383,12 @@ export default function App() {
     })();
   }, []);
 
-  const baseStyle = { background:"#100f0d", minHeight:"100vh", fontFamily:"'Cormorant Garamond', Georgia, serif", color:"#fff" };
+  const baseStyle = { background:"#0d0c0a", minHeight:"100vh", fontFamily:"'Courier Prime','Courier New',monospace", color:"#fff" };
   const globalCss = `
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
     @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css');
     *{box-sizing:border-box;margin:0;padding:0;}
-    html,body{background:#100f0d;}
+    html,body{background:#0d0c0a;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
     @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
     @keyframes dotPulse{0%,100%{opacity:0.15;}50%{opacity:0.65;}}
@@ -398,7 +398,7 @@ export default function App() {
     input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.3);}
     ::-webkit-scrollbar{width:0;}
     ::selection{background:rgba(255,255,255,0.12);}
-    .emy-topbar{position:fixed;top:0;left:0;right:0;z-index:50;padding:20px 32px 32px;text-align:right;background:linear-gradient(to bottom,rgba(16,15,13,0.97) 40%,rgba(16,15,13,0.6) 75%,transparent);pointer-events:none;}
+    .emy-topbar{position:fixed;top:0;left:0;right:0;z-index:50;padding:20px 32px 32px;text-align:right;background:linear-gradient(to bottom,rgba(13,12,10,0.97) 40%,rgba(13,12,10,0.6) 75%,transparent);pointer-events:none;}
     .emy-topbar>*{pointer-events:auto;}
     .emy-hamburger{position:fixed;top:24px;left:24px;z-index:200;}
     .ti{font-size:20px;color:rgba(255,255,255,0.45);}
@@ -430,7 +430,7 @@ export default function App() {
   );
 
   const MenuOverlay = () => (
-    <div style={{ position:"fixed", inset:0, zIndex:100, background:"#100f0d", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"stretch", overflowY:"auto", padding:"40px 28px" }}>
+    <div style={{ position:"fixed", inset:0, zIndex:100, background:"#0d0c0a", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"stretch", overflowY:"auto", padding:"40px 28px" }}>
       <div style={{ maxWidth:420, margin:"0 auto", width:"100%" }}>
         {[
           { label:"About Emy.", key:"about" },
@@ -474,10 +474,10 @@ export default function App() {
       <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", opacity:mounted?1:0, transition:"opacity 1s ease" }}>
         <div style={{ textAlign:"center" }}>
           <Logo width={260}/>
-          <div style={{ marginTop:18, fontSize:11, letterSpacing:"0.32em", textTransform:"uppercase", color:"rgba(255,255,255,0.35)", fontWeight:400 }}>
+          <div style={{ marginTop:18, fontSize:10, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.38)", fontWeight:400 }}>
             {copy.taglineLine1}
           </div>
-          <div style={{ marginTop:30, fontSize:17, letterSpacing:"0.02em", color:"rgba(255,255,255,0.4)", fontWeight:300, fontStyle:"italic" }}>
+          <div style={{ marginTop:28, fontSize:13, letterSpacing:"0.04em", color:"rgba(255,255,255,0.35)", fontWeight:400, fontStyle:"italic" }}>
             Stop arranging. Start living.
           </div>
         </div>
@@ -489,28 +489,28 @@ export default function App() {
       <div ref={aboutRef} className="emy-section">
         <Section>
           <Label>{copy.labelAbout}</Label>
-          <div style={{ fontSize:19, lineHeight:2, color:"rgba(255,255,255,0.70)", marginBottom:56, fontWeight:300 }}>
-            <p style={{ marginBottom:22 }}>{copy.aboutP1}</p>
-            <p style={{ marginBottom:22 }}>{copy.aboutP2}</p>
-            <p style={{ marginBottom:22 }}>{copy.aboutP3}</p>
-            <p style={{ marginBottom:0, fontStyle:"italic", fontSize:21, color:"rgba(255,255,255,0.45)" }}>{copy.aboutP4}</p>
+          <div style={{ fontSize:15, lineHeight:1.9, color:"rgba(255,255,255,0.65)", marginBottom:56 }}>
+            <p style={{ marginBottom:18 }}>{copy.aboutP1}</p>
+            <p style={{ marginBottom:18 }}>{copy.aboutP2}</p>
+            <p style={{ marginBottom:18 }}>{copy.aboutP3}</p>
+            <p style={{ marginBottom:0, fontStyle:"italic", color:"rgba(255,255,255,0.35)" }}>{copy.aboutP4}</p>
           </div>
 
           {/* For Whom */}
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
             <Label>For whom.</Label>
-            <div style={{ fontSize:24, color:"rgba(255,255,255,0.82)", fontWeight:300, fontStyle:"italic", marginBottom:10, lineHeight:1.4 }}>
+            <div style={{ fontSize:16, color:"rgba(255,255,255,0.78)", fontWeight:700, marginBottom:10, lineHeight:1.6 }}>
               A lifestyle membership for those who expect more.
             </div>
-            <p style={{ fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.35)", marginBottom:32, fontWeight:300 }}>
+            <p style={{ fontSize:13, lineHeight:1.75, color:"rgba(255,255,255,0.38)", marginBottom:32 }}>
               Because your time is better spent elsewhere.
             </p>
             <div className="emy-for-whom-grid">
               {FOR_WHOM.map((p, i) => (
                 <div key={i} style={{ padding:"22px 18px", borderRight:"1px solid rgba(255,255,255,0.08)", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-                  <i className={`ti ${p.icon}`} style={{ fontSize:18, color:"rgba(255,255,255,0.35)", display:"block", marginBottom:12 }}/>
-                  <div style={{ fontSize:14, letterSpacing:"0.04em", color:"rgba(255,255,255,0.78)", fontWeight:400, marginBottom:8 }}>{p.title}</div>
-                  <p style={{ fontSize:14, lineHeight:1.7, color:"rgba(255,255,255,0.4)", fontWeight:300 }}>{p.desc}</p>
+                  <i className={`ti ${p.icon}`} style={{ fontSize:16, color:"rgba(255,255,255,0.32)", display:"block", marginBottom:10 }}/>
+                  <div style={{ fontSize:11, letterSpacing:"0.08em", color:"rgba(255,255,255,0.72)", fontWeight:700, marginBottom:8 }}>{p.title}</div>
+                  <p style={{ fontSize:12, lineHeight:1.7, color:"rgba(255,255,255,0.38)" }}>{p.desc}</p>
                 </div>
               ))}
             </div>
@@ -519,7 +519,7 @@ export default function App() {
           {/* What we do */}
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
             <Label>What we do.</Label>
-            <div style={{ fontSize:24, color:"rgba(255,255,255,0.82)", fontWeight:300, fontStyle:"italic", marginBottom:24, lineHeight:1.4 }}>
+            <div style={{ fontSize:16, color:"rgba(255,255,255,0.78)", fontWeight:700, marginBottom:24, lineHeight:1.6 }}>
               Everything that costs you time.
             </div>
             <div style={{ display:"flex", flexDirection:"column" }}>
@@ -527,8 +527,8 @@ export default function App() {
                 <div key={i} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)" }}>
                   <i className={`ti ${s.icon}`} style={{ fontSize:18, color:"rgba(255,255,255,0.35)", flexShrink:0, marginTop:4 }}/>
                   <div>
-                    <div style={{ fontSize:16, letterSpacing:"0.02em", color:"rgba(255,255,255,0.78)", fontWeight:400, marginBottom:6 }}>{s.title}</div>
-                    <p style={{ fontSize:16, lineHeight:1.85, color:"rgba(255,255,255,0.45)", fontWeight:300 }}>{s.desc}</p>
+                    <div style={{ fontSize:12, letterSpacing:"0.08em", color:"rgba(255,255,255,0.72)", fontWeight:700, marginBottom:6 }}>{s.title}</div>
+                    <p style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.42)" }}>{s.desc}</p>
                   </div>
                 </div>
               ))}
@@ -549,17 +549,17 @@ export default function App() {
               ].map((tier, i) => (
                 <div key={i} style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:28, paddingBottom:28 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:10 }}>
-                    <div style={{ fontSize:18, letterSpacing:"0.02em", fontStyle:"italic", fontWeight:400, color:"rgba(255,255,255,0.85)" }}>{tier.title}</div>
-                    <div style={{ fontSize:14, color:"rgba(255,255,255,0.4)", letterSpacing:"0.02em" }}>{tier.price}</div>
+                    <div style={{ fontSize:14, letterSpacing:"0.06em", fontWeight:700, color:"rgba(255,255,255,0.82)" }}>{tier.title}</div>
+                    <div style={{ fontSize:12, color:"rgba(255,255,255,0.38)", letterSpacing:"0.04em" }}>{tier.price}</div>
                   </div>
-                  <p style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.65)", marginBottom:10, fontWeight:300 }}>{tier.sub}</p>
-                  <p style={{ fontSize:15, lineHeight:1.75, color:"rgba(255,255,255,0.4)", fontWeight:300 }}>{tier.desc}</p>
+                  <p style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.62)", marginBottom:10 }}>{tier.sub}</p>
+                  <p style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.38)" }}>{tier.desc}</p>
                 </div>
               ))}
             </div>
             <div style={{ marginTop:8, paddingTop:28, borderTop:"1px solid rgba(255,255,255,0.07)" }}>
-              <p style={{ fontSize:17, lineHeight:1.8, color:"rgba(255,255,255,0.55)", marginBottom:16, fontStyle:"italic", fontWeight:300 }}>{copy.membershipCta1}</p>
-              <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, letterSpacing:"0.28em", textTransform:"uppercase", color:"rgba(255,255,255,0.5)", fontFamily:"'Cormorant Garamond', Georgia, serif", fontWeight:400, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
+              <p style={{ fontSize:13, lineHeight:1.8, color:"rgba(255,255,255,0.5)", marginBottom:16, fontStyle:"italic" }}>{copy.membershipCta1}</p>
+              <button onClick={() => goTo("talk")} style={{ background:"none", border:"none", cursor:"pointer", fontSize:11, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", fontFamily:"inherit", fontWeight:400, padding:0, textDecoration:"underline", textUnderlineOffset:4 }}>{copy.membershipCta2}</button>
             </div>
           </div>
         </Section>
@@ -571,15 +571,15 @@ export default function App() {
       <div ref={whoRef} className="emy-section">
         <Section>
           <Label>{copy.labelWho}</Label>
-          <div style={{ fontSize:19, lineHeight:2, color:"rgba(255,255,255,0.70)", marginBottom:40, fontWeight:300 }}>
-            <p style={{ marginBottom:22 }}>{copy.whoP1}</p>
-            <p style={{ marginBottom:22 }}>{copy.whoP2}</p>
+          <div style={{ fontSize:15, lineHeight:1.9, color:"rgba(255,255,255,0.65)", marginBottom:40 }}>
+            <p style={{ marginBottom:18 }}>{copy.whoP1}</p>
+            <p style={{ marginBottom:18 }}>{copy.whoP2}</p>
             <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
           </div>
           {copy.whoPhoto && (
             <div style={{ margin:"0 -28px" }}>
               <img src={copy.whoPhoto} alt="Emy Engels" style={{ width:"100%", height:"auto", display:"block" }}/>
-              <div style={{ padding:"12px 28px 0", fontSize:11, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.35)", fontFamily:"'Cormorant Garamond', Georgia, serif" }}>Emy Engels</div>
+              <div style={{ padding:"12px 28px 0", fontSize:10, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.32)", fontFamily:"inherit" }}>Emy Engels</div>
             </div>
           )}
         </Section>
@@ -591,14 +591,14 @@ export default function App() {
       <div ref={talkRef} className="emy-section" style={{ paddingBottom:120 }}>
         <Section>
           <Label>{copy.labelTalk}</Label>
-          <p style={{ fontSize:17, lineHeight:1.85, color:"rgba(255,255,255,0.5)", marginBottom:32, fontWeight:300, fontStyle:"italic" }}>
+          <p style={{ fontSize:14, lineHeight:1.85, color:"rgba(255,255,255,0.45)", marginBottom:32, fontStyle:"italic" }}>
             No forms, no waiting. Reach out directly — and within 24 hours you will know if we are a good match.
           </p>
           <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-            <a href="https://wa.me/32471481010" target="_blank" rel="noreferrer" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.15)", color:"#fff", textDecoration:"none", fontSize:13, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:400, fontFamily:"'Cormorant Garamond', Georgia, serif" }}>
+            <a href="https://wa.me/32471481010" target="_blank" rel="noreferrer" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.15)", color:"rgba(255,255,255,0.85)", textDecoration:"none", fontSize:12, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:700, fontFamily:"inherit" }}>
               <i className="ti ti-brand-whatsapp" style={{ fontSize:18 }}/> WhatsApp
             </a>
-            <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.08)", color:"rgba(255,255,255,0.55)", textDecoration:"none", fontSize:13, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:400, fontFamily:"'Cormorant Garamond', Georgia, serif" }}>
+            <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.08)", color:"rgba(255,255,255,0.45)", textDecoration:"none", fontSize:12, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:400, fontFamily:"inherit" }}>
               <i className="ti ti-mail" style={{ fontSize:18 }}/> emy@ask-emy.com
             </a>
           </div>
