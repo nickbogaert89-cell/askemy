@@ -168,7 +168,7 @@ function Rule() {
   return <div style={{ height:0, margin:"40px 0 0" }}/>;
 }
 function Label({ children }) {
-  return <div style={{ fontSize:10, letterSpacing:"0.22em", color:"rgba(255,255,255,0.38)", textTransform:"uppercase", marginBottom:24, fontWeight:400, fontFamily:"'Courier Prime','Courier New',monospace" }}>{children}</div>;
+  return <div style={{ fontSize:10, letterSpacing:"0.22em", color:"rgba(255,255,255,0.38)", textTransform:"uppercase", marginBottom:24, fontWeight:400, fontFamily:"'Space Mono','Courier New',monospace" }}>{children}</div>;
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
@@ -383,9 +383,9 @@ export default function App() {
     })();
   }, []);
 
-  const baseStyle = { background:"#0d0c0a", minHeight:"100vh", fontFamily:"'Courier Prime','Courier New',monospace", color:"#fff" };
+  const baseStyle = { background:"#0d0c0a", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", color:"#fff" };
   const globalCss = `
-    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
     @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css');
     *{box-sizing:border-box;margin:0;padding:0;}
     html,body{background:#0d0c0a;}
@@ -474,10 +474,10 @@ export default function App() {
       <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", opacity:mounted?1:0, transition:"opacity 1s ease" }}>
         <div style={{ textAlign:"center" }}>
           <Logo width={420}/>
-          <div style={{ marginTop:28, fontSize:13, color:"rgba(255,255,255,0.38)", fontWeight:400 }}>
+          <div style={{ marginTop:24, fontSize:10, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.4)", fontWeight:400 }}>
             {copy.taglineLine1}
           </div>
-          <div style={{ marginTop:14, fontSize:13, color:"rgba(255,255,255,0.38)", fontWeight:400, fontStyle:"italic" }}>
+          <div style={{ marginTop:16, fontSize:10, letterSpacing:"0.18em", color:"rgba(255,255,255,0.28)", fontWeight:400 }}>
             Stop arranging. Start living.
           </div>
         </div>
@@ -493,7 +493,7 @@ export default function App() {
             <p style={{ marginBottom:18 }}>{copy.aboutP1}</p>
             <p style={{ marginBottom:18 }}>{copy.aboutP2}</p>
             <p style={{ marginBottom:18 }}>{copy.aboutP3}</p>
-            <p style={{ marginBottom:0, fontStyle:"italic", color:"rgba(255,255,255,0.35)" }}>{copy.aboutP4}</p>
+            <p style={{ marginBottom:0, color:"rgba(255,255,255,0.35)" }}>{copy.aboutP4}</p>
           </div>
 
           {/* For Whom */}
@@ -591,7 +591,7 @@ export default function App() {
       <div ref={talkRef} className="emy-section" style={{ paddingBottom:120 }}>
         <Section>
           <Label>{copy.labelTalk}</Label>
-          <p style={{ fontSize:15, lineHeight:1.85, color:"rgba(255,255,255,0.45)", marginBottom:32 }}>
+          <p style={{ fontSize:13, lineHeight:1.85, color:"rgba(255,255,255,0.45)", marginBottom:32 }}>
             No forms, no waiting. Reach out directly — and within 24 hours you will know if we are a good match.
           </p>
           <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
