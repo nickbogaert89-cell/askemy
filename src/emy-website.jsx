@@ -405,6 +405,8 @@ export default function App() {
     .emy-section{max-width:1080px;margin:0 auto;padding:100px 72px 80px;}
     .emy-divider{max-width:1080px;margin:0 auto;padding:0 72px;}
     .emy-for-whom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid rgba(255,255,255,0.06);}
+    .emy-photo{width:100%;height:auto;display:block;}
+    @media(min-width:681px){.emy-photo{max-width:480px;}}
     .emy-body{font-size:14px;line-height:1.9;color:rgba(255,255,255,0.65);}
     .emy-section p{font-size:14px;line-height:1.9;}
     @media(min-width:681px){
@@ -584,8 +586,8 @@ export default function App() {
             <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
           </div>
           {copy.whoPhoto && (
-            <div style={{ margin:"0 -28px" }}>
-              <img src={copy.whoPhoto} alt="Emy Engels" style={{ width:"100%", height:"auto", display:"block" }}/>
+            <div>
+              <img src={copy.whoPhoto} alt="Emy Engels" className="emy-photo"/>
               <div style={{ padding:"12px 28px 0", fontSize:10, letterSpacing:"0.2em", textTransform:"uppercase", color:"rgba(255,255,255,0.32)", fontFamily:"inherit" }}>Emy Engels</div>
             </div>
           )}
