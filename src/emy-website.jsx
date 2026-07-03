@@ -481,10 +481,10 @@ export default function App() {
       <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", opacity:mounted?1:0, transition:"opacity 1s ease" }}>
         <div style={{ textAlign:"center" }}>
           <Logo width={420}/>
-          <div style={{ marginTop:24, fontSize:10, letterSpacing:"0.22em", textTransform:"uppercase", color:"rgba(255,255,255,0.4)", fontWeight:400 }}>
+          <div style={{ marginTop:28, fontSize:15, color:"rgba(255,255,255,0.5)", fontWeight:400 }}>
             {copy.taglineLine1}
           </div>
-          <div style={{ marginTop:16, fontSize:10, letterSpacing:"0.18em", color:"rgba(255,255,255,0.28)", fontWeight:400 }}>
+          <div style={{ marginTop:12, fontSize:15, color:"rgba(255,255,255,0.32)", fontWeight:400 }}>
             Stop arranging. Start living.
           </div>
         </div>
