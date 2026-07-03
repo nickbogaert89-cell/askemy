@@ -385,7 +385,7 @@ export default function App() {
 
   const baseStyle = { background:"#0d0c0a", minHeight:"100vh", fontFamily:"'Space Mono','Courier New',monospace", color:"#fff" };
   const globalCss = `
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@300;400&display=swap');
     @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css');
     *{box-sizing:border-box;margin:0;padding:0;}
     html,body{background:#0d0c0a;}
@@ -483,10 +483,10 @@ export default function App() {
       <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", opacity:mounted?1:0, transition:"opacity 1s ease" }}>
         <div style={{ textAlign:"center" }}>
           <Logo width={420}/>
-          <div style={{ marginTop:28, fontSize:15, color:"rgba(255,255,255,0.5)", fontWeight:400 }}>
+          <div style={{ marginTop:28, fontSize:15, fontFamily:"'Montserrat',sans-serif", fontWeight:300, letterSpacing:"0.12em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)" }}>
             {copy.taglineLine1}
           </div>
-          <div style={{ marginTop:12, fontSize:15, color:"rgba(255,255,255,0.32)", fontWeight:400 }}>
+          <div style={{ marginTop:12, fontSize:13, fontFamily:"'Montserrat',sans-serif", fontWeight:300, letterSpacing:"0.06em", color:"rgba(255,255,255,0.32)" }}>
             Stop arranging. Start living.
           </div>
         </div>
