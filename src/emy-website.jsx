@@ -481,7 +481,7 @@ export default function App() {
         <div style={{ textAlign:"center" }}>
           <Logo width={420}/>
           <div style={{ marginTop:28, fontSize:15, fontFamily:"'Montserrat',sans-serif", fontWeight:300, letterSpacing:"0.12em", textTransform:"uppercase", color:"rgba(255,255,255,0.55)" }}>
-            {copy.taglineLine1}
+            Lifestyle Membership
           </div>
           <div style={{ marginTop:12, fontSize:13, fontFamily:"'Montserrat',sans-serif", fontWeight:300, letterSpacing:"0.06em", color:"rgba(255,255,255,0.32)" }}>
             Stop arranging. Start living.
