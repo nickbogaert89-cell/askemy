@@ -119,7 +119,7 @@ const WHAT_I_DO = [
   { icon:"ti-plane",        title:"Private jets & helicopters", desc:"Access to the right aircraft, at the right price, at the right time. Ten years of aviation expertise — and the network to match." },
   { icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board." },
   { icon:"ti-map",          title:"Hotels & travel",            desc:"Bespoke travel from start to finish. The right suite, the right itinerary, the right experience — curated for you personally." },
-  { icon:"ti-confetti",     title:"Events & reservations",      desc:"A table at a fully booked restaurant, tickets to a sold-out event, a private gathering organised to the last detail." },
+  { icon:"ti-confetti",     title:"Events & reservations",      desc:"The right table, the right evening, a private gathering — arranged exactly as you had in mind." },
   { icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it — without you lifting a finger." },
   { icon:"ti-home-2",       title:"Relocation & family life",   desc:"Settling in somewhere new, or simply keeping a busy household running smoothly." },
 ];
@@ -388,7 +388,7 @@ export default function App() {
     @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Montserrat:wght@300;400&display=swap');
     @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css');
     *{box-sizing:border-box;margin:0;padding:0;}
-    html,body{background:#0d0c0a;}
+    html,body{background:#0d0c0a;overflow-x:hidden;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
     @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
     @keyframes dotPulse{0%,100%{opacity:0.15;}50%{opacity:0.65;}}
@@ -603,9 +603,11 @@ export default function App() {
           <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
             <a href="https://wa.me/32471481010" target="_blank" rel="noreferrer" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.15)", color:"rgba(255,255,255,0.85)", textDecoration:"none", fontSize:12, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:700, fontFamily:"inherit" }}>
               <i className="ti ti-brand-whatsapp" style={{ fontSize:18 }}/> WhatsApp
+              <i className="ti ti-external-link" style={{ fontSize:13, marginLeft:"auto", opacity:0.45 }}/>
             </a>
-            <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.08)", color:"rgba(255,255,255,0.45)", textDecoration:"none", fontSize:12, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:400, fontFamily:"inherit" }}>
+            <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.15)", color:"rgba(255,255,255,0.85)", textDecoration:"none", fontSize:12, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:700, fontFamily:"inherit" }}>
               <i className="ti ti-mail" style={{ fontSize:18 }}/> emy@ask-emy.com
+              <i className="ti ti-external-link" style={{ fontSize:13, marginLeft:"auto", opacity:0.45 }}/>
             </a>
           </div>
         </Section>
