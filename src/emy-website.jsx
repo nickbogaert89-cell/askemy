@@ -506,10 +506,10 @@ export default function App() {
           {/* For Whom */}
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
             <Label>For whom.</Label>
-            <p style={{ fontSize:15, lineHeight:1.85, color:"rgba(255,255,255,0.72)", marginBottom:6 }}>
+            <p style={{ lineHeight:1.85, color:"rgba(255,255,255,0.65)", marginBottom:6 }}>
               A lifestyle membership for those who expect more.
             </p>
-            <p style={{ fontSize:15, lineHeight:1.85, color:"rgba(255,255,255,0.38)", marginBottom:32 }}>
+            <p style={{ lineHeight:1.85, color:"rgba(255,255,255,0.65)", marginBottom:32 }}>
               Because your time is better spent elsewhere.
             </p>
             <div className="emy-for-whom-grid">
