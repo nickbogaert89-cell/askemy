@@ -90,7 +90,11 @@ const DEFAULT_COPY = {
   membershipSolo: "Solo",
   membershipSoloPrice: "€ 175 / month excl. VAT",
   membershipSoloSub: "For individuals who want one person to handle it all.",
-  membershipSoloDesc: "One dedicated contact. Available when you need it. No requests too small, no details overlooked.",
+  membershipSoloDesc: "One dedicated contact. Available when you need it.",
+  membershipExpats: "Expats",
+  membershipExpatsPrice: "On request",
+  membershipExpatsSub: "New to Belgium and building a life from scratch.",
+  membershipExpatsDesc: "Schools, housing, daily life, local admin — everything arranged so you can focus on settling in, not sorting out.",
   membershipFamily: "Family",
   membershipFamilyPrice: "On request",
   membershipFamilySub: "For families with a full schedule and high expectations.",
@@ -547,6 +551,7 @@ export default function App() {
             <div style={{ display:"flex", flexDirection:"column" }}>
               {[
                 { title: copy.membershipSolo,     price: copy.membershipSoloPrice,     sub: copy.membershipSoloSub,     desc: copy.membershipSoloDesc },
+                { title: copy.membershipExpats,   price: copy.membershipExpatsPrice,   sub: copy.membershipExpatsSub,   desc: copy.membershipExpatsDesc },
                 { title: copy.membershipFamily,   price: copy.membershipFamilyPrice,   sub: copy.membershipFamilySub,   desc: copy.membershipFamilyDesc },
                 { title: copy.membershipBusiness, price: copy.membershipBusinessPrice, sub: copy.membershipBusinessSub, desc: copy.membershipBusinessDesc },
               ].map((tier, i) => (
