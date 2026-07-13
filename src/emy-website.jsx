@@ -76,7 +76,8 @@ const DEFAULT_COPY = {
   whoPhoto: "/emy-who.jpg",
   whoP1: "My name is Emy. After ten years in private aviation, I know what is expected — and what it takes to deliver.",
   whoP2: "I understand the standards, the discretion, the details that matter.",
-  whoP3: "That's why I started EMY — a Lifestyle Membership for people who expect more. Based in Antwerp. Connected globally.",
+  whoP3: "Alongside that, travel has always been my passion. I've been lucky enough to explore some of the most extraordinary corners of the world, and that curiosity for discovering something special has never really faded. Today, I get to put that same passion to work for my clients: finding the places, people, and details that make an experience unforgettable. There's nothing I love more than arranging it all, down to the last detail, so you don't have to.",
+  whoP4: "That's why I started EMY — a Lifestyle Membership for people who expect more. Based in Antwerp. Connected globally.",
   labelWhere: "Where is Emy.",
   locationPhoto: "/emy-location.jpg",  // ← paste a photo URL here to show it in the Where section
   labelTalk: "Talk to Emy.",
@@ -120,10 +121,10 @@ const FOR_WHOM = [
 ];
 
 const WHAT_I_DO = [
-  { icon:"ti-plane",        title:"Private jets & helicopters", desc:"Access to the right aircraft, at the right price, at the right time. Ten years of aviation expertise — and the network to match." },
+  { icon:"ti-plane",        title:"Private jets, helicopters & flights", desc:"From a chartered jet to a first-class ticket, and if your flight changes at midnight, we're already rebooking it. Ten years of aviation expertise, and the network to match." },
   { icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board." },
-  { icon:"ti-map",          title:"Hotels & travel",            desc:"Bespoke travel from start to finish. The right suite, the right itinerary, the right experience — curated for you personally." },
-  { icon:"ti-confetti",     title:"Events & reservations",      desc:"The right table, the right evening, a private gathering — arranged exactly as you had in mind." },
+  { icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish." },
+  { icon:"ti-confetti",     title:"Events & reservations",      desc:"A table, an evening, a private gathering, arranged exactly as you had in mind." },
   { icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it — without you lifting a finger." },
   { icon:"ti-home-2",       title:"Relocation & family life",   desc:"Settling in somewhere new, or simply keeping a busy household running smoothly." },
 ];
@@ -582,7 +583,8 @@ export default function App() {
           <div className="emy-body" style={{ marginBottom:40 }}>
             <p style={{ marginBottom:18 }}>{copy.whoP1}</p>
             <p style={{ marginBottom:18 }}>{copy.whoP2}</p>
-            <p style={{ marginBottom:0 }}>{copy.whoP3}</p>
+            <p style={{ marginBottom:18 }}>{copy.whoP3}</p>
+            <p style={{ marginBottom:0 }}>{copy.whoP4}</p>
           </div>
           {copy.whoPhoto && (
             <div>
