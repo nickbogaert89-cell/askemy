@@ -456,7 +456,7 @@ export default function App() {
             onMouseLeave={e => e.currentTarget.style.color="inherit"}
           >
             <span style={{ fontSize:11, color:"rgba(255,255,255,0.3)", flexShrink:0 }}>{String(i+1).padStart(2,"0")}</span>
-            <span style={{ fontSize:24, letterSpacing:"0.02em", color:"rgba(255,255,255,0.85)", fontWeight:300, fontStyle:"italic" }}>{item.label}</span>
+            <span style={{ fontSize:24, letterSpacing:"0.02em", color:"rgba(255,255,255,0.85)", fontWeight:300 }}>{item.label}</span>
           </button>
         ))}
       </div>
