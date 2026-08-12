@@ -423,7 +423,11 @@ export default function App() {
       .emy-section{padding:90px 28px 70px;}
       .emy-divider{padding:0 28px;}
       .emy-for-whom-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+      .emy-menu-item-label{font-size:24px!important;}
     }
+    .emy-menu-item{opacity:0.82;transition:opacity 0.25s ease;}
+    .emy-menu-item:hover{opacity:1;}
+    .emy-menu-item:hover .emy-menu-item-label{color:#fff!important;transform:translateX(6px);}
   `;
 
   const HamburgerBtn = () => (
@@ -445,18 +449,16 @@ export default function App() {
 
   const MenuOverlay = () => (
     <div style={{ position:"fixed", inset:0, zIndex:100, background:"#0d0c0a", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"stretch", overflowY:"auto", padding:"40px 28px" }}>
-      <div style={{ maxWidth:420, margin:"0 auto", width:"100%" }}>
+      <div style={{ maxWidth:480, margin:"0 auto", width:"100%" }}>
         {[
           { label:"About Emy.", key:"about" },
           { label:"Who is Emy.", key:"who" },
           { label:"Talk to Emy.", key:"talk" },
         ].map((item, i, arr) => (
-          <button key={item.key} onClick={() => goTo(item.key)} style={{ display:"flex", alignItems:"center", gap:18, width:"100%", background:"none", border:"none", borderBottom: i < arr.length-1 ? "1px solid rgba(255,255,255,0.08)" : "none", cursor:"pointer", padding:"22px 0", fontFamily:"inherit", transition:"color 0.2s" }}
-            onMouseEnter={e => e.currentTarget.style.color="#fff"}
-            onMouseLeave={e => e.currentTarget.style.color="inherit"}
+          <button key={item.key} onClick={() => goTo(item.key)} className="emy-menu-item" style={{ display:"flex", alignItems:"baseline", gap:22, width:"100%", background:"none", border:"none", borderBottom: i < arr.length-1 ? "1px solid rgba(255,255,255,0.08)" : "none", cursor:"pointer", padding:"28px 4px", fontFamily:"inherit" }}
           >
-            <span style={{ fontSize:11, color:"rgba(255,255,255,0.3)", flexShrink:0 }}>{String(i+1).padStart(2,"0")}</span>
-            <span style={{ fontSize:24, letterSpacing:"0.02em", color:"rgba(255,255,255,0.85)", fontWeight:300 }}>{item.label}</span>
+            <span style={{ fontSize:11, letterSpacing:"0.18em", color:"rgba(255,255,255,0.28)", fontFamily:"'Space Mono','Courier New',monospace", flexShrink:0 }}>{String(i+1).padStart(2,"0")}</span>
+            <span className="emy-menu-item-label" style={{ fontSize:32, letterSpacing:"0.01em", color:"rgba(255,255,255,0.9)", fontFamily:"'Montserrat',sans-serif", fontWeight:300, transition:"color 0.25s ease, transform 0.25s ease" }}>{item.label}</span>
           </button>
         ))}
       </div>
