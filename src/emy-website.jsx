@@ -448,6 +448,7 @@ export default function App() {
     <div style={{ position:"fixed", inset:0, zIndex:100, background:"#0d0c0a", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"stretch", overflowY:"auto", padding:"40px 28px" }}>
       <div style={{ maxWidth:480, margin:"0 auto", width:"100%" }}>
         {[
+          { label:"For whom.", key:"about" },
           { label:"What we do.", key:"what" },
           { label:"Who is Emy.", key:"who" },
           { label:"Talk to Emy.", key:"talk" },
