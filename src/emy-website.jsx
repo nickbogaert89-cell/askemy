@@ -111,7 +111,7 @@ const FOR_WHOM = [
   { icon:"ti-briefcase", title:"Entrepreneurs & executives", desc:"Your agenda is your most valuable asset. Let me protect it." },
   { icon:"ti-plane",     title:"Frequent travellers",        desc:"From private aviation to hotel suites — every detail arranged before you ask." },
   { icon:"ti-users",     title:"Families",                   desc:"Complex schedules, multiple properties, children — one person handles it all." },
-  { icon:"ti-world",     title:"Expats in Antwerp",          desc:"New to Belgium and Antwerp — one person who already knows the city, from plumbers to paper work." },
+  { icon:"ti-world",     title:"Expats in Antwerp",          desc:"New to Belgium and Antwerp — one person who already knows the city, from opening a bank account to finding the best table in town." },
   { icon:"ti-building-bank", title:"Private banking clients",desc:"Referred by your wealth manager. Expects the same level of service in daily life." },
   { icon:"ti-star",      title:"Those who simply know",      desc:"You know what you want. You just need someone to make it happen." },
 ];
