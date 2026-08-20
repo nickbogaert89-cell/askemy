@@ -117,7 +117,7 @@ const FOR_WHOM = [
 ];
 
 const WHAT_I_DO = [
-  { icon:"ti-plane",        title:"Private jets, helicopters & flights", desc:"From a chartered jet to a first-class ticket. A last-minute change or a last-minute trip, we take care of it. Ten years of aviation expertise, and the network to match." },
+  { icon:"ti-plane",        title:"Flights, private jets & helicopters", desc:"From a first-class ticket to a chartered jet. A last-minute change or a last-minute trip, we take care of it. Ten years of aviation expertise, and the network to match." },
   { icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish." },
   { icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board." },
   { icon:"ti-confetti",     title:"Events & reservations",      desc:"A table, an evening, a private gathering, arranged exactly as you had in mind." },
