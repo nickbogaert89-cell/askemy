@@ -114,19 +114,19 @@ const WA_NUMBER_INTL = "+32471481010";
 const FOR_WHOM = [
   { icon:"ti-briefcase", title:"Entrepreneurs & executives", desc:"Your agenda is your most valuable asset. Let me protect it." },
   { icon:"ti-plane",     title:"Frequent travellers",        desc:"From private aviation to hotel suites — every detail arranged before you ask." },
-  { icon:"ti-world",     title:"Expats in Antwerp",          desc:"New to Belgium. Everything arranged: schools, housing, daily life." },
   { icon:"ti-users",     title:"Families",                   desc:"Complex schedules, multiple properties, children — one person handles it all." },
+  { icon:"ti-world",     title:"Expats in Antwerp",          desc:"New to Belgium and Antwerp, and don't know anyone yet? One person who already knows the city inside out — from finding a reliable plumber to booking a doctor's appointment — so you're never starting from zero." },
   { icon:"ti-building-bank", title:"Private banking clients",desc:"Referred by your wealth manager. Expects the same level of service in daily life." },
   { icon:"ti-star",      title:"Those who simply know",      desc:"You know what you want. You just need someone to make it happen." },
 ];
 
 const WHAT_I_DO = [
   { icon:"ti-plane",        title:"Private jets, helicopters & flights", desc:"From a chartered jet to a first-class ticket. A last-minute change or a last-minute trip, we take care of it. Ten years of aviation expertise, and the network to match." },
-  { icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board." },
   { icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish." },
+  { icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board." },
   { icon:"ti-confetti",     title:"Events & reservations",      desc:"A table, an evening, a private gathering, arranged exactly as you had in mind." },
   { icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it — without you lifting a finger." },
-  { icon:"ti-home-2",       title:"Relocation & family life",   desc:"Settling in somewhere new, or simply keeping a busy household running smoothly." },
+  { icon:"ti-briefcase",    title:"Business",                   desc:"A meeting room booked within the hour, a work trip arranged for yourself or your team, or a client dinner and networking event organised start to finish." },
 ];
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
@@ -358,6 +358,7 @@ export default function App() {
   const copy = DEFAULT_COPY;
 
   const aboutRef = useRef(null);
+  const whatRef  = useRef(null);
   const whoRef   = useRef(null);
   const talkRef  = useRef(null);
 
@@ -367,7 +368,7 @@ export default function App() {
     setMenuOpen(false);
     const smooth = window.innerWidth <= 680;
     if (key === "landing") { window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "instant" }); return; }
-    const refs = { about: aboutRef, who: whoRef, talk: talkRef };
+    const refs = { about: aboutRef, what: whatRef, who: whoRef, talk: talkRef };
     refs[key]?.current?.scrollIntoView({ behavior: smooth ? "smooth" : "instant" });
   };
 
@@ -451,7 +452,7 @@ export default function App() {
     <div style={{ position:"fixed", inset:0, zIndex:100, background:"#0d0c0a", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"stretch", overflowY:"auto", padding:"40px 28px" }}>
       <div style={{ maxWidth:480, margin:"0 auto", width:"100%" }}>
         {[
-          { label:"About Emy.", key:"about" },
+          { label:"What we do.", key:"what" },
           { label:"Who is Emy.", key:"who" },
           { label:"Talk to Emy.", key:"talk" },
         ].map((item, i, arr) => (
@@ -527,7 +528,7 @@ export default function App() {
           </div>
 
           {/* What we do */}
-          <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
+          <div ref={whatRef} style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:48, marginBottom:56 }}>
             <Label>What we do.</Label>
             <p style={{ fontSize:15, color:"rgba(255,255,255,0.72)", marginBottom:24, lineHeight:1.85 }}>
               Everything that costs you time.
