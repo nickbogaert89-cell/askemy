@@ -231,9 +231,9 @@ function ServiceDetail({ service, onBack }) {
         {service.photos?.length > 0 && (
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40, marginBottom:48 }}>
             <Label>Gallery.</Label>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:12 }}>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:16 }}>
               {service.photos.map((src, i) => (
-                <img key={i} src={src} alt={`${service.title} ${i+1}`} style={{ width:"100%", height:220, objectFit:"cover", display:"block" }}/>
+                <img key={i} src={src} alt={`${service.title} ${i+1}`} style={{ width:"100%", height:"auto", display:"block" }}/>
               ))}
             </div>
           </div>
