@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      // GitHub Pages has no server-side routing, so any real URL other than "/"
+      // (e.g. /what-we-do/flights) hits this 404 page. Redirect to the app's
+      // index.html, carrying the intended path in a query param so index.html
+      // can restore it with history.replaceState before the app reads it.
+      var loc = window.location;
+      loc.replace(loc.origin + "/?p=" + encodeURIComponent(loc.pathname + loc.search) + loc.hash);
+    </script>
+  </head>
+  <body></body>
+</html>

@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Restores the real URL after a 404.html redirect (see public/404.html) —
+         must run before the app reads window.location. -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var p = params.get("p");
+        if (p) {
+          params.delete("p");
+          var rest = params.toString();
+          window.history.replaceState(null, "", p + (rest ? "?" + rest : "") + window.location.hash);
+        }
+      })();
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-X3EG97QRZ9"></script>
     <script>

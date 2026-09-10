@@ -116,7 +116,9 @@ const FOR_WHOM = [
   { icon:"ti-star",      title:"Those who simply know",      desc:"You know what you want. You just need someone to make it happen." },
 ];
 
-// Each category has its own page at #/what-we-do/<slug>.
+// Each category has its own page at /what-we-do/<slug>. `seoTitle`/`seoDesc`
+// become that page's <title> and meta description (shown in Google search
+// results) — keep seoTitle under ~60 characters and seoDesc under ~155.
 // `pageTitle`, `subtitle` and `longDesc` are optional — when set they override
 // `title`/`desc` on that category's own page (the homepage grid always shows
 // the shorter `title`/`desc`). `desc`/`longDesc` can be a string or an array of
@@ -127,14 +129,14 @@ const FOR_WHOM = [
 //   examples: [{ title:"Case: Iceland", text:["First paragraph.", "Second paragraph."] }],
 //   photos: ["/services/<slug>/photo-1.jpg"],   ← drop the image file in /public/services/<slug>/ first
 const WHAT_I_DO = [
-  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", pageTitle:"Flights", subtitle:"Scheduled, chartered & beyond", desc:"Scheduled, chartered & beyond", longDesc:"Whether it's a seat on a scheduled flight, a fully chartered private jet, a helicopter transfer that skips the traffic altogether, or a hot air balloon ride, we arrange it. A last-minute change or a last-minute trip, we take care of it. Over ten years of aviation expertise, and a worldwide network to match.", examples:[], photos:["/services/flights/victoria-falls-1.jpg","/services/flights/hot-air-balloon-1.jpg","/services/flights/jet-dog-1.jpg"] },
-  { slug:"hotels",               icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish.", longDesc:["Every trip fully planned, from the airport transfer and reserved parking to booked tickets, hotels, on-the-ground activities, and restaurant reservations.", "I've traveled for years myself and come from the travel industry, so planning a trip is something I do with real passion. I see membership as a relationship we build together: with every trip, I get to know the client and their family a little better, and understand exactly what they want. Less explaining for them, more enjoyment."], examples:[{ title:"Case: Iceland", text:["One phone call was enough to paint the picture: a love for nature, young children who could manage no more than a few hours of walking a day, and a soft spot for boutique hotels. From there, EMY took over, a fully tailored proposal with the most stunning houses, each perfectly matched to Iceland's landscape, activities for parents and children alike, and restaurant reservations throughout. A few messages later, it was approved, and everything was arranged and booked by EMY.", "But that's not where it ends. Throughout the trip, EMY stayed closely involved: coordinating every detail, making sure everything was in place, with follow-up during the trip and after."] }], photos:[] },
-  { slug:"transfers",            icon:"ti-car",          title:"Transfers",                  desc:"Wherever, whenever", longDesc:"Whether it's a last-minute transfer, someone to pick up your car, a ride to the airport, or a safe way home after a night out, we arrange it. Always reliable, always discreet.", examples:[], photos:[] },
-  { slug:"gastronomy",           icon:"ti-chef-hat",     title:"Gastronomy",                 desc:"From restaurant reservations to a private chef at home, we take care of it.", longDesc:"Restaurant reservations, taken care of. EMY handles the booking so you don't have to, and keeps track of new openings and hidden gems wherever your travels take you. The experience can come to you too, from a curated menu delivered to your door to a private chef in your own kitchen.", requestTypes:["Restaurant reservations","Restaurant recommendations for your travel destination","On-site catering","Private chef at home"], examples:[], photos:[] },
-  { slug:"entertainment-sport",  icon:"ti-confetti",     title:"Entertainment & sport",       desc:"Tickets to the match, the concert, or the show you don't want to miss, anywhere in the world.", longDesc:"From a seat at the match to front row at a concert, EMY arranges access to the events worth showing up for.", requestTypes:["Football matches","World Cups & European Championships","Olympic Games","Grand Slams and other tennis tournaments","Formula 1 races","Concerts","Theatre shows and musicals"], examples:[], photos:[] },
-  { slug:"personal-shopping",    icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it.", longDesc:"Never have to shop alone again. EMY helps you choose the right gift, tracks down that one item you've been searching for, or brings in a personal shopper to refresh your wardrobe from top to bottom.", requestTypes:["Gift selection & sourcing","Sourcing a specific item","Personal shopping for a new wardrobe","Styling with a personal shopper"], examples:[], photos:[] },
-  { slug:"yachts",               icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"From a day on the water to a week at sea, or even a yacht of your own, fully arranged by the best in the industry.", longDesc:"From a day on the water in Ibiza to a full week at sea, or even the purchase of your own yacht, EMY works with the best names in the industry to arrange it. The right boat, the right crew, and every detail in between, fully taken care of.", requestTypes:["Day charters","Weekly yacht charters","Crewed yachts","Yacht purchases","Charters worldwide"], examples:[], photos:[] },
-  { slug:"business",             icon:"ti-briefcase",    title:"Business",                   desc:"From meeting rooms to client dinners, EMY takes care of the details around your business too.", longDesc:"From meeting rooms to a client's arrival, EMY takes care of the details around your business too. A table for a client dinner, tickets for a work trip, a day out for the team, or someone to receive your client the moment they walk through the door, all arranged in your company's name.", requestTypes:["Meeting room bookings","Restaurant reservations for business dinners & lunches","Travel arrangements for work trips","Company outings","Client reception & hosting"], examples:[], photos:[] },
+  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", pageTitle:"Flights", subtitle:"Scheduled, chartered & beyond", desc:"Scheduled, chartered & beyond", seoTitle:"Private Jet Charter Antwerp | EMY", seoDesc:"Private jet, helicopter and scheduled flight bookings, arranged personally. EMY is your dedicated aviation concierge in Antwerp — chartered flights, hot air balloons and more.", longDesc:"Whether it's a seat on a scheduled flight, a fully chartered private jet, a helicopter transfer that skips the traffic altogether, or a hot air balloon ride, we arrange it. A last-minute change or a last-minute trip, we take care of it. Over ten years of aviation expertise, and a worldwide network to match.", examples:[], photos:["/services/flights/victoria-falls-1.jpg","/services/flights/hot-air-balloon-1.jpg","/services/flights/jet-dog-1.jpg"] },
+  { slug:"hotels",               icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish.", seoTitle:"Luxury Travel Designer Antwerp & Belgium | EMY", seoDesc:"Full trip planning from a personal travel designer: flights, hotels, transfers, restaurant reservations and on-the-ground activities, planned by someone with years of experience in the travel industry.", longDesc:["Every trip fully planned, from the airport transfer and reserved parking to booked tickets, hotels, on-the-ground activities, and restaurant reservations.", "I've traveled for years myself and come from the travel industry, so planning a trip is something I do with real passion. I see membership as a relationship we build together: with every trip, I get to know the client and their family a little better, and understand exactly what they want. Less explaining for them, more enjoyment."], examples:[{ title:"Case: Iceland", text:["One phone call was enough to paint the picture: a love for nature, young children who could manage no more than a few hours of walking a day, and a soft spot for boutique hotels. From there, EMY took over, a fully tailored proposal with the most stunning houses, each perfectly matched to Iceland's landscape, activities for parents and children alike, and restaurant reservations throughout. A few messages later, it was approved, and everything was arranged and booked by EMY.", "But that's not where it ends. Throughout the trip, EMY stayed closely involved: coordinating every detail, making sure everything was in place, with follow-up during the trip and after."] }], photos:[] },
+  { slug:"transfers",            icon:"ti-car",          title:"Transfers",                  desc:"Wherever, whenever", seoTitle:"Chauffeur & Transfer Service Antwerp | EMY", seoDesc:"Reliable, discreet transfers in Antwerp and beyond — airport rides, chauffeurs, and last-minute transport, arranged personally by EMY.", longDesc:"Whether it's a last-minute transfer, someone to pick up your car, a ride to the airport, or a safe way home after a night out, we arrange it. Always reliable, always discreet.", examples:[], photos:[] },
+  { slug:"gastronomy",           icon:"ti-chef-hat",     title:"Gastronomy",                 desc:"From restaurant reservations to a private chef at home, we take care of it.", seoTitle:"Restaurant Reservations & Private Chef Antwerp | EMY", seoDesc:"Restaurant reservations, private chefs and on-site catering, arranged by EMY — your personal concierge for dining in Antwerp and while travelling.", longDesc:"Restaurant reservations, taken care of. EMY handles the booking so you don't have to, and keeps track of new openings and hidden gems wherever your travels take you. The experience can come to you too, from a curated menu delivered to your door to a private chef in your own kitchen.", requestTypes:["Restaurant reservations","Restaurant recommendations for your travel destination","On-site catering","Private chef at home"], examples:[], photos:[] },
+  { slug:"entertainment-sport",  icon:"ti-confetti",     title:"Entertainment & sport",       desc:"Tickets to the match, the concert, or the show you don't want to miss, anywhere in the world.", seoTitle:"VIP Concert & Sports Tickets | EMY Concierge Antwerp", seoDesc:"Tickets to sold-out concerts, football matches, F1 races and Grand Slams, arranged by EMY, your personal concierge in Antwerp.", longDesc:"From a seat at the match to front row at a concert, EMY arranges access to the events worth showing up for.", requestTypes:["Football matches","World Cups & European Championships","Olympic Games","Grand Slams and other tennis tournaments","Formula 1 races","Concerts","Theatre shows and musicals"], examples:[], photos:[] },
+  { slug:"personal-shopping",    icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it.", seoTitle:"Personal Shopping Concierge Antwerp | EMY", seoDesc:"Gift sourcing, personal shopping and styling in Antwerp — EMY finds it, sources it, and delivers it.", longDesc:"Never have to shop alone again. EMY helps you choose the right gift, tracks down that one item you've been searching for, or brings in a personal shopper to refresh your wardrobe from top to bottom.", requestTypes:["Gift selection & sourcing","Sourcing a specific item","Personal shopping for a new wardrobe","Styling with a personal shopper"], examples:[], photos:[] },
+  { slug:"yachts",               icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"From a day on the water to a week at sea, or even a yacht of your own, fully arranged by the best in the industry.", seoTitle:"Luxury Yacht Charter Belgium | EMY", seoDesc:"Day charters, weekly yacht charters and yacht purchases, arranged by EMY with the best names in the industry.", longDesc:"From a day on the water in Ibiza to a full week at sea, or even the purchase of your own yacht, EMY works with the best names in the industry to arrange it. The right boat, the right crew, and every detail in between, fully taken care of.", requestTypes:["Day charters","Weekly yacht charters","Crewed yachts","Yacht purchases","Charters worldwide"], examples:[], photos:[] },
+  { slug:"business",             icon:"ti-briefcase",    title:"Business",                   desc:"From meeting rooms to client dinners, EMY takes care of the details around your business too.", seoTitle:"Corporate Concierge Services Antwerp | EMY", seoDesc:"Meeting rooms, business travel, client dinners and corporate hosting in Antwerp, arranged by EMY on behalf of your company.", longDesc:"From meeting rooms to a client's arrival, EMY takes care of the details around your business too. A table for a client dinner, tickets for a work trip, a day out for the team, or someone to receive your client the moment they walk through the door, all arranged in your company's name.", requestTypes:["Meeting room bookings","Restaurant reservations for business dinners & lunches","Travel arrangements for work trips","Company outings","Client reception & hosting"], examples:[], photos:[] },
 ];
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
@@ -209,9 +211,12 @@ function Paragraphs({ content, style }) {
   ));
 }
 
-// ── Service detail page (#/what-we-do/<slug>) ──────────────────────────────────
+// ── Service detail page (/what-we-do/<slug>) ────────────────────────────────────
 function ServiceDetail({ service, onBack }) {
-  useEffect(() => { window.scrollTo(0, 0); }, [service?.slug]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (service) setMeta(service.seoTitle || service.title, service.seoDesc || HOME_DESC);
+  }, [service?.slug]);
   if (!service) return null;
   return (
     <div className="emy-section" style={{ paddingBottom:120 }}>
@@ -458,10 +463,26 @@ function renderWithAdminLink(text) {
   return <a href="#/admin" onClick={goAdmin} style={linkStyle}>{text}</a>;
 }
 
-// A service page lives at #/what-we-do/<slug>; everything else is the home page.
-function parseRoute(hash) {
-  const m = (hash || "").match(/^#\/what-we-do\/([a-z0-9-]+)$/);
+// A service page lives at /what-we-do/<slug>; everything else is the home page.
+// Real URLs (not #hash) so each page is crawlable and indexable on its own.
+function parseRoute(pathname) {
+  const m = (pathname || "").match(/^\/what-we-do\/([a-z0-9-]+)\/?$/);
   return m ? { name:"service", slug:m[1] } : { name:"home" };
+}
+
+const HOME_TITLE = "EMY. — Lifestyle Membership Antwerp";
+const HOME_DESC  = "A discreet, personal lifestyle membership for entrepreneurs, families and individuals. One dedicated point of contact. Based in Antwerp, connected globally.";
+
+// Updates <title>, meta description and the canonical link for the current page.
+// Keep HOME_TITLE/HOME_DESC in sync with the defaults in index.html.
+function setMeta(title, description) {
+  document.title = title;
+  let desc = document.querySelector('meta[name="description"]');
+  if (!desc) { desc = document.createElement("meta"); desc.setAttribute("name", "description"); document.head.appendChild(desc); }
+  desc.setAttribute("content", description);
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) { canonical = document.createElement("link"); canonical.setAttribute("rel", "canonical"); document.head.appendChild(canonical); }
+  canonical.setAttribute("href", `https://ask-emy.com${window.location.pathname}`);
 }
 
 // ── App ───────────────────────────────────────────────────────────────────────
@@ -469,7 +490,7 @@ export default function App() {
   const [mounted, setMounted] = useState(false);
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [route, setRoute] = useState(() => parseRoute(window.location.hash));
+  const [route, setRoute] = useState(() => parseRoute(window.location.pathname));
   const copy = DEFAULT_COPY;
 
   const aboutRef = useRef(null);
@@ -481,10 +502,20 @@ export default function App() {
   useEffect(() => { setTimeout(() => setMounted(true), 80); window.scrollTo(0, 0); }, []);
 
   useEffect(() => {
-    const onHash = () => setRoute(parseRoute(window.location.hash));
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    const onPop = () => setRoute(parseRoute(window.location.pathname));
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
+
+  useEffect(() => {
+    if (route.name === "home") setMeta(HOME_TITLE, HOME_DESC);
+  }, [route.name]);
+
+  // Client-side navigation to a real URL (pushes history, no full page reload).
+  const navigate = (path) => {
+    if (window.location.pathname !== path) window.history.pushState(null, "", path);
+    setRoute(parseRoute(path));
+  };
 
   const scrollToKey = (key, behavior) => {
     if (key === "landing") { window.scrollTo({ top: 0, behavior }); return; }
@@ -502,7 +533,7 @@ export default function App() {
 
   const goTo = (key) => {
     setMenuOpen(false);
-    if (route.name === "service") { pendingScroll.current = key; window.location.hash = ""; return; }
+    if (route.name === "service") { pendingScroll.current = key; navigate("/"); return; }
     scrollToKey(key, window.innerWidth <= 680 ? "smooth" : "instant");
   };
 
@@ -676,7 +707,7 @@ export default function App() {
             </p>
             <div style={{ display:"flex", flexDirection:"column" }}>
               {WHAT_I_DO.map((s, i) => (
-                <a key={i} href={`#/what-we-do/${s.slug}`} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)", textDecoration:"none", cursor:"pointer" }}>
+                <a key={i} href={`/what-we-do/${s.slug}`} onClick={e => { e.preventDefault(); navigate(`/what-we-do/${s.slug}`); }} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)", textDecoration:"none", cursor:"pointer" }}>
                   <i className={`ti ${s.icon}`} style={{ fontSize:18, color:"rgba(255,255,255,0.35)", flexShrink:0, marginTop:4 }}/>
                   <div style={{ flex:1 }}>
                     <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.72)", marginBottom: s.desc ? 6 : 0 }}>{s.title}</div>
