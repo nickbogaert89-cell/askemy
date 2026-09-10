@@ -272,7 +272,7 @@ function ServiceDetail({ service, onBack }) {
           </div>
         )}
 
-        <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40 }}>
+        <div style={{ marginTop:32, borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:72 }}>
           <Label>Talk to Emy.</Label>
           <p style={{ fontSize:13, lineHeight:1.85, color:"rgba(255,255,255,0.45)", marginBottom:32 }}>
             No forms, no waiting. Reach out directly — and within 24 hours you will know if we are a good match.
