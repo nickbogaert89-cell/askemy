@@ -116,13 +116,19 @@ const FOR_WHOM = [
   { icon:"ti-star",      title:"Those who simply know",      desc:"You know what you want. You just need someone to make it happen." },
 ];
 
+// Each category has its own page at #/what-we-do/<slug>.
+// `examples` and `photos` start empty — add to them any time:
+//   examples: ["A short, concrete case you want to show visitors."],
+//   photos: ["/services/flights-1.jpg"],   ← drop the image file in /public/services/ first
 const WHAT_I_DO = [
-  { icon:"ti-plane",        title:"Flights, private jets & helicopters", desc:"From a first-class ticket to a chartered jet. A last-minute change or a last-minute trip, we take care of it. Ten years of aviation expertise, and the network to match." },
-  { icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish." },
-  { icon:"ti-confetti",     title:"Events & reservations",      desc:"A table, an evening, a private gathering, arranged exactly as you had in mind." },
-  { icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it — without you lifting a finger." },
-  { icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board." },
-  { icon:"ti-briefcase",    title:"Business",                   desc:"A meeting room booked within the hour, a work trip arranged for yourself or your team, or a client dinner and networking event organised start to finish." },
+  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", desc:"From a first-class ticket to a chartered jet. A last-minute change or a last-minute trip, we take care of it. Ten years of aviation expertise, and the network to match.", examples:[], photos:[] },
+  { slug:"hotels",               icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish.", examples:[], photos:[] },
+  { slug:"transfers",            icon:"ti-car",          title:"Transfers",                  desc:"A driver at the airport, a chauffeur for the evening, or transport arranged for a full group — on time, every time.", examples:[], photos:[] },
+  { slug:"gastronomy",           icon:"ti-chef-hat",     title:"Gastronomy",                 desc:"A table at the right restaurant, a private chef at home, or a tasting menu — arranged exactly as you had in mind.", examples:[], photos:[] },
+  { slug:"entertainment-sport",  icon:"ti-confetti",     title:"Entertainment & sport",       desc:"Sold-out concerts, courtside tickets, or a private gathering — arranged exactly as you had in mind.", examples:[], photos:[] },
+  { slug:"personal-shopping",    icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it — without you lifting a finger.", examples:[], photos:[] },
+  { slug:"yachts",               icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board.", examples:[], photos:[] },
+  { slug:"business",             icon:"ti-briefcase",    title:"Business",                   desc:"A meeting room booked within the hour, a work trip arranged for yourself or your team, or a client dinner and networking event organised start to finish.", examples:[], photos:[] },
 ];
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
@@ -170,6 +176,74 @@ function Rule() {
 }
 function Label({ children }) {
   return <div style={{ fontSize:10, letterSpacing:"0.22em", color:"rgba(255,255,255,0.38)", textTransform:"uppercase", marginBottom:24, fontWeight:400, fontFamily:"'Space Mono','Courier New',monospace" }}>{children}</div>;
+}
+
+// ── Contact links (reused on the talk section and every service page) ─────────
+function ContactLinks() {
+  const linkStyle = { display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.15)", color:"rgba(255,255,255,0.85)", textDecoration:"none", fontSize:12, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:700, fontFamily:"inherit" };
+  return (
+    <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+      <a href="https://wa.me/32471481010" target="_blank" rel="noreferrer" style={linkStyle}>
+        <i className="ti ti-brand-whatsapp" style={{ fontSize:18 }}/> WhatsApp
+        <i className="ti ti-external-link" style={{ fontSize:13, marginLeft:"auto", opacity:0.45 }}/>
+      </a>
+      <a href="mailto:emy@ask-emy.com" style={linkStyle}>
+        <i className="ti ti-mail" style={{ fontSize:18 }}/> emy@ask-emy.com
+        <i className="ti ti-external-link" style={{ fontSize:13, marginLeft:"auto", opacity:0.45 }}/>
+      </a>
+    </div>
+  );
+}
+
+// ── Service detail page (#/what-we-do/<slug>) ──────────────────────────────────
+function ServiceDetail({ service, onBack }) {
+  useEffect(() => { window.scrollTo(0, 0); }, [service?.slug]);
+  if (!service) return null;
+  return (
+    <div className="emy-section" style={{ paddingBottom:120 }}>
+      <Section>
+        <button onClick={onBack} style={{ background:"none", border:"none", cursor:"pointer", padding:0, marginBottom:40, display:"flex", alignItems:"center", gap:8, fontSize:11, letterSpacing:"0.18em", textTransform:"uppercase", color:"rgba(255,255,255,0.45)", fontFamily:"inherit" }}>
+          <i className="ti ti-arrow-left" style={{ fontSize:14 }}/> What we do.
+        </button>
+
+        <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:24 }}>
+          <i className={`ti ${service.icon}`} style={{ fontSize:26, color:"rgba(255,255,255,0.4)" }}/>
+          <h1 style={{ fontFamily:"'Montserrat',sans-serif", fontWeight:300, fontSize:28, letterSpacing:"0.01em", color:"rgba(255,255,255,0.92)" }}>{service.title}</h1>
+        </div>
+        <p className="emy-body" style={{ color:"rgba(255,255,255,0.55)", marginBottom:48 }}>{service.desc}</p>
+
+        {service.examples?.length > 0 && (
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40, marginBottom:48 }}>
+            <Label>Examples.</Label>
+            <div style={{ display:"flex", flexDirection:"column", gap:24 }}>
+              {service.examples.map((ex, i) => (
+                <p key={i} style={{ color:"rgba(255,255,255,0.5)" }}>{ex}</p>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {service.photos?.length > 0 && (
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40, marginBottom:48 }}>
+            <Label>Gallery.</Label>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:12 }}>
+              {service.photos.map((src, i) => (
+                <img key={i} src={src} alt={`${service.title} ${i+1}`} style={{ width:"100%", height:220, objectFit:"cover", display:"block" }}/>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40 }}>
+          <Label>Talk to Emy.</Label>
+          <p style={{ fontSize:13, lineHeight:1.85, color:"rgba(255,255,255,0.45)", marginBottom:32 }}>
+            No forms, no waiting. Reach out directly — and within 24 hours you will know if we are a good match.
+          </p>
+          <ContactLinks/>
+        </div>
+      </Section>
+    </div>
+  );
 }
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
@@ -346,27 +420,55 @@ function renderWithAdminLink(text) {
   return <a href="#/admin" onClick={goAdmin} style={linkStyle}>{text}</a>;
 }
 
+// A service page lives at #/what-we-do/<slug>; everything else is the home page.
+function parseRoute(hash) {
+  const m = (hash || "").match(/^#\/what-we-do\/([a-z0-9-]+)$/);
+  return m ? { name:"service", slug:m[1] } : { name:"home" };
+}
+
 // ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   const [mounted, setMounted] = useState(false);
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [route, setRoute] = useState(() => parseRoute(window.location.hash));
   const copy = DEFAULT_COPY;
 
   const aboutRef = useRef(null);
   const whatRef  = useRef(null);
   const whoRef   = useRef(null);
   const talkRef  = useRef(null);
+  const pendingScroll = useRef(null); // menu key to scroll to once the home page is back
 
   useEffect(() => { setTimeout(() => setMounted(true), 80); window.scrollTo(0, 0); }, []);
 
+  useEffect(() => {
+    const onHash = () => setRoute(parseRoute(window.location.hash));
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  const scrollToKey = (key, behavior) => {
+    if (key === "landing") { window.scrollTo({ top: 0, behavior }); return; }
+    const refs = { about: aboutRef, what: whatRef, who: whoRef, talk: talkRef };
+    refs[key]?.current?.scrollIntoView({ behavior });
+  };
+
+  useEffect(() => {
+    if (route.name === "home" && pendingScroll.current) {
+      const key = pendingScroll.current;
+      pendingScroll.current = null;
+      requestAnimationFrame(() => scrollToKey(key, "instant"));
+    }
+  }, [route]);
+
   const goTo = (key) => {
     setMenuOpen(false);
-    const smooth = window.innerWidth <= 680;
-    if (key === "landing") { window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "instant" }); return; }
-    const refs = { about: aboutRef, what: whatRef, who: whoRef, talk: talkRef };
-    refs[key]?.current?.scrollIntoView({ behavior: smooth ? "smooth" : "instant" });
+    if (route.name === "service") { pendingScroll.current = key; window.location.hash = ""; return; }
+    scrollToKey(key, window.innerWidth <= 680 ? "smooth" : "instant");
   };
+
+  const backFromService = () => goTo("what");
 
   useEffect(() => {
     (async () => {
@@ -481,6 +583,10 @@ export default function App() {
       <TopBar/>
       {menuOpen && <MenuOverlay/>}
 
+      {route.name === "service" ? (
+        <ServiceDetail service={WHAT_I_DO.find(s => s.slug === route.slug)} onBack={backFromService}/>
+      ) : (
+      <>
       {/* ── Landing ── */}
       <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", opacity:mounted?1:0, transition:"opacity 1s ease" }}>
         <div style={{ textAlign:"center" }}>
@@ -532,13 +638,14 @@ export default function App() {
             </p>
             <div style={{ display:"flex", flexDirection:"column" }}>
               {WHAT_I_DO.map((s, i) => (
-                <div key={i} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)" }}>
+                <a key={i} href={`#/what-we-do/${s.slug}`} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)", textDecoration:"none", cursor:"pointer" }}>
                   <i className={`ti ${s.icon}`} style={{ fontSize:18, color:"rgba(255,255,255,0.35)", flexShrink:0, marginTop:4 }}/>
-                  <div>
+                  <div style={{ flex:1 }}>
                     <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.72)", marginBottom:6 }}>{s.title}</div>
                     <p style={{ color:"rgba(255,255,255,0.42)" }}>{s.desc}</p>
                   </div>
-                </div>
+                  <i className="ti ti-chevron-right" style={{ fontSize:16, color:"rgba(255,255,255,0.25)", alignSelf:"center", flexShrink:0 }}/>
+                </a>
               ))}
             </div>
             <p style={{ marginTop:24, fontSize:15, lineHeight:1.8, color:"rgba(255,255,255,0.35)", borderTop:"1px solid rgba(255,255,255,0.07)", paddingTop:20 }}>
@@ -603,18 +710,11 @@ export default function App() {
           <p style={{ fontSize:13, lineHeight:1.85, color:"rgba(255,255,255,0.45)", marginBottom:32 }}>
             No forms, no waiting. Reach out directly — and within 24 hours you will know if we are a good match.
           </p>
-          <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-            <a href="https://wa.me/32471481010" target="_blank" rel="noreferrer" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.15)", color:"rgba(255,255,255,0.85)", textDecoration:"none", fontSize:12, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:700, fontFamily:"inherit" }}>
-              <i className="ti ti-brand-whatsapp" style={{ fontSize:18 }}/> WhatsApp
-              <i className="ti ti-external-link" style={{ fontSize:13, marginLeft:"auto", opacity:0.45 }}/>
-            </a>
-            <a href="mailto:emy@ask-emy.com" style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 20px", border:"1px solid rgba(255,255,255,0.15)", color:"rgba(255,255,255,0.85)", textDecoration:"none", fontSize:12, letterSpacing:"0.14em", textTransform:"uppercase", fontWeight:700, fontFamily:"inherit" }}>
-              <i className="ti ti-mail" style={{ fontSize:18 }}/> emy@ask-emy.com
-              <i className="ti ti-external-link" style={{ fontSize:13, marginLeft:"auto", opacity:0.45 }}/>
-            </a>
-          </div>
+          <ContactLinks/>
         </Section>
       </div>
+      </>
+      )}
     </div>
   );
 }
