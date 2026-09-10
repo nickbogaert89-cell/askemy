@@ -123,13 +123,22 @@ const FOR_WHOM = [
 // `title`/`desc` on that category's own page (the homepage grid always shows
 // the shorter `title`/`desc`). `desc`/`longDesc` can be a string or an array of
 // strings (one per paragraph). `requestTypes` (optional) is a plain bullet list,
-// e.g. ["Restaurant reservations", "Private chef at home"]. `examples` and
-// `photos` start empty — add any time:
+// e.g. ["Restaurant reservations", "Private chef at home"]. `faqs` (optional)
+// also feeds Google's FAQ rich-result markup automatically — good for SEO.
+// `examples` and `photos` start empty — add any time:
 //   examples: ["A short, concrete case you want to show visitors."],
 //   examples: [{ title:"Case: Iceland", text:["First paragraph.", "Second paragraph."] }],
+//   faqs: [{ q:"How far in advance should I book?", a:"As last-minute as needed..." }],
 //   photos: ["/services/<slug>/photo-1.jpg"],   ← drop the image file in /public/services/<slug>/ first
 const WHAT_I_DO = [
-  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", pageTitle:"Flights", subtitle:"Scheduled, chartered & beyond", desc:"Scheduled, chartered & beyond", seoTitle:"Private Jet Charter Antwerp | EMY", seoDesc:"Private jet, helicopter and scheduled flight bookings, arranged personally. EMY is your dedicated aviation concierge in Antwerp — chartered flights, hot air balloons and more.", longDesc:"Whether it's a seat on a scheduled flight, a fully chartered private jet, a helicopter transfer that skips the traffic altogether, or a hot air balloon ride, we arrange it. A last-minute change or a last-minute trip, we take care of it. Over ten years of aviation expertise, and a worldwide network to match.", examples:[], photos:["/services/flights/victoria-falls-1.jpg","/services/flights/hot-air-balloon-1.jpg","/services/flights/jet-dog-1.jpg"] },
+  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", pageTitle:"Flights", subtitle:"Scheduled, chartered & beyond", desc:"Scheduled, chartered & beyond", seoTitle:"Private Jet Charter Antwerp | EMY", seoDesc:"Private jet, helicopter and scheduled flight bookings, arranged personally. EMY is your dedicated aviation concierge in Antwerp — chartered flights, hot air balloons and more.", longDesc:"Whether it's a seat on a scheduled flight, a fully chartered private jet, a helicopter transfer that skips the traffic altogether, or a hot air balloon ride, we arrange it. A last-minute change or a last-minute trip, we take care of it. Over ten years of aviation expertise, and a worldwide network to match.", examples:[], faqs:[
+    { q:"How far in advance do I need to book?", a:"As last-minute as needed, EMY specialises in fast turnarounds, though for peak periods, booking ahead secures the best options." },
+    { q:"Can you also book scheduled (non-private) flights?", a:"Yes, from a single seat on a scheduled flight to a fully chartered aircraft, whatever fits the trip." },
+    { q:"Does this work worldwide?", a:"Yes, wherever you're headed, EMY works with a global network of operators." },
+    { q:"What if my flight changes or gets cancelled?", a:"EMY handles last-minute changes personally, so you never have to sort it out yourself." },
+    { q:"What if I need a flight within just a few hours?", a:"You can reach me 24/7 for exactly this kind of situation. After ten years in private aviation, I know how to move fast and call on the right network to make it happen." },
+    { q:"Can I combine this with my own airline miles or loyalty programs?", a:"Yes, EMY works around your existing memberships wherever possible." },
+  ], photos:["/services/flights/victoria-falls-1.jpg","/services/flights/hot-air-balloon-1.jpg","/services/flights/jet-dog-1.jpg"] },
   { slug:"hotels",               icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish.", seoTitle:"Luxury Travel Designer Antwerp & Belgium | EMY", seoDesc:"Full trip planning from a personal travel designer: flights, hotels, transfers, restaurant reservations and on-the-ground activities, planned by someone with years of experience in the travel industry.", longDesc:["Every trip fully planned, from the airport transfer and reserved parking to booked tickets, hotels, on-the-ground activities, and restaurant reservations.", "I've traveled for years myself and come from the travel industry, so planning a trip is something I do with real passion. I see membership as a relationship we build together: with every trip, I get to know the client and their family a little better, and understand exactly what they want. Less explaining for them, more enjoyment."], examples:[{ title:"Case: Iceland", text:["One phone call was enough to paint the picture: a love for nature, young children who could manage no more than a few hours of walking a day, and a soft spot for boutique hotels. From there, EMY took over, a fully tailored proposal with the most stunning houses, each perfectly matched to Iceland's landscape, activities for parents and children alike, and restaurant reservations throughout. A few messages later, it was approved, and everything was arranged and booked by EMY.", "But that's not where it ends. Throughout the trip, EMY stayed closely involved: coordinating every detail, making sure everything was in place, with follow-up during the trip and after."] }], photos:[] },
   { slug:"transfers",            icon:"ti-car",          title:"Transfers",                  desc:"Wherever, whenever", seoTitle:"Chauffeur & Transfer Service Antwerp | EMY", seoDesc:"Reliable, discreet transfers in Antwerp and beyond — airport rides, chauffeurs, and last-minute transport, arranged personally by EMY.", longDesc:"Whether it's a last-minute transfer, someone to pick up your car, a ride to the airport, or a safe way home after a night out, we arrange it. Always reliable, always discreet.", examples:[], photos:[] },
   { slug:"gastronomy",           icon:"ti-chef-hat",     title:"Gastronomy",                 desc:"From restaurant reservations to a private chef at home, we take care of it.", seoTitle:"Restaurant Reservations & Private Chef Antwerp | EMY", seoDesc:"Restaurant reservations, private chefs and on-site catering, arranged by EMY — your personal concierge for dining in Antwerp and while travelling.", longDesc:"Restaurant reservations, taken care of. EMY handles the booking so you don't have to, and keeps track of new openings and hidden gems wherever your travels take you. The experience can come to you too, from a curated menu delivered to your door to a private chef in your own kitchen.", requestTypes:["Restaurant reservations","Restaurant recommendations for your travel destination","On-site catering","Private chef at home"], examples:[], photos:[] },
@@ -215,7 +224,11 @@ function Paragraphs({ content, style }) {
 function ServiceDetail({ service, onBack }) {
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (service) setMeta(service.seoTitle || service.title, service.seoDesc || HOME_DESC);
+    if (service) {
+      setMeta(service.seoTitle || service.title, service.seoDesc || HOME_DESC);
+      setFaqSchema(service.faqs);
+    }
+    return () => setFaqSchema(null);
   }, [service?.slug]);
   if (!service) return null;
   return (
@@ -272,6 +285,20 @@ function ServiceDetail({ service, onBack }) {
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:16 }}>
               {service.photos.map((src, i) => (
                 <img key={i} src={src} alt={`${service.title} ${i+1}`} style={{ width:"100%", height:"auto", display:"block" }}/>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {service.faqs?.length > 0 && (
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40, marginBottom:48 }}>
+            <Label>FAQ.</Label>
+            <div style={{ display:"flex", flexDirection:"column", gap:28 }}>
+              {service.faqs.map((f, i) => (
+                <div key={i}>
+                  <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.72)", marginBottom:8 }}>{f.q}</div>
+                  <Paragraphs content={f.a} style={{ color:"rgba(255,255,255,0.5)" }}/>
+                </div>
               ))}
             </div>
           </div>
@@ -483,6 +510,28 @@ function setMeta(title, description) {
   let canonical = document.querySelector('link[rel="canonical"]');
   if (!canonical) { canonical = document.createElement("link"); canonical.setAttribute("rel", "canonical"); document.head.appendChild(canonical); }
   canonical.setAttribute("href", `https://ask-emy.com${window.location.pathname}`);
+}
+
+// Adds/removes FAQPage structured data so Google can show FAQ rich results.
+// Pass null/empty to clear it (e.g. when leaving a service page).
+function setFaqSchema(faqs) {
+  let el = document.getElementById("faq-schema");
+  if (!faqs || faqs.length === 0) { el?.remove(); return; }
+  if (!el) {
+    el = document.createElement("script");
+    el.type = "application/ld+json";
+    el.id = "faq-schema";
+    document.head.appendChild(el);
+  }
+  el.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: Array.isArray(f.a) ? f.a.join(" ") : f.a },
+    })),
+  });
 }
 
 // ── App ───────────────────────────────────────────────────────────────────────
