@@ -123,7 +123,7 @@ const FOR_WHOM = [
 //   examples: ["A short, concrete case you want to show visitors."],
 //   photos: ["/services/<slug>/photo-1.jpg"],   ← drop the image file in /public/services/<slug>/ first
 const WHAT_I_DO = [
-  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", pageTitle:"Flights", subtitle:"Scheduled, chartered & beyond", desc:"From a first-class ticket to a chartered jet. A last-minute change or a last-minute trip, we take care of it. Ten years of aviation expertise, and the network to match.", longDesc:"Whether it's a seat on a scheduled flight, a fully chartered private jet, a helicopter transfer that skips the traffic altogether, or a hot air balloon ride, we arrange it. A last-minute change or a last-minute trip, we take care of it. Over ten years of aviation expertise, and a worldwide network to match.", examples:[], photos:["/services/flights/victoria-falls-1.jpg","/services/flights/hot-air-balloon-1.jpg","/services/flights/jet-dog-1.jpg"] },
+  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", pageTitle:"Flights", subtitle:"Scheduled, chartered & beyond", desc:"", longDesc:"Whether it's a seat on a scheduled flight, a fully chartered private jet, a helicopter transfer that skips the traffic altogether, or a hot air balloon ride, we arrange it. A last-minute change or a last-minute trip, we take care of it. Over ten years of aviation expertise, and a worldwide network to match.", examples:[], photos:["/services/flights/victoria-falls-1.jpg","/services/flights/hot-air-balloon-1.jpg","/services/flights/jet-dog-1.jpg"] },
   { slug:"hotels",               icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish.", examples:[], photos:[] },
   { slug:"transfers",            icon:"ti-car",          title:"Transfers",                  desc:"A driver at the airport, a chauffeur for the evening, or transport arranged for a full group — on time, every time.", examples:[], photos:[] },
   { slug:"gastronomy",           icon:"ti-chef-hat",     title:"Gastronomy",                 desc:"A table at the right restaurant, a private chef at home, or a tasting menu — arranged exactly as you had in mind.", examples:[], photos:[] },
@@ -646,8 +646,8 @@ export default function App() {
                 <a key={i} href={`#/what-we-do/${s.slug}`} style={{ display:"flex", gap:18, padding:"22px 0", borderTop:"1px solid rgba(255,255,255,0.08)", textDecoration:"none", cursor:"pointer" }}>
                   <i className={`ti ${s.icon}`} style={{ fontSize:18, color:"rgba(255,255,255,0.35)", flexShrink:0, marginTop:4 }}/>
                   <div style={{ flex:1 }}>
-                    <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.72)", marginBottom:6 }}>{s.title}</div>
-                    <p style={{ color:"rgba(255,255,255,0.42)" }}>{s.desc}</p>
+                    <div className="emy-item-title" style={{ color:"rgba(255,255,255,0.72)", marginBottom: s.desc ? 6 : 0 }}>{s.title}</div>
+                    {s.desc && <p style={{ color:"rgba(255,255,255,0.42)" }}>{s.desc}</p>}
                   </div>
                   <i className="ti ti-chevron-right" style={{ fontSize:16, color:"rgba(255,255,255,0.25)", alignSelf:"center", flexShrink:0 }}/>
                 </a>
