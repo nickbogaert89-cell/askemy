@@ -120,7 +120,9 @@ const FOR_WHOM = [
 // `pageTitle`, `subtitle` and `longDesc` are optional — when set they override
 // `title`/`desc` on that category's own page (the homepage grid always shows
 // the shorter `title`/`desc`). `desc`/`longDesc` can be a string or an array of
-// strings (one per paragraph). `examples` and `photos` start empty — add any time:
+// strings (one per paragraph). `requestTypes` (optional) is a plain bullet list,
+// e.g. ["Restaurant reservations", "Private chef at home"]. `examples` and
+// `photos` start empty — add any time:
 //   examples: ["A short, concrete case you want to show visitors."],
 //   examples: [{ title:"Case: Iceland", text:["First paragraph.", "Second paragraph."] }],
 //   photos: ["/services/<slug>/photo-1.jpg"],   ← drop the image file in /public/services/<slug>/ first
@@ -128,7 +130,7 @@ const WHAT_I_DO = [
   { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", pageTitle:"Flights", subtitle:"Scheduled, chartered & beyond", desc:"Scheduled, chartered & beyond", longDesc:"Whether it's a seat on a scheduled flight, a fully chartered private jet, a helicopter transfer that skips the traffic altogether, or a hot air balloon ride, we arrange it. A last-minute change or a last-minute trip, we take care of it. Over ten years of aviation expertise, and a worldwide network to match.", examples:[], photos:["/services/flights/victoria-falls-1.jpg","/services/flights/hot-air-balloon-1.jpg","/services/flights/jet-dog-1.jpg"] },
   { slug:"hotels",               icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish.", longDesc:["Every trip fully planned, from the airport transfer and reserved parking to booked tickets, hotels and on-the-ground activities, restaurant reservations, and tickets to the opera.", "I've traveled for years myself and come from the travel industry, so planning a trip is something I do with real passion. I see membership as a relationship we build together: with every trip, I get to know the client and their family a little better, and understand exactly what they want. Less explaining for them, more enjoyment."], examples:[{ title:"Case: Iceland", text:["One phone call was enough to paint the picture: a love for nature, young children who could manage no more than a few hours of walking a day, and a soft spot for boutique hotels. From there, EMY took over, a fully tailored proposal with the most stunning houses, each perfectly matched to Iceland's landscape, activities for parents and children alike, and restaurant reservations throughout. A few messages later, it was approved, and everything was arranged and booked by EMY.", "But that's not where it ends. Throughout the trip, EMY stayed closely involved: coordinating every detail, making sure everything was in place, with follow-up during the trip and after."] }], photos:[] },
   { slug:"transfers",            icon:"ti-car",          title:"Transfers",                  desc:"Wherever, whenever", longDesc:"Whether it's a last-minute transfer, someone to pick up your car, a ride to the airport, or a safe way home after a night out, we arrange it. Always reliable, always discreet.", examples:[], photos:[] },
-  { slug:"gastronomy",           icon:"ti-chef-hat",     title:"Gastronomy",                 desc:"A table at the right restaurant, a private chef at home, or a tasting menu — arranged exactly as you had in mind.", examples:[], photos:[] },
+  { slug:"gastronomy",           icon:"ti-chef-hat",     title:"Gastronomy",                 desc:"From restaurant reservations to a private chef at home, we take care of it.", longDesc:"Restaurant reservations, taken care of. EMY handles the booking so you don't have to, and keeps track of new openings and hidden gems wherever your travels take you. The experience can come to you too, from a curated menu delivered to your door to a private chef in your own kitchen.", requestTypes:["Restaurant reservations","Restaurant recommendations for your travel destination","On-site catering","Private chef at home"], examples:[], photos:[] },
   { slug:"entertainment-sport",  icon:"ti-confetti",     title:"Entertainment & sport",       desc:"Sold-out concerts, courtside tickets, or a private gathering — arranged exactly as you had in mind.", examples:[], photos:[] },
   { slug:"personal-shopping",    icon:"ti-shopping-bag", title:"Personal shopping",          desc:"From a specific timepiece to a full wardrobe refresh. We find it, source it, and deliver it — without you lifting a finger.", examples:[], photos:[] },
   { slug:"yachts",               icon:"ti-sailboat",     title:"Yachts & boat charters",     desc:"Day trips or extended charters, Mediterranean or North Sea. We source, negotiate, and arrange everything on board.", examples:[], photos:[] },
@@ -228,6 +230,19 @@ function ServiceDetail({ service, onBack }) {
         <div style={{ marginBottom:48 }}>
           <Paragraphs content={service.longDesc || service.desc} style={{ color:"rgba(255,255,255,0.55)" }}/>
         </div>
+
+        {service.requestTypes?.length > 0 && (
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40, marginBottom:48 }}>
+            <Label>Types of requests.</Label>
+            <ul style={{ listStyle:"none", display:"flex", flexDirection:"column", gap:12 }}>
+              {service.requestTypes.map((r, i) => (
+                <li key={i} className="emy-body" style={{ color:"rgba(255,255,255,0.55)", display:"flex", gap:10 }}>
+                  <span style={{ color:"rgba(255,255,255,0.3)" }}>—</span>{r}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {service.examples?.length > 0 && (
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40, marginBottom:48 }}>
