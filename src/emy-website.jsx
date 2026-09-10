@@ -117,11 +117,13 @@ const FOR_WHOM = [
 ];
 
 // Each category has its own page at #/what-we-do/<slug>.
-// `examples` and `photos` start empty — add to them any time:
+// `pageTitle`, `subtitle` and `longDesc` are optional — when set they override
+// `title`/`desc` on that category's own page (the homepage grid always shows
+// the shorter `title`/`desc`). `examples` and `photos` start empty — add any time:
 //   examples: ["A short, concrete case you want to show visitors."],
-//   photos: ["/services/flights-1.jpg"],   ← drop the image file in /public/services/ first
+//   photos: ["/services/<slug>/photo-1.jpg"],   ← drop the image file in /public/services/<slug>/ first
 const WHAT_I_DO = [
-  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", desc:"From a first-class ticket to a chartered jet. A last-minute change or a last-minute trip, we take care of it. Ten years of aviation expertise, and the network to match.", examples:[], photos:[] },
+  { slug:"flights",             icon:"ti-plane",        title:"Flights, private jets & helicopters", pageTitle:"Flights", subtitle:"Scheduled, chartered & beyond", desc:"From a first-class ticket to a chartered jet. A last-minute change or a last-minute trip, we take care of it. Ten years of aviation expertise, and the network to match.", longDesc:"Whether it's a seat on a scheduled flight, a fully chartered private jet, a scenic flight just for the thrill of it, a hot air balloon ride, or a helicopter transfer that skips the traffic altogether, we arrange it. A last-minute change or a last-minute trip, we take care of it. Over ten years of aviation expertise, and a worldwide network to match.", examples:[], photos:["/services/flights/helicopter-1.jpg","/services/flights/victoria-falls-1.jpg","/services/flights/hot-air-balloon-1.jpg","/services/flights/jet-dog-1.jpg"] },
   { slug:"hotels",               icon:"ti-map",          title:"Hotels & travel",            desc:"Travel designed around you, start to finish.", examples:[], photos:[] },
   { slug:"transfers",            icon:"ti-car",          title:"Transfers",                  desc:"A driver at the airport, a chauffeur for the evening, or transport arranged for a full group — on time, every time.", examples:[], photos:[] },
   { slug:"gastronomy",           icon:"ti-chef-hat",     title:"Gastronomy",                 desc:"A table at the right restaurant, a private chef at home, or a tasting menu — arranged exactly as you had in mind.", examples:[], photos:[] },
@@ -206,11 +208,14 @@ function ServiceDetail({ service, onBack }) {
           <i className="ti ti-arrow-left" style={{ fontSize:14 }}/> What we do.
         </button>
 
-        <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:24 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:16, marginBottom:service.subtitle ? 10 : 24 }}>
           <i className={`ti ${service.icon}`} style={{ fontSize:26, color:"rgba(255,255,255,0.4)" }}/>
-          <h1 style={{ fontFamily:"'Montserrat',sans-serif", fontWeight:300, fontSize:28, letterSpacing:"0.01em", color:"rgba(255,255,255,0.92)" }}>{service.title}</h1>
+          <h1 style={{ fontFamily:"'Montserrat',sans-serif", fontWeight:300, fontSize:28, letterSpacing:"0.01em", color:"rgba(255,255,255,0.92)" }}>{service.pageTitle || service.title}</h1>
         </div>
-        <p className="emy-body" style={{ color:"rgba(255,255,255,0.55)", marginBottom:48 }}>{service.desc}</p>
+        {service.subtitle && (
+          <div style={{ fontSize:13, letterSpacing:"0.08em", color:"rgba(255,255,255,0.4)", fontFamily:"'Montserrat',sans-serif", marginBottom:24 }}>{service.subtitle}</div>
+        )}
+        <p className="emy-body" style={{ color:"rgba(255,255,255,0.55)", marginBottom:48 }}>{service.longDesc || service.desc}</p>
 
         {service.examples?.length > 0 && (
           <div style={{ borderTop:"1px solid rgba(255,255,255,0.1)", paddingTop:40, marginBottom:48 }}>
