@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta property="og:title" content="EMY – Lidmaatschap">
+<meta property="og:description" content="Stop arranging. Start living.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMY – Lidmaatschap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#111;color:#fff}
+  body{font-family:'Inter',Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:520px;margin:0 auto;padding:40px 22px 60px}
+  .logo{width:150px;display:block;mix-blend-mode:lighten}
+  .lab{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;color:#a8a8a8;text-transform:uppercase}
+  .rule{border-top:1px solid #fff;margin:22px 0}
+  h1{font-size:30px;font-weight:600;line-height:1.15;margin:26px 0 10px}
+  .intro{font-family:'Space Mono',monospace;font-size:14px;line-height:1.6;color:#d6d6d6;margin:0 0 8px}
+  form{margin-top:10px}
+  .f{margin:0 0 20px}
+  label.t{display:block;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#bdbdbd;margin-bottom:8px}
+  input[type=text],input[type=email],input[type=tel],input[type=date],textarea{width:100%;background:transparent;border:0;border-bottom:1px solid #555;color:#fff;font:16px 'Inter',Arial,sans-serif;padding:10px 0;outline:none;border-radius:0;-webkit-appearance:none;appearance:none}
+  input:focus,textarea:focus{border-bottom-color:#fff}
+  input[type=date]{color-scheme:dark}
+  textarea{resize:vertical;min-height:70px}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{display:flex;align-items:flex-start;gap:12px;border:1px solid #444;padding:14px;cursor:pointer}
+  .opt input{accent-color:#fff;margin-top:3px;width:18px;height:18px;flex:none}
+  .opt b{display:block;font-weight:600;font-size:15px}
+  .opt span{font-family:'Space Mono',monospace;font-size:12px;color:#a8a8a8}
+  .opt:has(input:checked){border-color:#fff}
+  .row{display:flex;gap:10px}
+  .row .opt{flex:1}
+  .check{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:#d6d6d6}
+  .check input{accent-color:#fff;width:18px;height:18px;flex:none;margin-top:2px}
+  .hide{display:none}
+  button,.btn{display:block;width:100%;text-align:center;background:#fff;color:#111;border:0;padding:16px;font:600 15px 'Inter',Arial,sans-serif;letter-spacing:.5px;cursor:pointer;text-decoration:none;margin-top:12px}
+  .btn.ghost{background:transparent;color:#fff;border:1px solid #fff}
+  .err{color:#ff8a8a;font-size:13px;margin-top:6px;min-height:1em}
+  .done h2{font-size:24px;font-weight:600;margin:26px 0 10px}
+  pre{white-space:pre-wrap;font-family:'Space Mono',monospace;font-size:12.5px;line-height:1.6;color:#d6d6d6;border:1px solid #444;padding:14px;margin:16px 0}
+  .small{font-family:'Space Mono',monospace;font-size:12px;color:#a8a8a8;line-height:1.6;margin-top:14px}
+  .foot{margin-top:40px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:#a8a8a8;line-height:2}
+  .tag{font-family:Georgia,serif;font-style:italic;font-size:16px;color:#fff;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo" src="data:image/png;base64,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" alt="EMY.">
+  <div class="lab" style="margin-top:16px">Lidmaatschap</div>
+  <div class="rule"></div>
+
+  <div id="formView">
+    <h1>Welkom bij EMY.</h1>
+    <p class="intro">Vul hieronder uw gegevens in. Het duurt één minuut.</p>
+
+    <form id="f" novalidate>
+      <div class="f"><label class="t" for="naam">Voor- en achternaam</label><input type="text" id="naam" autocomplete="name" required></div>
+      <div class="f"><label class="t" for="tel">GSM</label><input type="tel" id="tel" autocomplete="tel" required></div>
+      <div class="f"><label class="t" for="mail">E-mail</label><input type="email" id="mail" autocomplete="email" required></div>
+      <div class="f"><label class="t" for="adres">Adres</label><input type="text" id="adres" autocomplete="street-address"></div>
+      <div class="f"><label class="t" for="bedrijf">Bedrijf + btw-nummer (optioneel)</label><input type="text" id="bedrijf" autocomplete="organization"></div>
+
+      <div class="f">
+        <label class="t">Formule</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="formule" value="Solo" checked><div><b>Solo</b><span>€175 / maand excl. btw</span></div></label>
+          <label class="opt"><input type="radio" name="formule" value="Family"><div><b>Family</b><span>Op aanvraag</span></div></label>
+          <label class="opt"><input type="radio" name="formule" value="Business"><div><b>Business</b><span>Op maat</span></div></label>
+        </div>
+      </div>
+
+      <div class="f">
+        <label class="t">Facturatie</label>
+        <div class="row">
+          <label class="opt"><input type="radio" name="fact" value="Maandelijks" checked><div><b>Maandelijks</b></div></label>
+          <label class="opt"><input type="radio" name="fact" value="Jaarlijks"><div><b>Jaarlijks</b></div></label>
+        </div>
+      </div>
+
+      <div class="f">
+        <label class="t">Betaling</label>
+        <div class="row">
+          <label class="opt"><input type="radio" name="bet" value="Domiciliëring (SEPA)" checked><div><b>Domiciliëring</b></div></label>
+          <label class="opt"><input type="radio" name="bet" value="Overschrijving"><div><b>Overschrijving</b></div></label>
+        </div>
+      </div>
+
+      <div class="f" id="ibanBox"><label class="t" for="iban">IBAN (voor de domiciliëring)</label><input type="text" id="iban" autocomplete="off" placeholder="BE.. .... .... ...."></div>
+
+      <div class="f"><label class="t" for="start">Gewenste startdatum</label><input type="date" id="start"></div>
+      <div class="f"><label class="t" for="note">Iets wat ik meteen mag weten? (optioneel)</label><textarea id="note"></textarea></div>
+
+      <div class="f"><label class="check"><input type="checkbox" id="akkoord"> <span>Ik ga akkoord met de algemene voorwaarden van EMY.</span></label></div>
+
+      <div class="err" id="err"></div>
+      <button type="submit">Klaar</button>
+    </form>
+  </div>
+
+  <div id="doneView" class="done hide">
+    <h2>Dank u, de rest regel ik.</h2>
+    <p class="intro">Stuur uw gegevens met één tik naar mij door:</p>
+    <a class="btn" id="wa" href="#">Verstuur via WhatsApp</a>
+    <button type="button" class="btn ghost" id="copy">Kopieer gegevens</button>
+    <div class="err" id="copyMsg" style="color:#bdbdbd"></div>
+    <pre id="sum"></pre>
+    <p class="small">Lukt WhatsApp niet? Plak de gegevens in een bericht naar +32 471 48 10 10 of een mail naar emy@ask-emy.com.</p>
+    <button type="button" class="btn ghost" id="back">Iets aanpassen</button>
+  </div>
+
+  <div class="foot">
+    <div class="tag">Stop arranging. Start living.</div>
+    EMY@ASK-EMY.COM · +32 471 48 10 10<br>ASK-EMY.COM
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var val=function(n){var e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:''};
+  function toggleIban(){ $('ibanBox').classList.toggle('hide', val('bet')!=='Domiciliëring (SEPA)'); }
+  document.querySelectorAll('input[name="bet"]').forEach(function(r){r.addEventListener('change',toggleIban)});
+  toggleIban();
+
+  $('f').addEventListener('submit',function(e){
+    e.preventDefault();
+    var naam=$('naam').value.trim(), tel=$('tel').value.trim(), mail=$('mail').value.trim();
+    if(!naam||!tel||!mail){ $('err').textContent='Vul uw naam, GSM en e-mail in.'; return; }
+    if(!$('akkoord').checked){ $('err').textContent='Gelieve akkoord te gaan met de algemene voorwaarden.'; return; }
+    $('err').textContent='';
+    var lines=[
+      'Nieuw EMY-lidmaatschap',
+      '',
+      'Naam: '+naam,
+      'GSM: '+tel,
+      'E-mail: '+mail
+    ];
+    if($('adres').value.trim()) lines.push('Adres: '+$('adres').value.trim());
+    if($('bedrijf').value.trim()) lines.push('Bedrijf: '+$('bedrijf').value.trim());
+    lines.push('Formule: '+val('formule'));
+    lines.push('Facturatie: '+val('fact'));
+    lines.push('Betaling: '+val('bet'));
+    if(val('bet')==='Domiciliëring (SEPA)' && $('iban').value.trim()) lines.push('IBAN: '+$('iban').value.trim());
+    if($('start').value){ var d=$('start').value.split('-'); lines.push('Start: '+d[2]+'/'+d[1]+'/'+d[0]); }
+    if($('note').value.trim()) lines.push('Opmerking: '+$('note').value.trim());
+    lines.push('Akkoord algemene voorwaarden: ja');
+    var text=lines.join('\n');
+    $('sum').textContent=text;
+    $('wa').href='https://wa.me/32471481010?text='+encodeURIComponent(text);
+    $('formView').classList.add('hide'); $('doneView').classList.remove('hide');
+    window.scrollTo(0,0);
+  });
+
+  $('copy').addEventListener('click',function(){
+    var t=$('sum').textContent;
+    try{
+      navigator.clipboard.writeText(t).then(function(){ $('copyMsg').textContent='Gekopieerd.'; },function(){ $('copyMsg').textContent='Kopiëren lukte niet. Selecteer de tekst hieronder.'; });
+    }catch(err){ $('copyMsg').textContent='Kopiëren lukte niet. Selecteer de tekst hieronder.'; }
+  });
+  $('back').addEventListener('click',function(){ $('doneView').classList.add('hide'); $('formView').classList.remove('hide'); });
+})();
+</script>
+</body>
+</html>
