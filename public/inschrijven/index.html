@@ -56,59 +56,58 @@
     <h1>Welkom bij EMY.</h1>
     <p class="intro">Vul hieronder uw gegevens in. Het duurt één minuut.</p>
 
-    <form id="f" novalidate>
-      <div class="f"><label class="t" for="naam">Voor- en achternaam</label><input type="text" id="naam" autocomplete="name" required></div>
-      <div class="f"><label class="t" for="tel">GSM</label><input type="tel" id="tel" autocomplete="tel" required></div>
-      <div class="f"><label class="t" for="mail">E-mail</label><input type="email" id="mail" autocomplete="email" required></div>
-      <div class="f"><label class="t" for="adres">Adres</label><input type="text" id="adres" autocomplete="street-address"></div>
-      <div class="f"><label class="t" for="bedrijf">Bedrijf + btw-nummer (optioneel)</label><input type="text" id="bedrijf" autocomplete="organization"></div>
+    <form id="f" action="https://formsubmit.co/emy@ask-emy.com" method="POST" novalidate>
+      <input type="hidden" name="_subject" value="Inschrijving nieuwe member – EMY">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://ask-emy.com/inschrijven/#bedankt">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+      <div class="f"><label class="t" for="naam">Voor- en achternaam</label><input type="text" id="naam" name="Naam" autocomplete="name" required></div>
+      <div class="f"><label class="t" for="tel">GSM</label><input type="tel" id="tel" name="GSM" autocomplete="tel" required></div>
+      <div class="f"><label class="t" for="mail">E-mail</label><input type="email" id="mail" name="E-mail" autocomplete="email" required></div>
+      <div class="f"><label class="t" for="adres">Adres</label><input type="text" id="adres" name="Adres" autocomplete="street-address"></div>
+      <div class="f"><label class="t" for="bedrijf">Bedrijf + btw-nummer (optioneel)</label><input type="text" id="bedrijf" name="Bedrijf" autocomplete="organization"></div>
 
       <div class="f">
         <label class="t">Formule</label>
         <div class="opts">
-          <label class="opt"><input type="radio" name="formule" value="Solo" checked><div><b>Solo</b><span>€175 / maand excl. btw</span></div></label>
-          <label class="opt"><input type="radio" name="formule" value="Family"><div><b>Family</b><span>Op aanvraag</span></div></label>
-          <label class="opt"><input type="radio" name="formule" value="Business"><div><b>Business</b><span>Op maat</span></div></label>
+          <label class="opt"><input type="radio" name="Formule" value="Solo" checked><div><b>Solo</b><span>€175 / maand excl. btw</span></div></label>
+          <label class="opt"><input type="radio" name="Formule" value="Family"><div><b>Family</b><span>Op aanvraag</span></div></label>
+          <label class="opt"><input type="radio" name="Formule" value="Business"><div><b>Business</b><span>Op maat</span></div></label>
         </div>
       </div>
 
       <div class="f">
         <label class="t">Facturatie</label>
         <div class="row">
-          <label class="opt"><input type="radio" name="fact" value="Maandelijks" checked><div><b>Maandelijks</b></div></label>
-          <label class="opt"><input type="radio" name="fact" value="Jaarlijks"><div><b>Jaarlijks</b></div></label>
+          <label class="opt"><input type="radio" name="Facturatie" value="Maandelijks" checked><div><b>Maandelijks</b></div></label>
+          <label class="opt"><input type="radio" name="Facturatie" value="Jaarlijks"><div><b>Jaarlijks</b></div></label>
         </div>
       </div>
 
       <div class="f">
         <label class="t">Betaling</label>
         <div class="row">
-          <label class="opt"><input type="radio" name="bet" value="Domiciliëring (SEPA)" checked><div><b>Domiciliëring</b></div></label>
-          <label class="opt"><input type="radio" name="bet" value="Overschrijving"><div><b>Overschrijving</b></div></label>
+          <label class="opt"><input type="radio" name="Betaling" value="Domiciliëring (SEPA)" checked><div><b>Domiciliëring</b></div></label>
+          <label class="opt"><input type="radio" name="Betaling" value="Overschrijving"><div><b>Overschrijving</b></div></label>
         </div>
       </div>
 
-      <div class="f" id="ibanBox"><label class="t" for="iban">IBAN (voor de domiciliëring)</label><input type="text" id="iban" autocomplete="off" placeholder="BE.. .... .... ...."></div>
+      <div class="f" id="ibanBox"><label class="t" for="iban">IBAN (voor de domiciliëring)</label><input type="text" id="iban" name="IBAN" autocomplete="off" placeholder="BE.. .... .... ...."></div>
 
-      <div class="f"><label class="t" for="start">Gewenste startdatum</label><input type="date" id="start"></div>
-      <div class="f"><label class="t" for="note">Iets wat ik meteen mag weten? (optioneel)</label><textarea id="note"></textarea></div>
+      <div class="f"><label class="t" for="start">Gewenste startdatum</label><input type="date" id="start" name="Startdatum"></div>
+      <div class="f"><label class="t" for="note">Iets wat ik meteen mag weten? (optioneel)</label><textarea id="note" name="Opmerking"></textarea></div>
 
-      <div class="f"><label class="check"><input type="checkbox" id="akkoord"> <span>Ik ga akkoord met de algemene voorwaarden van EMY.</span></label></div>
+      <div class="f"><label class="check"><input type="checkbox" id="akkoord" name="Akkoord voorwaarden" value="ja"> <span>Ik ga akkoord met de algemene voorwaarden van EMY.</span></label></div>
 
       <div class="err" id="err"></div>
-      <button type="submit">Klaar</button>
+      <button type="submit" id="sendBtn">Versturen</button>
     </form>
   </div>
 
   <div id="doneView" class="done hide">
-    <h2>Dank u, de rest regel ik.</h2>
-    <p class="intro">Stuur uw gegevens met één tik naar mij door:</p>
-    <a class="btn" id="wa" href="#">Verstuur via WhatsApp</a>
-    <button type="button" class="btn ghost" id="copy">Kopieer gegevens</button>
-    <div class="err" id="copyMsg" style="color:#bdbdbd"></div>
-    <pre id="sum"></pre>
-    <p class="small">Lukt WhatsApp niet? Plak de gegevens in een bericht naar +32 471 48 10 10 of een mail naar emy@ask-emy.com.</p>
-    <button type="button" class="btn ghost" id="back">Iets aanpassen</button>
+    <h2>Dank u, uw gegevens zijn goed ontvangen.</h2>
+    <p class="intro">Ik neem binnenkort persoonlijk contact met u op. Welkom bij EMY.</p>
   </div>
 
   <div class="foot">
@@ -121,46 +120,17 @@
 (function(){
   var $=function(id){return document.getElementById(id)};
   var val=function(n){var e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:''};
-  function toggleIban(){ $('ibanBox').classList.toggle('hide', val('bet')!=='Domiciliëring (SEPA)'); }
-  document.querySelectorAll('input[name="bet"]').forEach(function(r){r.addEventListener('change',toggleIban)});
+  function toggleIban(){ $('ibanBox').classList.toggle('hide', val('Betaling')!=='Domiciliëring (SEPA)'); }
+  document.querySelectorAll('input[name="Betaling"]').forEach(function(r){r.addEventListener('change',toggleIban)});
   toggleIban();
-
+  function showDone(){ if(location.hash==='#bedankt'){ $('formView').classList.add('hide'); $('doneView').classList.remove('hide'); } }
+  showDone(); window.addEventListener('hashchange',showDone);
   $('f').addEventListener('submit',function(e){
-    e.preventDefault();
     var naam=$('naam').value.trim(), tel=$('tel').value.trim(), mail=$('mail').value.trim();
-    if(!naam||!tel||!mail){ $('err').textContent='Vul uw naam, GSM en e-mail in.'; return; }
-    if(!$('akkoord').checked){ $('err').textContent='Gelieve akkoord te gaan met de algemene voorwaarden.'; return; }
-    $('err').textContent='';
-    var lines=[
-      'Nieuw EMY-lidmaatschap',
-      '',
-      'Naam: '+naam,
-      'GSM: '+tel,
-      'E-mail: '+mail
-    ];
-    if($('adres').value.trim()) lines.push('Adres: '+$('adres').value.trim());
-    if($('bedrijf').value.trim()) lines.push('Bedrijf: '+$('bedrijf').value.trim());
-    lines.push('Formule: '+val('formule'));
-    lines.push('Facturatie: '+val('fact'));
-    lines.push('Betaling: '+val('bet'));
-    if(val('bet')==='Domiciliëring (SEPA)' && $('iban').value.trim()) lines.push('IBAN: '+$('iban').value.trim());
-    if($('start').value){ var d=$('start').value.split('-'); lines.push('Start: '+d[2]+'/'+d[1]+'/'+d[0]); }
-    if($('note').value.trim()) lines.push('Opmerking: '+$('note').value.trim());
-    lines.push('Akkoord algemene voorwaarden: ja');
-    var text=lines.join('\n');
-    $('sum').textContent=text;
-    $('wa').href='https://wa.me/32471481010?text='+encodeURIComponent(text);
-    $('formView').classList.add('hide'); $('doneView').classList.remove('hide');
-    window.scrollTo(0,0);
+    if(!naam||!tel||!mail){ e.preventDefault(); $('err').textContent='Vul uw naam, GSM en e-mail in.'; return; }
+    if(!$('akkoord').checked){ e.preventDefault(); $('err').textContent='Gelieve akkoord te gaan met de algemene voorwaarden.'; return; }
+    $('err').textContent=''; $('sendBtn').textContent='Bezig met versturen…'; $('sendBtn').disabled=true;
   });
-
-  $('copy').addEventListener('click',function(){
-    var t=$('sum').textContent;
-    try{
-      navigator.clipboard.writeText(t).then(function(){ $('copyMsg').textContent='Gekopieerd.'; },function(){ $('copyMsg').textContent='Kopiëren lukte niet. Selecteer de tekst hieronder.'; });
-    }catch(err){ $('copyMsg').textContent='Kopiëren lukte niet. Selecteer de tekst hieronder.'; }
-  });
-  $('back').addEventListener('click',function(){ $('doneView').classList.add('hide'); $('formView').classList.remove('hide'); });
 })();
 </script>
 </body>
